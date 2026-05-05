@@ -126,14 +126,22 @@ jobs:
       - name: Generate code
         run: dart run build_runner build --delete-conflicting-outputs
 
-      # --repo-update so CocoaPods refreshes its spec repo cache and
-      # re-resolves dependencies. Without it, a stale Podfile.lock that
-      # pins an older subdep (e.g. Sentry/HybridSDK 8.46 when
-      # sentry_flutter 9.19 now requires 8.58) is treated as authoritative
-      # and the install fails. The auto-commit step below picks up the
-      # refreshed lockfile.
-      - name: Pod install
-        run: cd ios && pod install --repo-update
+      # `pod install` honours Podfile.lock as authoritative even with
+      # --repo-update — CocoaPods will only refresh the spec cache, not
+      # re-resolve. So if the lockfile pins a transitive subdep version
+      # that's been bumped in pubspec.yaml (e.g. sentry_flutter 9.19
+      # now wants Sentry/HybridSDK 8.58 but the lock still pins 8.46),
+      # `pod install` fails. The fallback `pod update` re-resolves and
+      # writes a fresh lockfile. The auto-commit step below pushes the
+      # refreshed lockfile back to the PR branch so future runs hit the
+      # deterministic `install` path.
+      - name: Pod install (regenerate lockfile if constraints have shifted)
+        run: |
+          cd ios
+          if ! pod install --repo-update; then
+            echo "::warning::Podfile.lock has stale constraints; regenerating via pod update"
+            pod update
+          fi
 
       # Same-repo PRs only — fork PRs run with a read-only token so this
       # step would fail to push. Fork contributors get the lockfile via
