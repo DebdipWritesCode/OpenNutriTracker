@@ -440,7 +440,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'en': 'English',
     'de': 'Deutsch',
     'tr': 'Türkçe',
-    'cz': 'Čeština',
+    'cs': 'Čeština',
     'it': 'Italiano',
     'uk': 'Українська',
     'zh': '中文',
