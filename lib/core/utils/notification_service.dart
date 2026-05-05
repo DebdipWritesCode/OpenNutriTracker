@@ -80,12 +80,11 @@ class NotificationService {
     final details =
         NotificationDetails(android: androidDetails, iOS: iosDetails);
 
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
-        tz.local, now.year, now.month, now.day, hour, minute);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
+    final scheduledDate = computeNextOccurrence(
+      tz.TZDateTime.now(tz.local),
+      hour,
+      minute,
+    );
 
     await _plugin.zonedSchedule(
       _dailyReminderId,
@@ -108,5 +107,23 @@ class NotificationService {
 
   Future<void> _ensureInitialized() async {
     if (!_initialized) await initialize();
+  }
+
+  /// Returns the next [tz.TZDateTime] at [hour]:[minute] in the same location
+  /// as [now]. If today's slot has already passed (or matches `now` exactly),
+  /// rolls forward to the next day. Pure function — extracted from
+  /// [scheduleDailyReminder] so it can be unit-tested across timezones / DST
+  /// transitions without touching the notification plugin.
+  static tz.TZDateTime computeNextOccurrence(
+    tz.TZDateTime now,
+    int hour,
+    int minute,
+  ) {
+    var scheduled = tz.TZDateTime(
+        now.location, now.year, now.month, now.day, hour, minute);
+    if (!scheduled.isAfter(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
+    }
+    return scheduled;
   }
 }

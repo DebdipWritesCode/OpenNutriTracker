@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,6 +9,9 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+    // Required by flutter_local_notifications so foreground notifications are
+    // displayed instead of being silently dropped (#312).
+    UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         // Exclude the documents folder from iCloud backup.
         try! setExcludeFromiCloudBackup(isExcluded: true)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
