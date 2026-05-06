@@ -517,6 +517,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("su aktiviteleri"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("kış aktiviteleri"),
+        "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
+            "yüksek yoğunluklu interval antrenman"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("orta düzeyde efor"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage(
+                "yüksek yoğunluklu interval antrenman"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "burpees, dağcı, squat jump, Tabata, yüksek efor"),
         "paHikingCrossCountry": MessageLookupByLibrary.simpleMessage("yürüyüş"),
         "paHikingCrossCountryDesc":
             MessageLookupByLibrary.simpleMessage("kırsal alan"),

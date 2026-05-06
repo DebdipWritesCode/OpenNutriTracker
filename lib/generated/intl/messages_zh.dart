@@ -458,6 +458,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("水上活动"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("冬季活动"),
+        "paHighIntensityIntervalExercise":
+            MessageLookupByLibrary.simpleMessage("高强度间歇训练"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("中等强度"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage("高强度间歇训练"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "波比跳、登山者、深蹲跳、塔巴塔，高强度"),
         "paHikingCrossCountry": MessageLookupByLibrary.simpleMessage("徒步"),
         "paHikingCrossCountryDesc": MessageLookupByLibrary.simpleMessage("越野"),
         "paHockeyField": MessageLookupByLibrary.simpleMessage("场地曲棍球"),

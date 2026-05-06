@@ -522,6 +522,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("водні види спорту"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("зимові види спорту"),
+        "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
+            "високоінтенсивне інтервальне тренування"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("помірне зусилля"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage(
+                "високоінтенсивне інтервальне тренування"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "берпі, скелелаз, вистрибування з присіду, Табата, інтенсивне зусилля"),
         "paHikingCrossCountry": MessageLookupByLibrary.simpleMessage("похід"),
         "paHikingCrossCountryDesc":
             MessageLookupByLibrary.simpleMessage("пересіченою місцевістю"),

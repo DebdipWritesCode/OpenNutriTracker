@@ -153,6 +153,22 @@ class PhysicalActivityDataSource {
 
         // ── Dancing ───────────────────────────────────────────────────────────
         PhysicalActivityDBO(
+          "02210",
+          "high intensity interval exercise",
+          "moderate effort",
+          7.0,
+          [],
+          PhysicalActivityTypeDBO.conditioningExercise,
+        ),
+        PhysicalActivityDBO(
+          "02214",
+          "high intensity interval exercise",
+          "burpees, mountain climbers, squat jumps, Tabata, vigorous effort",
+          11.0,
+          [],
+          PhysicalActivityTypeDBO.conditioningExercise,
+        ),
+        PhysicalActivityDBO(
           "03015",
           "aerobic",
           "general",

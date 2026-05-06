@@ -3653,6 +3653,46 @@ class S {
     );
   }
 
+  /// `high intensity interval exercise`
+  String get paHighIntensityIntervalExercise {
+    return Intl.message(
+      'high intensity interval exercise',
+      name: 'paHighIntensityIntervalExercise',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `moderate effort`
+  String get paHighIntensityIntervalExerciseDesc {
+    return Intl.message(
+      'moderate effort',
+      name: 'paHighIntensityIntervalExerciseDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `high intensity interval exercise`
+  String get paHighIntensityIntervalExerciseVigorous {
+    return Intl.message(
+      'high intensity interval exercise',
+      name: 'paHighIntensityIntervalExerciseVigorous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `burpees, mountain climbers, squat jumps, Tabata, vigorous effort`
+  String get paHighIntensityIntervalExerciseVigorousDesc {
+    return Intl.message(
+      'burpees, mountain climbers, squat jumps, Tabata, vigorous effort',
+      name: 'paHighIntensityIntervalExerciseVigorousDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `pilates`
   String get paPilates {
     return Intl.message(

@@ -516,6 +516,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("vodní sporty"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("zimní sporty"),
+        "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
+            "vysoce intenzivní intervalový trénink"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("střední intenzita"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage(
+                "vysoce intenzivní intervalový trénink"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "burpees, horolezci, výskoky z dřepu, Tabata, vysoká intenzita"),
         "paHikingCrossCountry":
             MessageLookupByLibrary.simpleMessage("chůze v přírodě"),
         "paHikingCrossCountryDesc":

@@ -519,6 +519,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("attività acquatiche"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("attività invernali"),
+        "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
+            "allenamento intervallato ad alta intensità"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("sforzo moderato"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage(
+                "allenamento intervallato ad alta intensità"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "burpees, mountain climber, squat jump, Tabata, sforzo intenso"),
         "paHikingCrossCountry":
             MessageLookupByLibrary.simpleMessage("escursionismo"),
         "paHikingCrossCountryDesc":
