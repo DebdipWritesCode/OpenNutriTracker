@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_bmi_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:opennutritracker/features/profile/presentation/widgets/bmi_overv
 import 'package:opennutritracker/features/profile/presentation/widgets/set_gender_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_goal_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_height_dialog.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/set_weekly_weight_goal_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_pal_category_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
@@ -106,6 +109,22 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         ListTile(
           title: Text(
+            S.of(context).weeklyWeightGoalLabel,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          subtitle: Text(
+            _weeklyGoalSubtitle(context, user, usesImperialUnits),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          leading: const SizedBox(
+            height: double.infinity,
+            child: Icon(Icons.trending_down_outlined),
+          ),
+          onTap: () =>
+              _showSetWeeklyWeightGoalDialog(context, user, usesImperialUnits),
+        ),
+        ListTile(
+          title: Text(
             S.of(context).weightLabel,
             style: Theme.of(context).textTheme.titleLarge,
           ),
@@ -166,12 +185,31 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           leading: SizedBox(
             height: double.infinity,
-            child: Icon(user.gender.getIcon()),
+            child: user.gender.getIcon(),
           ),
           onTap: () {
             _showSetGenderDialog(context, user);
           },
         ),
+        if (user.gender == UserGenderEntity.nonBinary)
+          ListTile(
+            title: Text(
+              S.of(context).caloriesProfileInfoTitle,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
+                  .getName(context),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.tune_outlined),
+            ),
+            onTap: () {
+              _showCaloriesProfileDialog(context, user);
+            },
+          ),
       ],
     );
   }
@@ -188,6 +226,43 @@ class _ProfilePageState extends State<ProfilePage> {
       userEntity.pal = selectedPalCategory;
       _profileBloc.updateUser(userEntity);
     }
+  }
+
+  String _weeklyGoalSubtitle(
+      BuildContext context, UserEntity user, bool usesImperialUnits) {
+    final goal = user.weeklyWeightGoalKg;
+    if (goal == null) return S.of(context).weeklyWeightGoalNoneLabel;
+    if (goal == 0.0) return S.of(context).goalMaintainWeight;
+    final displayValue =
+        usesImperialUnits ? goal * 2.20462 : goal;
+    final sign = displayValue > 0 ? '+' : '';
+    final formatted = '$sign${displayValue.toStringAsFixed(2)}';
+    return usesImperialUnits
+        ? S.of(context).weeklyWeightGoalLbsPerWeek(formatted)
+        : S.of(context).weeklyWeightGoalKgPerWeek(formatted);
+  }
+
+  Future<void> _showSetWeeklyWeightGoalDialog(BuildContext context,
+      UserEntity userEntity, bool usesImperialUnits) async {
+    final result = await showDialog<WeeklyWeightGoalResult>(
+      context: context,
+      builder: (context) => SetWeeklyWeightGoalDialog(
+        currentGoalKg: userEntity.weeklyWeightGoalKg,
+        usesImperialUnits: usesImperialUnits,
+      ),
+    );
+    switch (result) {
+      // null when the framework returns from a back-button pop, treated
+      // as cancellation alongside the explicit Cancel case.
+      case null:
+      case WeeklyWeightGoalCancelled():
+        return;
+      case WeeklyWeightGoalCleared():
+        userEntity.weeklyWeightGoalKg = null;
+      case WeeklyWeightGoalSet(:final kgPerWeek):
+        userEntity.weeklyWeightGoalKg = kgPerWeek;
+    }
+    await _profileBloc.updateUser(userEntity);
   }
 
   Future<void> _showSetGoalDialog(
@@ -277,10 +352,53 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) => const SetGenderDialog(),
     );
-    if (selectedGender != null) {
-      userEntity.gender = selectedGender;
+    if (selectedGender == null) return;
+    userEntity.gender = selectedGender;
 
-      _profileBloc.updateUser(userEntity);
+    // Switching to non-binary: prompt for hormone profile and persist BOTH
+    // fields in a single updateUser call. Issuing two saves (one for the
+    // gender, one for the profile) used to race — by the time the home
+    // recomputed kcal, only the gender write had landed and the profile
+    // was still null, so every choice rendered as "averaged".
+    if (selectedGender == UserGenderEntity.nonBinary) {
+      if (context.mounted) {
+        final selected = await showDialog<CaloriesProfileEntity>(
+          context: context,
+          builder: (BuildContext context) => CaloriesProfileInfoDialog(
+            initialProfile:
+                userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged,
+          ),
+        );
+        if (selected != null) {
+          userEntity.caloriesProfile = selected;
+        } else {
+          // User cancelled the picker but is now non-binary — store the
+          // implicit default explicitly so reads don't keep falling back.
+          userEntity.caloriesProfile ??= CaloriesProfileEntity.averaged;
+        }
+      }
+    } else {
+      // Switching back to binary — drop any previously set hormone profile.
+      // The field is meaningless outside of nonBinary.
+      userEntity.caloriesProfile = null;
     }
+
+    await _profileBloc.updateUser(userEntity);
+  }
+
+  Future<void> _showCaloriesProfileDialog(
+    BuildContext context,
+    UserEntity userEntity,
+  ) async {
+    final selected = await showDialog<CaloriesProfileEntity>(
+      context: context,
+      builder: (BuildContext context) => CaloriesProfileInfoDialog(
+        initialProfile:
+            userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged,
+      ),
+    );
+    if (selected == null) return;
+    userEntity.caloriesProfile = selected;
+    await _profileBloc.updateUser(userEntity);
   }
 }

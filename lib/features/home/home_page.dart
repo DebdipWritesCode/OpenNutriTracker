@@ -6,6 +6,7 @@ import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/activity_vertial_list.dart';
+import 'package:opennutritracker/core/presentation/widgets/edit_activity_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/edit_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/delete_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
@@ -14,6 +15,7 @@ import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.da
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/intake_vertical_list.dart';
+import 'package:opennutritracker/features/home/presentation/widgets/quick_weight_widget.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,7 +29,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final log = Logger('HomePage');
 
   late HomeBloc _homeBloc;
-  bool _isDragging = false;
+  bool _isIntakeDragging = false;
+  bool _isActivityDragging = false;
+  bool get _isDragging => _isIntakeDragging || _isActivityDragging;
 
   @override
   void initState() {
@@ -72,6 +76,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             state.snackIntakeList,
             state.userActivityList,
             state.usesImperialUnits,
+            state.showMealMacros,
+            state.userWeightKg,
           );
         } else {
           return _getLoadingContent();
@@ -112,6 +118,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     List<IntakeEntity> snackIntakeList,
     List<UserActivityEntity> userActivities,
     bool usesImperialUnits,
+    bool showMealMacros,
+    double userWeightKg,
   ) {
     if (showDisclaimerDialog) {
       _showDisclaimerDialog(context);
@@ -120,6 +128,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       children: [
         ListView(
           children: [
+            QuickWeightWidget(
+              weightKg: userWeightKg,
+              usesImperialUnits: usesImperialUnits,
+            ),
+            const SizedBox(height: 8.0),
             DashboardWidget(
               totalKcalDaily: totalKcalDaily,
               totalKcalLeft: totalKcalLeft,
@@ -137,6 +150,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               title: S.of(context).activityLabel,
               userActivityList: userActivities,
               onItemLongPressedCallback: onActivityItemLongPressed,
+              onItemTappedCallback: onActivityItemTapped,
+              onItemDragCallback: onActivityItemDrag,
             ),
             IntakeVerticalList(
               day: DateTime.now(),
@@ -148,6 +163,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onItemDragCallback: onIntakeItemDrag,
               onItemTappedCallback: onIntakeItemTapped,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
             ),
             IntakeVerticalList(
               day: DateTime.now(),
@@ -159,6 +175,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onItemDragCallback: onIntakeItemDrag,
               onItemTappedCallback: onIntakeItemTapped,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
             ),
             IntakeVerticalList(
               day: DateTime.now(),
@@ -170,6 +187,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onItemDragCallback: onIntakeItemDrag,
               onItemTappedCallback: onIntakeItemTapped,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
             ),
             IntakeVerticalList(
               day: DateTime.now(),
@@ -181,6 +199,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onItemDragCallback: onIntakeItemDrag,
               onItemTappedCallback: onIntakeItemTapped,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
             ),
             const SizedBox(height: 48.0),
           ],
@@ -189,28 +208,46 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           alignment: Alignment.bottomCenter,
           child: Visibility(
             visible: _isDragging,
-            child: Container(
+            child: SizedBox(
               height: 70,
-              color: Theme.of(context).colorScheme.error
-                ..withValues(alpha: 0.3),
-              child: DragTarget<IntakeEntity>(
-                onAcceptWithDetails: (data) {
-                  _confirmDelete(context, data.data);
-                },
-                onLeave: (data) {
-                  setState(() {
-                    _isDragging = false;
-                  });
-                },
-                builder: (context, candidateData, rejectedData) {
-                  return const Center(
-                    child: Icon(
-                      Icons.delete_outline,
-                      size: 36,
-                      color: Colors.white,
-                    ),
-                  );
-                },
+              child: Stack(
+                children: [
+                  DragTarget<IntakeEntity>(
+                    onAcceptWithDetails: (data) {
+                      _confirmDelete(context, data.data);
+                    },
+                    onLeave: (data) {
+                      setState(() {
+                        _isIntakeDragging = false;
+                      });
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return Container(
+                        color: Theme.of(context).colorScheme.error,
+                        child: const Center(
+                          child: Icon(
+                            Icons.delete_outline,
+                            size: 36,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  DragTarget<UserActivityEntity>(
+                    onAcceptWithDetails: (data) {
+                      _confirmDeleteActivity(context, data.data);
+                    },
+                    onLeave: (data) {
+                      setState(() {
+                        _isActivityDragging = false;
+                      });
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return const SizedBox.expand();
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -262,9 +299,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void onIntakeItemDrag(bool isDragging) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _isDragging = isDragging;
+        _isIntakeDragging = isDragging;
       });
     });
+  }
+
+  void onActivityItemDrag(bool isDragging) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isActivityDragging = isDragging;
+      });
+    });
+  }
+
+  void onActivityItemTapped(
+    BuildContext context,
+    UserActivityEntity activityEntity,
+  ) async {
+    final newDuration = await showDialog<double>(
+      context: context,
+      builder: (context) =>
+          EditActivityDialog(activityEntity: activityEntity),
+    );
+    if (newDuration != null) {
+      await _homeBloc.updateUserActivityItem(activityEntity, newDuration);
+      _homeBloc.add(const LoadItemsEvent());
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).itemUpdatedSnackbar)),
+        );
+      }
+    }
   }
 
   void onIntakeItemTapped(
@@ -307,7 +372,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       onDeleteIntake(intake, null);
     }
     setState(() {
-      _isDragging = false;
+      _isIntakeDragging = false;
+    });
+  }
+
+  void _confirmDeleteActivity(
+    BuildContext context,
+    UserActivityEntity activity,
+  ) async {
+    final delete = await showDialog<bool>(
+      context: context,
+      builder: (context) => const DeleteDialog(),
+    );
+    if (delete == true) {
+      _homeBloc.deleteUserActivityItem(activity);
+      _homeBloc.add(const LoadItemsEvent());
+    }
+    setState(() {
+      _isActivityDragging = false;
     });
   }
 

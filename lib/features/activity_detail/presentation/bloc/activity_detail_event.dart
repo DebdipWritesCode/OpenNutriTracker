@@ -5,10 +5,9 @@ abstract class ActivityDetailEvent extends Equatable {
 }
 
 class LoadActivityDetailEvent extends ActivityDetailEvent {
-  final BuildContext context;
   final PhysicalActivityEntity physicalActivity;
 
-  const LoadActivityDetailEvent(this.context, this.physicalActivity);
+  const LoadActivityDetailEvent(this.physicalActivity);
 
   @override
   List<Object?> get props => [];

@@ -26,6 +26,20 @@ class ConfigDBO extends HiveObject {
   double? userProteinGoalPct;
   @HiveField(8)
   double? userFatGoalPct;
+  @HiveField(9)
+  bool? showActivityTracking;
+  @HiveField(10)
+  bool? notificationsEnabled;
+  @HiveField(11)
+  int? notificationHour;
+  @HiveField(12)
+  int? notificationMinute;
+  @HiveField(13)
+  String? selectedLocale;
+  @HiveField(14)
+  bool? showMealMacros;
+  @HiveField(15)
+  bool? showMicronutrients; // #237: null means default (false)
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -34,6 +48,13 @@ class ConfigDBO extends HiveObject {
     this.selectedAppTheme, {
     this.usesImperialUnits = false,
     this.userKcalAdjustment,
+    this.showActivityTracking,
+    this.showMealMacros,
+    this.notificationsEnabled,
+    this.notificationHour,
+    this.notificationMinute,
+    this.selectedLocale,
+    this.showMicronutrients,
   });
 
   factory ConfigDBO.empty() =>

@@ -10,4 +10,9 @@ class NavigationOptions {
   static const activityDetailRoute = "activityDetail";
   static const imageFullScreenRoute = "imageFullScreen";
   static const importMealScannerRoute = "importMealScanner";
+  static const importActivityScannerRoute = "importActivityScanner";
+  static const recipesRoute = "recipes";
+  static const recipeBuilderRoute = "recipeBuilder";
+  static const recipeDetailRoute = "recipeDetail";
+  static const importRecipeScannerRoute = "importRecipeScanner";
 }

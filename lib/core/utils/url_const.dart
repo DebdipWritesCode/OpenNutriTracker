@@ -1,6 +1,5 @@
 class URLConst {
-  static const paCompendium2011URL =
-      "https://sites.google.com/site/compendiumofphysicalactivities/home";
+  static const paCompendium2011URL = "https://pacompendium.com/";
   static const privacyPolicyURLEn =
       "https://www.iubenda.com/privacy-policy/53501884";
   static const privacyPolicyURLDe =

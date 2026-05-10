@@ -41,6 +41,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
     _activityDetailBloc = locator<ActivityDetailBloc>();
     quantityTextController = TextEditingController();
     quantityTextController.text = "0";
+    quantityTextController.addListener(_onQuantityChanged);
     totalQuantity = 0; // TODO change to 60
     totalKcal = 0;
     super.initState();
@@ -52,8 +53,14 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
         as ActivityDetailScreenArguments;
     activityEntity = args.activityEntity;
     _day = args.day;
-    quantityTextController.addListener(() {});
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    quantityTextController.removeListener(_onQuantityChanged);
+    quantityTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,15 +71,12 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
         builder: (context, state) {
           if (state is ActivityDetailInitial) {
             _activityDetailBloc.add(
-              LoadActivityDetailEvent(context, activityEntity),
+              LoadActivityDetailEvent(activityEntity),
             );
             return getLoadingContent();
           } else if (state is ActivityDetailLoadingState) {
             return getLoadingContent();
           } else if (state is ActivityDetailLoadedState) {
-            quantityTextController.addListener(() {
-              _onQuantityChanged(quantityTextController.text, state.userEntity);
-            });
             return getLoadedContent(state.totalKcalBurned, state.userEntity);
           } else {
             return const SizedBox();
@@ -173,11 +177,13 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
     );
   }
 
-  void _onQuantityChanged(String quantityString, UserEntity userEntity) async {
+  void _onQuantityChanged() {
+    final state = _activityDetailBloc.state;
+    if (state is! ActivityDetailLoadedState) return;
     try {
-      final newQuantity = double.parse(quantityString);
+      final newQuantity = double.parse(quantityTextController.text);
       final newTotalKcal = _activityDetailBloc.getTotalKcalBurned(
-        userEntity,
+        state.userEntity,
         activityEntity,
         newQuantity,
       );
@@ -187,7 +193,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
         scrollToCalorieText();
       });
     } on FormatException catch (_) {
-      log.warning("Error while parsing: \"$quantityString\"");
+      log.warning("Error while parsing: \"${quantityTextController.text}\"");
     }
   }
 
@@ -201,7 +207,6 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
   void onAddButtonPressed(BuildContext context) {
     _activityDetailBloc.persistActivity(
-      context,
       quantityTextController.text,
       totalKcal,
       activityEntity,

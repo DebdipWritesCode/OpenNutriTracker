@@ -18,7 +18,7 @@ class ConfigDataSource {
 
   Future<void> addConfig(ConfigDBO configDBO) async {
     _log.fine('Adding new config item to db');
-    _configBox.put(_configKey, configDBO);
+    await _configBox.put(_configKey, configDBO);
   }
 
   Future<void> setConfigDisclaimer(bool hasAcceptedDisclaimer) async {
@@ -27,7 +27,7 @@ class ConfigDataSource {
     );
     final config = _configBox.get(_configKey);
     config?.hasAcceptedDisclaimer = hasAcceptedDisclaimer;
-    config?.save();
+    await config?.save();
   }
 
   Future<void> setConfigAcceptedAnonymousData(
@@ -38,7 +38,7 @@ class ConfigDataSource {
     );
     final config = _configBox.get(_configKey);
     config?.hasAcceptedSendAnonymousData = hasAcceptedAnonymousData;
-    config?.save();
+    await config?.save();
   }
 
   Future<AppThemeDBO> getAppTheme() async {
@@ -50,14 +50,14 @@ class ConfigDataSource {
     _log.fine('Updating config appTheme to $appTheme');
     final config = _configBox.get(_configKey);
     config?.selectedAppTheme = appTheme;
-    config?.save();
+    await config?.save();
   }
 
   Future<void> setConfigUsesImperialUnits(bool usesImperialUnits) async {
     _log.fine('Updating config usesImperialUnits to $usesImperialUnits');
     final config = _configBox.get(_configKey);
     config?.usesImperialUnits = usesImperialUnits;
-    config?.save();
+    await config?.save();
   }
 
   Future<double> getKcalAdjustment() async {
@@ -69,29 +69,84 @@ class ConfigDataSource {
     _log.fine('Updating config kcalAdjustment to $kcalAdjustment');
     final config = _configBox.get(_configKey);
     config?.userKcalAdjustment = kcalAdjustment;
-    config?.save();
+    await config?.save();
   }
 
   Future<void> setConfigCarbGoalPct(double carbGoalPct) async {
     _log.fine('Updating config carbGoalPct to $carbGoalPct');
     final config = _configBox.get(_configKey);
     config?.userCarbGoalPct = carbGoalPct;
-    config?.save();
+    await config?.save();
   }
 
   Future<void> setConfigProteinGoalPct(double proteinGoalPct) async {
     _log.fine('Updating config proteinGoalPct to $proteinGoalPct');
     final config = _configBox.get(_configKey);
     config?.userProteinGoalPct = proteinGoalPct;
-    config?.save();
+    await config?.save();
   }
 
   Future<void> setConfigFatGoalPct(double fatGoalPct) async {
     _log.fine('Updating config fatGoalPct to $fatGoalPct');
     final config = _configBox.get(_configKey);
     config?.userFatGoalPct = fatGoalPct;
-    config?.save();
+    await config?.save();
   }
+
+  Future<void> setConfigShowActivityTracking(bool show) async {
+    _log.fine('Updating config showActivityTracking to $show');
+    final config = _configBox.get(_configKey);
+    config?.showActivityTracking = show;
+    await config?.save();
+  }
+
+  Future<void> setConfigShowMealMacros(bool show) async {
+    _log.fine('Updating config showMealMacros to $show');
+    final config = _configBox.get(_configKey);
+    config?.showMealMacros = show;
+    await config?.save();
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    _log.fine('Updating config notificationsEnabled to $enabled');
+    final config = _configBox.get(_configKey);
+    config?.notificationsEnabled = enabled;
+    await config?.save();
+  }
+
+  Future<void> setNotificationTime(int hour, int minute) async {
+    _log.fine('Updating config notification time to $hour:$minute');
+    final config = _configBox.get(_configKey);
+    config?.notificationHour = hour;
+    config?.notificationMinute = minute;
+    await config?.save();
+  }
+
+  Future<String?> getSelectedLocale() async {
+    final config = _configBox.get(_configKey);
+    final raw = config?.selectedLocale;
+    // Backward-compat: the project used to ship Czech as 'cz' (non-standard).
+    // It was renamed to the BCP-47 code 'cs' so iOS surfaces it correctly in
+    // its system language picker. Migrate any stored 'cz' value silently so
+    // existing users keep their language preference across the rename.
+    if (raw == 'cz') return 'cs';
+    return raw;
+  }
+
+  Future<void> setSelectedLocale(String? locale) async {
+    _log.fine('Updating config selectedLocale to $locale');
+    final config = _configBox.get(_configKey);
+    config?.selectedLocale = locale;
+    await config?.save();
+  }
+
+  Future<void> setConfigShowMicronutrients(bool show) async {
+    _log.fine('Updating config showMicronutrients to $show');
+    final config = _configBox.get(_configKey);
+    config?.showMicronutrients = show;
+    await config?.save();
+  }
+
 
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();

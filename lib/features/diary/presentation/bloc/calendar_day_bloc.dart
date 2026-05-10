@@ -10,6 +10,8 @@ import 'package:opennutritracker/core/domain/usecase/delete_user_activity_usecas
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_activity_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/macro_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
@@ -25,6 +27,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
   final DeleteUserActivityUsecase _deleteUserActivityUsecase;
   final GetTrackedDayUsecase _getTrackedDayUsecase;
   final AddTrackedDayUsecase _addTrackedDayUsecase;
+  final UpdateIntakeUsecase _updateIntakeUsecase;
+  final UpdateUserActivityUsecase _updateUserActivityUsecase;
 
   DateTime? _currentDay;
 
@@ -35,6 +39,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     this._deleteUserActivityUsecase,
     this._getTrackedDayUsecase,
     this._addTrackedDayUsecase,
+    this._updateIntakeUsecase,
+    this._updateUserActivityUsecase,
   ) : super(CalendarDayInitial()) {
     on<LoadCalendarDayEvent>((event, emit) async {
       emit(CalendarDayLoading());
@@ -98,6 +104,40 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     );
   }
 
+  Future<void> updateIntakeItem(
+    String intakeId,
+    Map<String, dynamic> fields,
+    DateTime day,
+  ) async {
+    final oldIntake = await _getIntakeUsecase.getIntakeById(intakeId);
+    assert(oldIntake != null);
+    final newIntake = await _updateIntakeUsecase.updateIntake(intakeId, fields);
+    assert(newIntake != null);
+    if (oldIntake!.amount > newIntake!.amount) {
+      await _addTrackedDayUsecase.removeDayCaloriesTracked(
+        day,
+        oldIntake.totalKcal - newIntake.totalKcal,
+      );
+      await _addTrackedDayUsecase.removeDayMacrosTracked(
+        day,
+        carbsTracked: oldIntake.totalCarbsGram - newIntake.totalCarbsGram,
+        fatTracked: oldIntake.totalFatsGram - newIntake.totalFatsGram,
+        proteinTracked: oldIntake.totalProteinsGram - newIntake.totalProteinsGram,
+      );
+    } else if (newIntake.amount > oldIntake.amount) {
+      await _addTrackedDayUsecase.addDayCaloriesTracked(
+        day,
+        newIntake.totalKcal - oldIntake.totalKcal,
+      );
+      await _addTrackedDayUsecase.addDayMacrosTracked(
+        day,
+        carbsTracked: newIntake.totalCarbsGram - oldIntake.totalCarbsGram,
+        fatTracked: newIntake.totalFatsGram - oldIntake.totalFatsGram,
+        proteinTracked: newIntake.totalProteinsGram - oldIntake.totalProteinsGram,
+      );
+    }
+  }
+
   Future<void> deleteUserActivityItem(
     BuildContext context,
     UserActivityEntity activityEntity,
@@ -119,6 +159,36 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
       proteinAmount: proteinAmount,
     );
     _updateDiaryPage(day);
+  }
+
+  Future<void> updateUserActivityItem(
+    UserActivityEntity activityEntity,
+    double newDuration,
+    DateTime day,
+  ) async {
+    final newActivity = await _updateUserActivityUsecase.updateUserActivity(
+      activityEntity,
+      newDuration,
+    );
+    assert(newActivity != null);
+    final kcalDiff = newActivity!.burnedKcal - activityEntity.burnedKcal;
+    if (kcalDiff > 0) {
+      await _addTrackedDayUsecase.increaseDayCalorieGoal(day, kcalDiff);
+      await _addTrackedDayUsecase.increaseDayMacroGoals(
+        day,
+        carbsAmount: MacroCalc.getTotalCarbsGoal(kcalDiff),
+        fatAmount: MacroCalc.getTotalFatsGoal(kcalDiff),
+        proteinAmount: MacroCalc.getTotalProteinsGoal(kcalDiff),
+      );
+    } else if (kcalDiff < 0) {
+      await _addTrackedDayUsecase.reduceDayCalorieGoal(day, kcalDiff.abs());
+      await _addTrackedDayUsecase.reduceDayMacroGoals(
+        day,
+        carbsAmount: MacroCalc.getTotalCarbsGoal(kcalDiff.abs()),
+        fatAmount: MacroCalc.getTotalFatsGoal(kcalDiff.abs()),
+        proteinAmount: MacroCalc.getTotalProteinsGoal(kcalDiff.abs()),
+      );
+    }
   }
 
   Future<void> _updateDiaryPage(DateTime day) async {

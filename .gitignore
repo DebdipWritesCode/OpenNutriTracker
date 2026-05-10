@@ -55,3 +55,7 @@ result
 
 # FVM Version Cache
 .fvm/
+
+# Hive test artefacts
+*.hive
+*.lock

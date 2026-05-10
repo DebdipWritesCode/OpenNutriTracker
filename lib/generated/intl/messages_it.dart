@@ -37,6 +37,33 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(count) =>
       "${count} elemento/i non è stato possibile recuperare da OpenFoodFacts.";
 
+  static String m8(rate) => "${rate} kg/settimana";
+
+  static String m9(rate) => "${rate} lbs/settimana";
+
+  static String m10(qty, unit) => "Per ${qty} ${unit}";
+
+  static String m11(time) => "Orario promemoria: ${time}";
+
+  static String m12(count) => "Importati ${count} pasti dal file CSV.";
+
+  static String m13(imported, skipped) =>
+      "Importati ${imported} pasti; ${skipped} righe ignorate per dati non validi.";
+
+  static String m14(count, size) => "${count} elementi · ${size}";
+
+  static String m15(count) => "${count} ingrediente/i";
+
+  static String m16(count) =>
+      "Importare questa ricetta con ${count} ingrediente(i)?";
+
+  static String m17(count) => "${count} selezionati";
+
+  static String m18(count) => "Eliminare ${count} ricetta/e?";
+
+
+  static String m19(count) => "Importare ${count} attività?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -46,13 +73,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aggiungi nuovo alimento:"),
         "addLabel": MessageLookupByLibrary.simpleMessage("Aggiungi"),
         "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
-            "Informazioni fornite\ndal\n\'2011 Compendium\ndelle Attività Fisiche\'"),
+            "Informazioni fornite\ndal\n\'2024 Compendium\ndelle Attività Fisiche\'"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Alimento personalizzato"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Maggiori informazioni su\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
             "Maggiori informazioni su\nOpenFoodFacts"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Ricetta personalizzata"),
         "additionalInfoLabelUnknown":
             MessageLookupByLibrary.simpleMessage("Alimento sconosciuto"),
         "ageLabel": MessageLookupByLibrary.simpleMessage("Età"),
@@ -79,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Salva"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("INIZIA"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("SI"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("calcio"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage(
                 "Distribuzione dei macronutrienti"),
@@ -89,11 +119,32 @@ class MessageLookup extends MessageLookupByLibrary {
             "Equazione dell\'Istituto di Medicina"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("Equazione TDEE"),
+        "caloriesProfileAveragedLabel":
+            MessageLookupByLibrary.simpleMessage("Riferimento medio (predefinito)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Riferimento di tipo estrogenico"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Non esiste una base calorica pubblicata per persone non binarie — le equazioni di riferimento si basano su campioni maschili e femminili. Per impostazione predefinita usiamo la media delle due, un punto di partenza neutrale che non ti chiede di rivelare nulla in più sul tuo corpo. Il cursore kcal in Impostazioni è sempre disponibile per la regolazione fine; questo è un punto di partenza, non una stima precisa."),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Riferimento calorie"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Riferimento di tipo testosteronico"),
         "carbohydrateLabel":
             MessageLookupByLibrary.simpleMessage("carboidrati"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("carboidrati"),
+        "carbsLabelShort": MessageLookupByLibrary.simpleMessage("c"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("colesterolo"),
+        "chooseWeeklyWeightGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ritmo peso settimanale"),
         "chooseWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Scegli obiettivo di peso"),
+        "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Rimuove i risultati di ricerca e scansione memorizzati localmente da Open Food Facts e FDC. La cache si ricostruisce automaticamente quando cerchi e scansioni prodotti. I tuoi pasti personalizzati non vengono toccati."),
+        "clearOffCacheConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Svuotare la cache?"),
+        "clearOffCacheLabel":
+            MessageLookupByLibrary.simpleMessage("Svuota cache"),
+        "clearOffCacheSubtitle": m14,
         "cmLabel": MessageLookupByLibrary.simpleMessage("cm"),
         "codeCopiedLabel":
             MessageLookupByLibrary.simpleMessage("Codice copiato"),
@@ -109,11 +160,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Vuoi creare un alimento personalizzato per il pasto?"),
         "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage(
             "Creare un alimento personalizzato?"),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Crea ricetta"),
+        "csvImportContributeOffAndroidLink":
+            MessageLookupByLibrary.simpleMessage("Android"),
+        "csvImportContributeOffIosLink":
+            MessageLookupByLibrary.simpleMessage("iOS"),
+        "csvImportContributeOffPrefix": MessageLookupByLibrary.simpleMessage(
+            "Hai un codice a barre? Contribuisci il prodotto a Open Food Facts:"),
+        "csvImportErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile leggere il file CSV. Controlla il formato e riprova."),
+        "csvImportPartialLabel": m13,
+        "csvImportSuccessLabel": m12,
+        "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Tutte le voci del diario che utilizzano questo pasto verranno rimosse."),
+        "customMealsDeleteConfirmTitle": MessageLookupByLibrary.simpleMessage(
+            "Eliminare il pasto personalizzato?"),
+        "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
+            "Nessun pasto personalizzato salvato."),
         "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
             "Regolazione kcal giornaliere:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Supporta lo sviluppo inviando dati di utilizzo anonimi"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Elimina tutto"),
+        "deleteSelectedRecipesConfirmTitle": m18,
         "deleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
             "Vuoi eliminare l\'alimento selezionato?"),
         "deleteTimeDialogPluralContent": MessageLookupByLibrary.simpleMessage(
@@ -126,15 +196,35 @@ class MessageLookup extends MessageLookupByLibrary {
         "dialogCopyLabel": MessageLookupByLibrary.simpleMessage("Copia a oggi"),
         "dialogDeleteLabel": MessageLookupByLibrary.simpleMessage("ELIMINA"),
         "dialogOKLabel": MessageLookupByLibrary.simpleMessage("OK"),
+        "diaryFutureDateWarning": MessageLookupByLibrary.simpleMessage(
+            "Stai modificando una data futura"),
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Diario"),
         "dinnerExample":
             MessageLookupByLibrary.simpleMessage("es. zuppa, pollo, vino ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Cena"),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Annulla"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Le modifiche non salvate andranno perse."),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("Annullare le modifiche?"),
         "disclaimerText": MessageLookupByLibrary.simpleMessage(
             "OpenNutriTracker non è un\'applicazione medica. Tutti i dati forniti non sono validati e dovrebbero essere utilizzati con cautela. Mantieni uno stile di vita sano e consulta un professionista se hai problemi. L\'uso durante malattie, gravidanza o allattamento non è raccomandato."),
+        "downloadSampleCsvAction":
+            MessageLookupByLibrary.simpleMessage("Pasti di esempio (csv)"),
+        "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Ricette di esempio (csv)"),
+        "duplicateMealDialogContent":
+            MessageLookupByLibrary.simpleMessage("Questo alimento è già stato aggiunto a questo pasto oggi. Aggiungerlo di nuovo?"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Duplica"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(copia)"),
         "editItemDialogTitle":
             MessageLookupByLibrary.simpleMessage("Modifica alimento"),
         "editMealLabel": MessageLookupByLibrary.simpleMessage("Modifica pasto"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Modifica ricetta"),
         "energyLabel": MessageLookupByLibrary.simpleMessage("energia"),
         "errorFetchingProductData": MessageLookupByLibrary.simpleMessage(
             "Errore durante il recupero dei dati del prodotto"),
@@ -149,21 +239,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorProductNotFound":
             MessageLookupByLibrary.simpleMessage("Prodotto non trovato"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Esporta"),
+        "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
+            "Esporta / Importa dati app"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Puoi esportare i dati dell\'app in un file zip e importarli successivamente. Utile per backup o trasferimento su un altro dispositivo.\n\nL\'app non utilizza servizi cloud per memorizzare i tuoi dati."),
         "exportImportErrorLabel": MessageLookupByLibrary.simpleMessage(
             "Errore di esportazione / importazione"),
-        "exportImportLabel":
-            MessageLookupByLibrary.simpleMessage("Esporta / Importa dati"),
         "exportImportSuccessLabel": MessageLookupByLibrary.simpleMessage(
             "Esportazione / Importazione riuscita"),
         "fatLabel": MessageLookupByLibrary.simpleMessage("grassi"),
+        "fatLabelShort": MessageLookupByLibrary.simpleMessage("g"),
         "fiberLabel": MessageLookupByLibrary.simpleMessage("fibre"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ femmina"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("femmina"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Sesso"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ maschio"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("maschio"),
+        "genderNonBinaryLabel":
+            MessageLookupByLibrary.simpleMessage("non binario"),
         "goalGainWeight":
             MessageLookupByLibrary.simpleMessage("Aumentare peso"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Obiettivo"),
@@ -175,6 +268,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "heightLabel": MessageLookupByLibrary.simpleMessage("Altezza"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Home"),
         "importAction": MessageLookupByLibrary.simpleMessage("Importa"),
+        "importActivityConfirmContent":
+            MessageLookupByLibrary.simpleMessage("Queste attività verranno aggiunte a oggi."),
+        "importActivityConfirmTitle": m19,
+        "importActivityLabel":
+            MessageLookupByLibrary.simpleMessage("Importa allenamento condiviso"),
+        "importActivitySuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Allenamento importato"),
+        "importCustomFoodDataDescription": MessageLookupByLibrary.simpleMessage(
+            "Importa i tuoi pasti da un file CSV. Scarica un esempio per vedere il formato delle colonne e i campi obbligatori."),
+        "importCustomFoodDataLabel": MessageLookupByLibrary.simpleMessage(
+            "Importa dati alimentari personalizzati"),
         "importMealConfirmContent": m4,
         "importMealConfirmTitle": m5,
         "importMealErrorLabel":
@@ -183,17 +287,31 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Importa pasto condiviso"),
         "importMealSuccessLabel":
             MessageLookupByLibrary.simpleMessage("Pasto importato"),
+        "importMealsCsvAction":
+            MessageLookupByLibrary.simpleMessage("Importa pasti (csv)"),
         "importOffFetchFailedLabel": m6,
+        "importRecipeConfirmContent": m16,
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile leggere il codice della ricetta"),
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Importa ricetta"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Ricetta importata"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Importa ricette (csv)"),
         "infoAddedActivityLabel":
             MessageLookupByLibrary.simpleMessage("Nuova attività aggiunta"),
         "infoAddedIntakeLabel":
             MessageLookupByLibrary.simpleMessage("Nuova assunzione aggiunta"),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("ferro"),
         "itemDeletedSnackbar":
             MessageLookupByLibrary.simpleMessage("alimento eliminato"),
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Alimento aggiornato"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal rimanenti"),
+        "kcalTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("kcal in eccesso"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -201,12 +319,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Pranzo"),
         "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
             "Distribuzione dei macronutrienti:"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("magnesio"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Marche"),
         "mealCarbsLabel":
             MessageLookupByLibrary.simpleMessage("carboidrati per"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("grassi per"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Nome pasto"),
+        "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
+            "Il nome del pasto deve contenere almeno una lettera"),
+        "mealNutrientsPerQtyLabel": m10,
+        "mealNutrientsTotalLabel":
+            MessageLookupByLibrary.simpleMessage("Quantità totale"),
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("proteine per 100 g/ml"),
         "mealSizeLabel":
@@ -214,9 +338,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealSizeLabelImperial":
             MessageLookupByLibrary.simpleMessage("Dimensione pasto (oz/fl oz)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Unità pasto"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Micronutrienti"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
         "missingProductInfo": MessageLookupByLibrary.simpleMessage(
             "Prodotto senza informazioni su kcal o macronutrienti"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("grassi monoinsaturi"),
+        "newCustomMealLabel": MessageLookupByLibrary.simpleMessage(
+            "Nuovo alimento personalizzato"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("niacina (B3)"),
         "noActivityRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
             "Nessuna attività aggiunta di recente"),
         "noMealsRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
@@ -279,6 +408,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Per iniziare, l\'app ha bisogno di alcune informazioni su di te per calcolare il tuo obiettivo calorico giornaliero.\nTutte le informazioni su di te sono memorizzate in modo sicuro sul tuo dispositivo."),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("kcal al giorno"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Non esiste una base calorica pubblicata per persone non binarie, quindi per impostazione predefinita usiamo una media delle formule maschili e femminili — un punto di partenza, non una stima precisa. Puoi regolare in qualsiasi momento da Impostazioni → Calcoli."),
         "onboardingOverviewLabel":
             MessageLookupByLibrary.simpleMessage("Panoramica"),
         "onboardingSaveUserError":
@@ -300,6 +431,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingYourMacrosGoalLabel": MessageLookupByLibrary.simpleMessage(
             "I tuoi obiettivi di macronutrienti:"),
         "ozUnit": MessageLookupByLibrary.simpleMessage("oz"),
+        "paActiveVideoGames":
+            MessageLookupByLibrary.simpleMessage("videogiochi attivi"),
+        "paActiveVideoGamesDesc":
+            MessageLookupByLibrary.simpleMessage("Wii Sports, Dance Dance Revolution, generale"),
         "paAmericanFootballGeneral":
             MessageLookupByLibrary.simpleMessage("football americano"),
         "paAmericanFootballGeneralDesc":
@@ -370,6 +505,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("battuta, lancio, fielding"),
         "paCroquet": MessageLookupByLibrary.simpleMessage("croquet"),
         "paCroquetDesc": MessageLookupByLibrary.simpleMessage("generale"),
+        "paCrossCountrySkiing":
+            MessageLookupByLibrary.simpleMessage("sci di fondo"),
+        "paCrossCountrySkiingDesc":
+            MessageLookupByLibrary.simpleMessage("fondo, generale"),
         "paCurling": MessageLookupByLibrary.simpleMessage("curling"),
         "paCurlingDesc": MessageLookupByLibrary.simpleMessage("generale"),
         "paDancingAerobicGeneral":
@@ -414,15 +553,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "paHeadingDancing": MessageLookupByLibrary.simpleMessage("danza"),
         "paHeadingRunning": MessageLookupByLibrary.simpleMessage("corsa"),
         "paHeadingSports": MessageLookupByLibrary.simpleMessage("sport"),
-        "pasteCodeHint": MessageLookupByLibrary.simpleMessage(
-            "Incolla qui il codice del pasto condiviso"),
-        "pasteCodeLabel":
-            MessageLookupByLibrary.simpleMessage("Incolla codice"),
         "paHeadingWalking": MessageLookupByLibrary.simpleMessage("camminata"),
         "paHeadingWaterActivities":
             MessageLookupByLibrary.simpleMessage("attività acquatiche"),
         "paHeadingWinterActivities":
             MessageLookupByLibrary.simpleMessage("attività invernali"),
+        "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
+            "allenamento intervallato ad alta intensità"),
+        "paHighIntensityIntervalExerciseDesc":
+            MessageLookupByLibrary.simpleMessage("sforzo moderato"),
+        "paHighIntensityIntervalExerciseVigorous":
+            MessageLookupByLibrary.simpleMessage(
+                "allenamento intervallato ad alta intensità"),
+        "paHighIntensityIntervalExerciseVigorousDesc":
+            MessageLookupByLibrary.simpleMessage(
+                "burpees, mountain climber, squat jump, Tabata, sforzo intenso"),
         "paHikingCrossCountry":
             MessageLookupByLibrary.simpleMessage("escursionismo"),
         "paHikingCrossCountryDesc":
@@ -474,6 +619,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("arrampicata"),
         "paMountainClimbingDesc":
             MessageLookupByLibrary.simpleMessage("roccia o montagna"),
+        "paNordicWalking":
+            MessageLookupByLibrary.simpleMessage("nordic walking"),
         "paOrienteering": MessageLookupByLibrary.simpleMessage("orienteering"),
         "paOrienteeringDesc": MessageLookupByLibrary.simpleMessage("generale"),
         "paPaddleBoarding":
@@ -485,6 +632,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "paPaddleball": MessageLookupByLibrary.simpleMessage("paddleball"),
         "paPaddleballDesc":
             MessageLookupByLibrary.simpleMessage("casuale, generale"),
+        "paPickleball": MessageLookupByLibrary.simpleMessage("pickleball"),
+        "paPilates": MessageLookupByLibrary.simpleMessage("pilates"),
         "paPoloHorse": MessageLookupByLibrary.simpleMessage("polo"),
         "paPoloHorseDesc": MessageLookupByLibrary.simpleMessage("a cavallo"),
         "paRacquetball": MessageLookupByLibrary.simpleMessage("racquetball"),
@@ -493,6 +642,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("allenamento con i pesi"),
         "paResistanceTrainingDesc": MessageLookupByLibrary.simpleMessage(
             "sollevamento pesi, pesi liberi, nautilus o universal"),
+        "paResistanceTrainingVigorous":
+            MessageLookupByLibrary.simpleMessage("allenamento di forza (intenso)"),
+        "paResistanceTrainingVigorousDesc":
+            MessageLookupByLibrary.simpleMessage("sforzo intenso, powerlifting o bodybuilding"),
         "paRodeoSportGeneralModerate":
             MessageLookupByLibrary.simpleMessage("sport da rodeo"),
         "paRodeoSportGeneralModerateDesc":
@@ -545,6 +698,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("spalare neve"),
         "paSnowShovingModerateDesc":
             MessageLookupByLibrary.simpleMessage("a mano, sforzo moderato"),
+        "paSnowshoeing":
+            MessageLookupByLibrary.simpleMessage("racchette da neve"),
         "paSoccerGeneral": MessageLookupByLibrary.simpleMessage("calcio"),
         "paSoccerGeneralDesc":
             MessageLookupByLibrary.simpleMessage("casuale, generale"),
@@ -554,6 +709,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "lancio veloce o lento, generale"),
         "paSquashGeneral": MessageLookupByLibrary.simpleMessage("squash"),
         "paSquashGeneralDesc": MessageLookupByLibrary.simpleMessage("generale"),
+        "paStretching": MessageLookupByLibrary.simpleMessage("stretching"),
+        "paStretchingDesc":
+            MessageLookupByLibrary.simpleMessage("leggero, generale"),
         "paSurfing": MessageLookupByLibrary.simpleMessage("surf"),
         "paSurfingDesc":
             MessageLookupByLibrary.simpleMessage("body o board, generale"),
@@ -581,6 +739,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "paTrampolineLight": MessageLookupByLibrary.simpleMessage("trampolino"),
         "paTrampolineLightDesc":
             MessageLookupByLibrary.simpleMessage("ricreativo"),
+        "paTreadmillRunning":
+            MessageLookupByLibrary.simpleMessage("corsa sul tapis roulant"),
+        "paTreadmillRunningDesc":
+            MessageLookupByLibrary.simpleMessage("sul tapis roulant, generale"),
         "paUnicyclingGeneral":
             MessageLookupByLibrary.simpleMessage("monociclo"),
         "paUnicyclingGeneralDesc":
@@ -628,16 +790,79 @@ class MessageLookup extends MessageLookupByLibrary {
             "Lavoro prevalentemente camminando, correndo o trasportando pesi e attività attive nel tempo libero"),
         "palVeryActiveLabel":
             MessageLookupByLibrary.simpleMessage("Molto attivo"),
+        "pasteCodeHint": MessageLookupByLibrary.simpleMessage(
+            "Incolla qui il codice del pasto condiviso"),
+        "pasteCodeLabel":
+            MessageLookupByLibrary.simpleMessage("Incolla codice"),
         "per100gmlLabel": MessageLookupByLibrary.simpleMessage("Per 100g/ml"),
         "perServingLabel": MessageLookupByLibrary.simpleMessage("Per porzione"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("fosforo"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("grassi polinsaturi"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("potassio"),
         "privacyPolicyLabel":
             MessageLookupByLibrary.simpleMessage("Privacy policy"),
         "profileLabel": MessageLookupByLibrary.simpleMessage("Profilo"),
         "proteinLabel": MessageLookupByLibrary.simpleMessage("proteine"),
+        "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Quantità"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Ho letto e accetto la privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recenti"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiungi ingrediente"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Le voci del diario registrate da questa ricetta saranno mantenute."),
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Eliminare ricetta?"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Descrizione (opzionale)"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Quantità"),
+        "recipeIngredientCountLabel": m15,
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Unità"),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Ingredienti"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Il peso totale deve essere maggiore di zero"),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Registra questa ricetta"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Nome della ricetta"),
+        "recipeNameRequiredLabel": MessageLookupByLibrary.simpleMessage(
+            "La ricetta ha bisogno di un nome"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Aggiungi almeno un ingrediente"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Nessun ingrediente ancora"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("Per 100 g"),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Nutrizione (totale)"),
+        "recipeSaveErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile salvare la ricetta."),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Salva ricetta"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Permette di registrare questa ricetta per porzioni invece che in grammi."),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Porzioni (opzionale)"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Separati da virgola, es. \"colazione, vegano\""),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Tag"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "Predefinito come somma degli ingredienti. I liquidi sono approssimati a 1 ml ≈ 1 g."),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Peso totale (g)"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Crea un pasto da più ingredienti e riutilizzalo come qualsiasi altro alimento."),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("Nessuna ricetta ancora"),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("Tutti"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Ricette"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile caricare le ricette. Riprova più tardi."),
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Vuoi segnalare un errore allo sviluppatore?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Riprova"),
@@ -660,6 +885,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Seleziona livello di attività"),
         "selectWeightDialogLabel":
             MessageLookupByLibrary.simpleMessage("Seleziona peso"),
+        "selectionCountLabel": m17,
         "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
             "Invia dati di utilizzo anonimi"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Porzione"),
@@ -673,6 +899,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Feedback"),
         "settingsCalculationsLabel":
             MessageLookupByLibrary.simpleMessage("Calcoli"),
+        "settingsCustomMealsLabel":
+            MessageLookupByLibrary.simpleMessage("Pasti personalizzati"),
         "settingsDisclaimerLabel":
             MessageLookupByLibrary.simpleMessage("Disclaimer"),
         "settingsDistanceLabel":
@@ -680,15 +908,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsImperialLabel":
             MessageLookupByLibrary.simpleMessage("Imperiale (lbs, ft, oz)"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Impostazioni"),
+        "settingsLanguageLabel":
+            MessageLookupByLibrary.simpleMessage("Lingua"),
         "settingsLicensesLabel":
             MessageLookupByLibrary.simpleMessage("Licenze"),
         "settingsMassLabel": MessageLookupByLibrary.simpleMessage("Massa"),
         "settingsMetricLabel":
             MessageLookupByLibrary.simpleMessage("Metrico (kg, cm, ml)"),
+        "settingsNotificationsLabel":
+            MessageLookupByLibrary.simpleMessage("Promemoria giornaliero"),
+        "settingsNotificationsTimeLabel": m11,
+        "notificationsPermissionDeniedSnack":
+            MessageLookupByLibrary.simpleMessage("Autorizzazione alle notifiche negata."),
+        "notificationsDailyReminderTitle":
+            MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
+        "notificationsDailyReminderBody":
+            MessageLookupByLibrary.simpleMessage("Non dimenticare di registrare i tuoi pasti oggi!"),
         "settingsPrivacySettings":
             MessageLookupByLibrary.simpleMessage("Impostazioni privacy"),
         "settingsReportErrorLabel":
             MessageLookupByLibrary.simpleMessage("Segnala errore"),
+        "settingsShowActivityTracking":
+            MessageLookupByLibrary.simpleMessage("Mostra tracciamento attività"),
+        "settingsShowMealMacros":
+            MessageLookupByLibrary.simpleMessage("Mostra macro pasto"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mostra micronutrienti"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Codice sorgente"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Sistema"),
@@ -700,17 +944,36 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Predefinito del sistema"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Unità"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Volume"),
+        "shareActivityLabel":
+            MessageLookupByLibrary.simpleMessage("Condividi allenamento"),
         "shareCodeLabel":
             MessageLookupByLibrary.simpleMessage("Condividi codice"),
         "shareMealLabel":
             MessageLookupByLibrary.simpleMessage("Condividi pasto"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Condividi ricetta"),
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "es. mela, gelato, cioccolato ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Spuntino"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("sodio"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("zuccheri"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("assunte"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("grassi trans"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Unità"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamina A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamina B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("vitamina B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamina C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamina D"),
+        "warningLabel": MessageLookupByLibrary.simpleMessage("Avviso"),
+        "weeklyWeightGoalKgPerWeek": m8,
+        "weeklyWeightGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ritmo settimanale"),
+        "weeklyWeightGoalLbsPerWeek": m9,
+        "weeklyWeightGoalNoneLabel":
+            MessageLookupByLibrary.simpleMessage("Non impostato"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
       };
 }

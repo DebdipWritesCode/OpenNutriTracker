@@ -11,17 +11,19 @@ class ConfigRepository {
 
   Future<void> updateConfig(ConfigEntity configEntity) async {
     final configDBO = ConfigDBO.fromConfigEntity(configEntity);
-    _configDataSource.addConfig(configDBO);
+    await _configDataSource.addConfig(configDBO);
   }
 
   Future<void> setConfigDisclaimer(bool hasAcceptedDisclaimer) async {
-    _configDataSource.setConfigDisclaimer(hasAcceptedDisclaimer);
+    await _configDataSource.setConfigDisclaimer(hasAcceptedDisclaimer);
   }
 
   Future<void> setConfigHasAcceptedAnonymousData(
     bool hasAcceptedAnonymousData,
   ) async {
-    _configDataSource.setConfigAcceptedAnonymousData(hasAcceptedAnonymousData);
+    await _configDataSource.setConfigAcceptedAnonymousData(
+      hasAcceptedAnonymousData,
+    );
   }
 
   Future<bool> getConfigHasAcceptedAnonymousData() async {
@@ -50,7 +52,7 @@ class ConfigRepository {
   }
 
   Future<void> setConfigUsesImperialUnits(bool usesImperialUnits) async {
-    _configDataSource.setConfigUsesImperialUnits(usesImperialUnits);
+    await _configDataSource.setConfigUsesImperialUnits(usesImperialUnits);
   }
 
   Future<double> getConfigKcalAdjustment() async {
@@ -58,12 +60,40 @@ class ConfigRepository {
   }
 
   Future<void> setConfigKcalAdjustment(double kcalAdjustment) async {
-    _configDataSource.setConfigKcalAdjustment(kcalAdjustment);
+    await _configDataSource.setConfigKcalAdjustment(kcalAdjustment);
+  }
+
+  Future<void> setConfigShowActivityTracking(bool show) async {
+    await _configDataSource.setConfigShowActivityTracking(show);
+  }
+
+  Future<void> setConfigShowMealMacros(bool show) async {
+    await _configDataSource.setConfigShowMealMacros(show);
   }
 
   Future<void> setUserMacroPct(double carbs, double protein, double fat) async {
-    _configDataSource.setConfigCarbGoalPct(carbs);
-    _configDataSource.setConfigProteinGoalPct(protein);
-    _configDataSource.setConfigFatGoalPct(fat);
+    await _configDataSource.setConfigCarbGoalPct(carbs);
+    await _configDataSource.setConfigProteinGoalPct(protein);
+    await _configDataSource.setConfigFatGoalPct(fat);
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    await _configDataSource.setNotificationsEnabled(enabled);
+  }
+
+  Future<void> setNotificationTime(int hour, int minute) async {
+    await _configDataSource.setNotificationTime(hour, minute);
+  }
+
+  Future<String?> getSelectedLocale() async {
+    return await _configDataSource.getSelectedLocale();
+  }
+
+  Future<void> setSelectedLocale(String? locale) async {
+    await _configDataSource.setSelectedLocale(locale);
+  }
+
+  Future<void> setConfigShowMicronutrients(bool show) async {
+    await _configDataSource.setConfigShowMicronutrients(show);
   }
 }

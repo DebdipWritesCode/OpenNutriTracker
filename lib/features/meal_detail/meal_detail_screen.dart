@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -44,6 +45,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
   final quantityTextController = TextEditingController();
   late bool _usesImperialUnits;
+  bool _showMicronutrients = false;
 
   String _initialUnit = "";
   String _initialQuantity = "";
@@ -51,8 +53,15 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   @override
   void initState() {
     _mealDetailBloc = locator<MealDetailBloc>();
-
+    _loadMicronutrientSetting();
     super.initState();
+  }
+
+  Future<void> _loadMicronutrientSetting() async {
+    final config = await locator<GetConfigUsecase>().getConfig();
+    if (mounted) {
+      setState(() => _showMicronutrients = config.showMicronutrients);
+    }
   }
 
   @override
@@ -107,12 +116,12 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocBuilder<MealDetailBloc, MealDetailState>(
-        bloc: _mealDetailBloc,
-        builder: (context, state) {
-          if (state is MealDetailInitial) {
-            return Scaffold(
-              body: _getLoadedContent(
+      child: Scaffold(
+        body: BlocBuilder<MealDetailBloc, MealDetailState>(
+          bloc: _mealDetailBloc,
+          builder: (context, state) {
+            if (state is MealDetailInitial) {
+              return _getLoadedContent(
                 context,
                 state.totalQuantityConverted,
                 state.totalKcal,
@@ -120,21 +129,26 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 state.totalFat,
                 state.totalProtein,
                 state.selectedUnit,
-              ),
-              bottomSheet: MealDetailBottomSheet(
-                product: meal,
-                day: _day,
-                intakeTypeEntity: intakeTypeEntity,
-                selectedUnit: state.selectedUnit,
-                mealDetailBloc: _mealDetailBloc,
-                quantityTextController: quantityTextController,
-                onQuantityOrUnitChanged: onQuantityOrUnitChanged,
-              ),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+        bottomSheet: BlocSelector<MealDetailBloc, MealDetailState, String>(
+          bloc: _mealDetailBloc,
+          selector: (state) => state.selectedUnit,
+          builder: (context, selectedUnit) {
+            return MealDetailBottomSheet(
+              product: meal,
+              day: _day,
+              intakeTypeEntity: intakeTypeEntity,
+              selectedUnit: selectedUnit,
+              mealDetailBloc: _mealDetailBloc,
+              quantityTextController: quantityTextController,
+              onQuantityOrUnitChanged: onQuantityOrUnitChanged,
             );
-          } else {
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -276,6 +290,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     usesImperialUnits: _usesImperialUnits,
                     servingQuantity: meal.servingQuantity,
                     servingUnit: meal.servingUnit,
+                    showMicronutrients: _showMicronutrients,
                   ),
                   const SizedBox(height: 32.0),
                   MealInfoButton(url: meal.url, source: meal.source),

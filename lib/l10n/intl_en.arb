@@ -5,11 +5,77 @@
   "alphaVersionName": "[Alpha]",
   "betaVersionName": "[Beta]",
   "addLabel": "Add",
+  "warningLabel": "Warning",
+  "duplicateMealDialogContent": "This food has already been added to this meal today. Add it again?",
   "createCustomDialogTitle": "Create custom meal item?",
   "createCustomDialogContent": "Do you want create a custom meal item?",
   "settingsLabel": "Settings",
   "homeLabel": "Home",
   "diaryLabel": "Diary",
+  "diaryFutureDateWarning": "You are editing a future date",
+  "recipesLabel": "Recipes",
+  "recipesEmptyLabel": "No recipes yet",
+  "recipesEmptyHint": "Build a meal from multiple ingredients and reuse it like any other food.",
+  "createRecipeTitle": "Create Recipe",
+  "newCustomMealLabel": "New Custom Food",
+  "discardChangesTitle": "Discard changes?",
+  "discardChangesContent": "Your unsaved changes will be lost.",
+  "discardChangesConfirmLabel": "Discard",
+  "editRecipeTitle": "Edit Recipe",
+  "recipeNameLabel": "Recipe name",
+  "recipeDescriptionLabel": "Description (optional)",
+  "recipeServingsCountLabel": "Servings (optional)",
+  "recipeServingsCountHelper": "Lets you log this recipe by serving instead of grams.",
+  "recipeIngredientsLabel": "Ingredients",
+  "recipeAddIngredientLabel": "Add Ingredient",
+  "recipeNoIngredientsLabel": "No ingredients yet",
+  "recipeTotalWeightLabel": "Total weight (g)",
+  "recipeTotalWeightHelper": "Defaults to sum of ingredients. Liquids approximated as 1 ml ≈ 1 g.",
+  "recipeNutritionPreviewLabel": "Nutrition (total)",
+  "recipeNutritionPer100Label": "Per 100 g",
+  "recipeIngredientAmountLabel": "Amount",
+  "recipeIngredientUnitLabel": "Unit",
+  "recipeSaveLabel": "Save Recipe",
+  "recipeSaveErrorLabel": "Could not save recipe.",
+  "recipeNameRequiredLabel": "Recipe needs a name",
+  "recipeNeedsIngredientsLabel": "Add at least one ingredient",
+  "recipeInvalidTotalWeightLabel": "Total weight must be greater than zero",
+  "shareRecipeLabel": "Share recipe",
+  "duplicateRecipeLabel": "Duplicate",
+  "duplicateRecipeNameSuffix": "(copy)",
+  "recipeTagsLabel": "Tags",
+  "recipeTagsHelper": "Comma-separated, e.g. \"breakfast, vegan\"",
+  "recipesFilterAllLabel": "All",
+  "selectionCountLabel": "{count} selected",
+  "@selectionCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "importRecipesCsvAction": "Import recipes (csv)",
+  "deleteSelectedRecipesConfirmTitle": "Delete {count} recipe(s)?",
+  "@deleteSelectedRecipesConfirmTitle": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "importRecipeLabel": "Import recipe",
+  "importRecipeSuccessLabel": "Recipe imported",
+  "importRecipeErrorLabel": "Could not parse recipe code",
+  "recipesLoadErrorLabel": "Could not load recipes. Try again later.",
+  "importRecipeConfirmContent": "Import this recipe with {count} ingredient(s)?",
+  "@importRecipeConfirmContent": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "recipeDeleteConfirmTitle": "Delete recipe?",
+  "recipeDeleteConfirmContent": "Past diary entries logged from this recipe will be kept.",
+  "recipeLogCtaLabel": "Log this Recipe",
+  "recipeIngredientCountLabel": "{count} ingredient(s)",
+  "@recipeIngredientCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "profileLabel": "Profile",
   "searchLabel": "Search",
   "searchProductsPage": "Products",
@@ -58,6 +124,20 @@
   "settingsDisclaimerLabel": "Disclaimer",
   "settingsReportErrorLabel": "Report Error",
   "settingsPrivacySettings": "Privacy Settings",
+  "settingsShowActivityTracking": "Show Activity Tracking",
+  "settingsShowMealMacros": "Show Meal Macros",
+  "settingsNotificationsLabel": "Daily Reminder",
+  "settingsNotificationsTimeLabel": "Reminder time: {time}",
+  "@settingsNotificationsTimeLabel": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsPermissionDeniedSnack": "Notification permission denied.",
+  "notificationsDailyReminderTitle": "OpenNutriTracker",
+  "notificationsDailyReminderBody": "Don't forget to log your meals today!",
   "settingsSourceCodeLabel": "Source Code",
   "settingFeedbackLabel": "Feedback",
   "settingAboutLabel": "About",
@@ -65,6 +145,7 @@
   "settingsSystemLabel": "System",
   "settingsMetricLabel": "Metric (kg, cm, ml)",
   "settingsImperialLabel": "Imperial (lbs, ft, oz)",
+  "settingsShowMicronutrientsLabel": "Show Micronutrients",
   "settingsDistanceLabel": "Distance",
   "settingsVolumeLabel": "Volume",
   "disclaimerText": "OpenNutriTracker is not a medical application. All data provided is not validated and should be used with caution. Please maintain a healthy lifestyle and consult a professional if you have any problems. Use during illness, pregnancy or lactation is not recommended.",
@@ -78,12 +159,48 @@
   "calculationsMacrosDistribution": "{pctCarbs}% carbs, {pctFats}% fats, {pctProteins}% proteins",
   "dailyKcalAdjustmentLabel": "Daily Kcal adjustment:",
   "macroDistributionLabel": "Macronutrient Distribution:",
-  "exportImportLabel": "Export / Import data",
+  "settingsCustomMealsLabel": "Custom Meals",
+  "customMealsEmptyLabel": "No custom meals saved yet.",
+  "customMealsDeleteConfirmTitle": "Delete custom meal?",
+  "customMealsDeleteConfirmContent": "All diary entries using this meal will also be removed.",
+  "exportImportAppDataLabel": "Export / Import App Data",
+  "importCustomFoodDataLabel": "Import Custom Food Data",
+  "importCustomFoodDataDescription": "Import your own meals from a CSV file. Download a sample to see the expected column shape and required fields.",
+  "clearOffCacheLabel": "Clear cached items",
+  "clearOffCacheSubtitle": "{count} item(s) · {size}",
+  "@clearOffCacheSubtitle": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "size": {"type": "String"}
+    }
+  },
+  "clearOffCacheConfirmTitle": "Clear cached items?",
+  "clearOffCacheConfirmContent": "Removes the locally cached search and scan results from Open Food Facts and FDC. The cache rebuilds automatically as you search and scan products. Your custom meals are not affected.",
   "exportImportDescription": "You can export the app data to a zip file and import it later. This is useful if you want to backup your data or transfer it to another device.\n\nThe app does not use any cloud service to store your data.",
   "exportImportSuccessLabel": "Export / Import successful",
   "exportImportErrorLabel": "Export / Import error",
   "exportAction": "Export",
   "importAction": "Import",
+  "downloadSampleCsvAction": "Sample meals (csv)",
+  "downloadSampleRecipesCsvAction": "Sample recipes (csv)",
+  "importMealsCsvAction": "Import meals (csv)",
+  "csvImportSuccessLabel": "Imported {count} meal(s) from the CSV file.",
+  "@csvImportSuccessLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "csvImportPartialLabel": "Imported {imported} meal(s); {skipped} row(s) were skipped due to invalid data.",
+  "@csvImportPartialLabel": {
+    "placeholders": {
+      "imported": {"type": "int"},
+      "skipped": {"type": "int"}
+    }
+  },
+  "csvImportErrorLabel": "Could not read CSV file. Check the format and try again.",
+  "csvImportContributeOffPrefix": "Have a barcode? Help everyone by contributing the product to Open Food Facts:",
+  "csvImportContributeOffAndroidLink": "Android",
+  "csvImportContributeOffIosLink": "iOS",
   "addItemLabel": "Add new Item:",
   "activityLabel": "Activity",
   "activityExample": "e.g. running, biking, yoga ...",
@@ -107,29 +224,45 @@
   "copyOrDeleteTimeDialogContent": "With \"Copy to today\" you can copy the meal to today. With \"Delete\" you can delete the meal.",
   "dialogCopyLabel": "Copy to today",
   "dialogDeleteLabel": "DELETE",
-
   "deleteAllLabel": "Delete all",
-
   "shareMealLabel": "Share meal",
   "importMealLabel": "Import shared meal",
   "importMealConfirmTitle": "Import {count} items?",
   "@importMealConfirmTitle": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "importMealConfirmContent": "These items will be added to your {mealType}.",
   "@importMealConfirmContent": {
     "placeholders": {
-      "mealType": { "type": "String" }
+      "mealType": {
+        "type": "String"
+      }
     }
   },
   "importMealSuccessLabel": "Meal imported",
   "importMealErrorLabel": "Invalid QR code",
+  "shareActivityLabel": "Share workout",
+  "importActivityLabel": "Import shared workout",
+  "importActivityConfirmTitle": "Import {count} activities?",
+  "@importActivityConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importActivityConfirmContent": "These activities will be added to today.",
+  "importActivitySuccessLabel": "Workout imported",
   "importOffFetchFailedLabel": "{count} item(s) could not be fetched from OpenFoodFacts.",
   "@importOffFetchFailedLabel": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "copyCodeLabel": "Copy code",
@@ -137,7 +270,6 @@
   "codeCopiedLabel": "Code copied",
   "pasteCodeLabel": "Paste code",
   "pasteCodeHint": "Paste the shared meal code here",
-
   "suppliedLabel": "supplied",
   "burnedLabel": "burned",
   "kcalLeftLabel": "kcal left",
@@ -145,20 +277,41 @@
   "nutritionInfoLabel": "Nutrition Information",
   "kcalLabel": "kcal",
   "carbsLabel": "carbs",
+  "carbsLabelShort": "c",
   "fatLabel": "fat",
+  "fatLabelShort": "f",
   "proteinLabel": "protein",
+  "proteinLabelShort": "p",
   "energyLabel": "energy",
   "saturatedFatLabel": "saturated fat",
   "carbohydrateLabel": "carbohydrate",
   "sugarLabel": "sugar",
   "fiberLabel": "fiber",
+  "monounsaturatedFatLabel": "monounsaturated fat",
+  "polyunsaturatedFatLabel": "polyunsaturated fat",
+  "transFatLabel": "trans fat",
+  "cholesterolLabel": "cholesterol",
+  "sodiumLabel": "sodium",
+  "potassiumLabel": "potassium",
+  "magnesiumLabel": "magnesium",
+  "calciumLabel": "calcium",
+  "ironLabel": "iron",
+  "zincLabel": "zinc",
+  "phosphorusLabel": "phosphorus",
+  "vitaminALabel": "vitamin A",
+  "vitaminCLabel": "vitamin C",
+  "vitaminDLabel": "vitamin D",
+  "vitaminB6Label": "vitamin B6",
+  "vitaminB12Label": "vitamin B12",
+  "niacinLabel": "niacin (B3)",
+  "micronutrientsLabel": "Micronutrients",
   "per100gmlLabel": "Per 100g/ml",
   "additionalInfoLabelOFF": "More Information at\nOpenFoodFacts",
-  "offDisclaimer": "The data provided to you by this app are retrieved from the Open Food Facts database. No guarantees can be made for the accuracy, completeness, or reliability of the information provided. The data are provided “as is” and the originating source for the data (Open Food Facts) is not liable for any damages arising out of the use of the data.",
+  "offDisclaimer": "The data provided to you by this app are retrieved from the Open Food Facts database. No guarantees can be made for the accuracy, completeness, or reliability of the information provided. The data are provided \"as is\" and the originating source for the data (Open Food Facts) is not liable for any damages arising out of the use of the data.",
   "additionalInfoLabelFDC": "More Information at\nFoodData Central",
   "additionalInfoLabelUnknown": "Unknown Meal Item",
   "additionalInfoLabelCustom": "Custom Meal Item",
-  "additionalInfoLabelCompendium2011": "Information provided\n by the \n'2011 Compendium\n of Physical Activities'",
+  "additionalInfoLabelCompendium2011": "Information provided\n by the \n'2024 Compendium\n of Physical Activities'",
   "quantityLabel": "Quantity",
   "baseQuantityLabel": "Base quantity (g/ml)",
   "unitLabel": "Unit",
@@ -174,6 +327,7 @@
   "infoAddedActivityLabel": "Added new activity",
   "editMealLabel": "Edit meal",
   "mealNameLabel": "Meal name",
+  "mealNameValidationError": "Meal name must contain at least one letter",
   "mealBrandsLabel": "Brands",
   "mealSizeLabel": "Meal size (g/ml)",
   "mealSizeLabelImperial": "Meal size (oz/fl oz)",
@@ -182,10 +336,22 @@
   "servingSizeLabelMetric": "Serving size (g/ml)",
   "servingSizeLabelImperial": "Serving size (oz/fl oz)",
   "mealUnitLabel": "Meal unit",
-  "mealKcalLabel": "kcal per",
-  "mealCarbsLabel": "carbs per",
-  "mealFatLabel": "fat per",
-  "mealProteinLabel": "protein per 100 g/ml",
+  "mealKcalLabel": "kcal",
+  "mealCarbsLabel": "Carbohydrates (g)",
+  "mealFatLabel": "Fat (g)",
+  "mealProteinLabel": "Protein (g)",
+  "mealNutrientsPerQtyLabel": "Per {qty} {unit}",
+  "@mealNutrientsPerQtyLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "mealNutrientsTotalLabel": "Total amount",
   "errorMealSave": "Error while saving meal. Did you input the correct meal information?",
   "bmiLabel": "BMI",
   "bmiInfo": "Body Mass Index (BMI) is a index to classify overweight and obesity in adults. It is defined as weight in kilograms divided by the square of height in meters (kg/m²).\n\nBMI does not differentiate between fat and muscle mass and can be misleading for some individuals.",
@@ -206,6 +372,25 @@
   "goalMaintainWeight": "Maintain Weight",
   "goalGainWeight": "Gain Weight",
   "goalLabel": "Goal",
+  "weeklyWeightGoalLabel": "Weekly rate",
+  "weeklyWeightGoalNoneLabel": "Not set",
+  "weeklyWeightGoalKgPerWeek": "{rate} kg/week",
+  "@weeklyWeightGoalKgPerWeek": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyWeightGoalLbsPerWeek": "{rate} lbs/week",
+  "@weeklyWeightGoalLbsPerWeek": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseWeeklyWeightGoalLabel": "Weekly weight rate",
   "selectHeightDialogLabel": "Select Height",
   "heightLabel": "Height",
   "cmLabel": "cm",
@@ -218,8 +403,15 @@
   "yearsLabel": "{age} years",
   "selectGenderDialogLabel": "Select Gender",
   "genderLabel": "Gender",
-  "genderMaleLabel": "♂ male",
-  "genderFemaleLabel": "♀ female",
+  "genderMaleLabel": "male",
+  "genderFemaleLabel": "female",
+  "genderNonBinaryLabel": "non-binary",
+  "caloriesProfileInfoTitle": "Calorie reference",
+  "caloriesProfileInfoBody": "There isn't a published non-binary calorie baseline — the reference equations are built around male and female samples. We use an average of the two by default, a neutral starting point that doesn't ask you to disclose more about your body. The kcal slider in Settings is always available to fine-tune; this is a starting point, not a precise estimate.",
+  "caloriesProfileAveragedLabel": "Averaged reference (default)",
+  "caloriesProfileEstrogenTypicalLabel": "Estrogen-typical reference",
+  "caloriesProfileTestosteroneTypicalLabel": "Testosterone-typical reference",
+  "onboardingNonBinaryDisclaimer": "There's no published non-binary calorie baseline, so by default we use an average of the male and female formulas — a starting point, not a precise estimate. You can fine-tune anytime in Settings → Calculations.",
   "nothingAddedLabel": "Nothing added",
   "nutritionalStatusUnderweight": "Underweight",
   "nutritionalStatusNormalWeight": "Normal Weight",
@@ -263,6 +455,15 @@
   "paCalisthenicsGeneralDesc": "light or moderate effort, general (e.g., back exercises)",
   "paResistanceTraining": "resistance training",
   "paResistanceTrainingDesc": "weight lifting, free weight, nautilus or universal",
+  "paResistanceTrainingVigorous": "resistance training (vigorous)",
+  "paResistanceTrainingVigorousDesc": "vigorous effort, powerlifting or bodybuilding",
+  "paHighIntensityIntervalExercise": "high intensity interval exercise",
+  "paHighIntensityIntervalExerciseDesc": "moderate effort",
+  "paHighIntensityIntervalExerciseVigorous": "high intensity interval exercise",
+  "paHighIntensityIntervalExerciseVigorousDesc": "burpees, mountain climbers, squat jumps, Tabata, vigorous effort",
+  "paPilates": "pilates",
+  "paStretching": "stretching",
+  "paStretchingDesc": "mild, general",
   "paRopeSkippingGeneral": "rope skipping",
   "paRopeSkippingGeneralDesc": "general",
   "paWaterAerobics": "water exercise",
@@ -275,6 +476,8 @@
   "paJoggingGeneralDesc": "general",
   "paRunningGeneral": "running",
   "paRunningGeneralDesc": "general",
+  "paTreadmillRunning": "running on treadmill",
+  "paTreadmillRunningDesc": "on treadmill, general",
   "paArcheryGeneral": "archery",
   "paArcheryGeneralDesc": "non-hunting",
   "paBadmintonGeneral": "badminton",
@@ -291,7 +494,7 @@
   "paBoxingGeneralDesc": "in ring, general",
   "paBroomball": "broomball",
   "paBroomballDesc": "general",
-  "paChildrenGame": "children’s games",
+  "paChildrenGame": "children's games",
   "paChildrenGameDesc": "(e.g., hopscotch, 4-square, dodgeball, playground apparatus, t-ball, tetherball, marbles, arcade games), moderate effort",
   "paCheerleading": "cheerleading",
   "paCheerleadingDesc": "gymnastic moves, competitive",
@@ -351,6 +554,9 @@
   "paPaddleballDesc": "casual, general",
   "paPoloHorse": "polo",
   "paPoloHorseDesc": "on horseback",
+  "paPickleball": "pickleball",
+  "paActiveVideoGames": "active video games",
+  "paActiveVideoGamesDesc": "Wii Sports, Dance Dance Revolution, general",
   "paRacquetball": "racquetball",
   "paRacquetballDesc": "general",
   "paMountainClimbing": "climbing",
@@ -407,6 +613,7 @@
   "paWalkingForPleasureDesc": "for pleasure",
   "paWalkingTheDog": "walking the dog",
   "paWalkingTheDogDesc": "general",
+  "paNordicWalking": "nordic walking",
   "paCanoeingGeneral": "canoeing",
   "paCanoeingGeneralDesc": "rowing, for pleasure, general",
   "paDivingSpringboardPlatform": "diving",
@@ -440,5 +647,9 @@
   "paSkiingGeneral": "skiing",
   "paSkiingGeneralDesc": "general",
   "paSnowShovingModerate": "snow shoveling",
-  "paSnowShovingModerateDesc": "by hand, moderate effort"
+  "paSnowShovingModerateDesc": "by hand, moderate effort",
+  "paCrossCountrySkiing": "cross-country skiing",
+  "paCrossCountrySkiingDesc": "cross-country, general",
+  "paSnowshoeing": "snowshoeing",
+  "settingsLanguageLabel": "Language"
 }

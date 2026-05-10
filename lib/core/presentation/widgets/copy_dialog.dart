@@ -3,7 +3,9 @@ import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.da
 import 'package:opennutritracker/generated/l10n.dart';
 
 class CopyDialog extends StatefulWidget {
-  const CopyDialog({super.key});
+  final AddMealType initialValue;
+
+  const CopyDialog({super.key, required this.initialValue});
   @override
   State<StatefulWidget> createState() {
     return CopyDialogState();
@@ -11,12 +13,14 @@ class CopyDialog extends StatefulWidget {
 }
 
 class CopyDialogState extends State<CopyDialog> {
-  AddMealType _selectedValue = AddMealType.breakfastType;
+  late AddMealType _selectedValue;
+
   AddMealType get selectedMealType => _selectedValue;
 
   @override
   void initState() {
     super.initState();
+    _selectedValue = widget.initialValue;
   }
 
   @override

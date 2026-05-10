@@ -17,9 +17,14 @@ class DiaryLoadingState extends DiaryState {
 class DiaryLoadedState extends DiaryState {
   final Map<String, TrackedDayEntity> trackedDayMap;
   final bool usesImperialUnits;
+  final bool showMealMacros;
 
-  const DiaryLoadedState(this.trackedDayMap, this.usesImperialUnits);
+  const DiaryLoadedState(
+    this.trackedDayMap,
+    this.usesImperialUnits, {
+    this.showMealMacros = true,
+  });
 
   @override
-  List<Object?> get props => [trackedDayMap, usesImperialUnits];
+  List<Object?> get props => [trackedDayMap, usesImperialUnits, showMealMacros];
 }

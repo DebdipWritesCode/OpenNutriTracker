@@ -18,10 +18,19 @@ class FoodLoadedState extends FoodState {
   final List<MealEntity> food;
   final bool usesImperialUnits;
 
-  const FoodLoadedState({required this.food, this.usesImperialUnits = false});
+  /// True when the remote FDC source returned zero results (or failed
+  /// silently — e.g. rate limit). The UI uses this to show a "no results"
+  /// hint below any custom-meal matches.
+  final bool remoteSourceEmpty;
+
+  const FoodLoadedState({
+    required this.food,
+    this.usesImperialUnits = false,
+    this.remoteSourceEmpty = false,
+  });
 
   @override
-  List<Object?> get props => [food, usesImperialUnits];
+  List<Object?> get props => [food, usesImperialUnits, remoteSourceEmpty];
 }
 
 class FoodFailedState extends FoodState {

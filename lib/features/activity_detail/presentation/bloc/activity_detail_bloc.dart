@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/physical_activity_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
@@ -61,7 +60,6 @@ class ActivityDetailBloc
   }
 
   void persistActivity(
-    BuildContext context,
     String durationText,
     double totalKcalBurned,
     PhysicalActivityEntity activityEntity,

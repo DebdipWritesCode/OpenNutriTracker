@@ -22,11 +22,13 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     on<LoadDiaryYearEvent>((event, emit) async {
       emit(DiaryLoadingState());
 
-      final usesImperialUnits =
-          (await _getConfigUsecase.getConfig()).usesImperialUnits;
+      final config = await _getConfigUsecase.getConfig();
+      final usesImperialUnits = config.usesImperialUnits;
+      final showMealMacros = config.showMealMacros;
 
       currentDay = DateTime.now();
-      const yearDuration = Duration(days: 356);
+      // #292: Extended to match calendar range (5 years back)
+      const yearDuration = Duration(days: 365 * 5);
 
       final trackedDays = await _getDayTrackedUsecase.getTrackedDaysByRange(
         currentDay.subtract(yearDuration),
@@ -38,7 +40,11 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
           trackedDay.day.toParsedDay(): trackedDay,
       };
 
-      emit(DiaryLoadedState(trackedDaysMap, usesImperialUnits));
+      emit(DiaryLoadedState(
+        trackedDaysMap,
+        usesImperialUnits,
+        showMealMacros: showMealMacros,
+      ));
     });
   }
 

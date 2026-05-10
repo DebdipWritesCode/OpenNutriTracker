@@ -54,7 +54,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
-  void updateUser(UserEntity userEntity) async {
+  Future<UserEntity> getUser() => _getUserUsecase.getUserData();
+
+  Future<void> updateUser(UserEntity userEntity) async {
     // Update user in DB
     await _addUserUsecase.addUser(userEntity);
 

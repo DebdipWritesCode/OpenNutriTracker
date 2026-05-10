@@ -6,8 +6,13 @@ import 'package:opennutritracker/generated/l10n.dart';
 class OnboardingThirdPageBody extends StatefulWidget {
   final Function(bool active, UserActivitySelectionEntity? selectedActivity)
       setButtonContent;
+  final UserActivitySelectionEntity? initialActivity;
 
-  const OnboardingThirdPageBody({super.key, required this.setButtonContent});
+  const OnboardingThirdPageBody({
+    super.key,
+    required this.setButtonContent,
+    this.initialActivity,
+  });
 
   @override
   State<OnboardingThirdPageBody> createState() =>
@@ -15,10 +20,14 @@ class OnboardingThirdPageBody extends StatefulWidget {
 }
 
 class _OnboardingThirdPageBodyState extends State<OnboardingThirdPageBody> {
-  bool _sedentarySelected = false;
-  bool _lowActiveSelected = false;
-  bool _activeSelected = false;
-  bool _veryActiveSelected = false;
+  late bool _sedentarySelected =
+      widget.initialActivity == UserActivitySelectionEntity.sedentary;
+  late bool _lowActiveSelected =
+      widget.initialActivity == UserActivitySelectionEntity.lowActive;
+  late bool _activeSelected =
+      widget.initialActivity == UserActivitySelectionEntity.active;
+  late bool _veryActiveSelected =
+      widget.initialActivity == UserActivitySelectionEntity.veryActive;
 
   @override
   Widget build(BuildContext context) {

@@ -16,17 +16,25 @@ class CalorieGoalCalc {
   static double getTdee(UserEntity userEntity) =>
       TDEECalc.getTDEEKcalIOM2005(userEntity);
 
+  // 1 kg of body fat ≈ 7700 kcal; spread over 7 days → ~1100 kcal/day per kg/week
+  static const double _kcalPerKgPerWeekDaily = 1100.0;
+
   static double getTotalKcalGoal(
     UserEntity userEntity,
     double totalKcalActivities, {
     double? kcalUserAdjustment,
   }) =>
       getTdee(userEntity) +
-      getKcalGoalAdjustment(userEntity.goal) +
+      getKcalGoalAdjustment(userEntity.goal,
+          weeklyWeightGoalKg: userEntity.weeklyWeightGoalKg) +
       (kcalUserAdjustment ?? 0) +
       totalKcalActivities;
 
-  static double getKcalGoalAdjustment(UserWeightGoalEntity goal) {
+  static double getKcalGoalAdjustment(UserWeightGoalEntity goal,
+      {double? weeklyWeightGoalKg}) {
+    if (weeklyWeightGoalKg != null) {
+      return weeklyWeightGoalKg * _kcalPerKgPerWeekDaily;
+    }
     double kcalAdjustment;
     if (goal == UserWeightGoalEntity.loseWeight) {
       kcalAdjustment = loseWeightKcalAdjustment;

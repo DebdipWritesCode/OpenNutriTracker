@@ -45,7 +45,7 @@ class _SetWeightDialogState extends State<SetWeightDialog> {
                 minValue: minWeight,
                 maxValue: maxWeight,
                 initialPosition: InitialPosition.center,
-                divisions: 1000,
+                divisions: 1000, // Supports decimal values (#244)
                 suffix: widget.usesImperialUnits
                     ? S.of(context).lbsLabel
                     : S.of(context).kgLabel,

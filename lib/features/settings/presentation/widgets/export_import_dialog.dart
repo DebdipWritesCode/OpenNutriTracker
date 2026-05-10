@@ -20,7 +20,7 @@ class ExportImportDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        S.of(context).exportImportLabel,
+        S.of(context).exportImportAppDataLabel,
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
       ),
@@ -47,7 +47,7 @@ class ExportImportDialog extends StatelessWidget {
                           Icons.check_circle,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(S.of(context).exportImportSuccessLabel),
                       ],
                     );
@@ -58,7 +58,7 @@ class ExportImportDialog extends StatelessWidget {
                           Icons.error,
                           color: Theme.of(context).colorScheme.error,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(S.of(context).exportImportErrorLabel),
                       ],
                     );
@@ -72,15 +72,11 @@ class ExportImportDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () {
-            exportImportBloc.add(ExportDataEvent());
-          },
+          onPressed: () => exportImportBloc.add(ExportDataEvent()),
           child: Text(S.of(context).exportAction),
         ),
         TextButton(
-          onPressed: () {
-            exportImportBloc.add(ImportDataEvent());
-          },
+          onPressed: () => exportImportBloc.add(ImportDataEvent()),
           child: Text(S.of(context).importAction),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
+import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
 import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dart';
@@ -21,6 +22,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final AddTrackedDayUsecase _addTrackedDayUsecase;
   final GetKcalGoalUsecase _getKcalGoalUsecase;
   final GetMacroGoalUsecase _getMacroGoalUsecase;
+  final RemoteSearchCacheDataSource _cachedOffMealDataSource;
 
   SettingsBloc(
     this._getConfigUsecase,
@@ -28,6 +30,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     this._addTrackedDayUsecase,
     this._getKcalGoalUsecase,
     this._getMacroGoalUsecase,
+    this._cachedOffMealDataSource,
   ) : super(SettingsInitial()) {
     on<LoadSettingsEvent>((event, emit) async {
       emit(SettingsLoadingState());
@@ -35,6 +38,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final userConfig = await _getConfigUsecase.getConfig();
       final appVersion = await AppConst.getVersionNumber();
       final usesImperialUnits = userConfig.usesImperialUnits;
+      final offCacheCount = _cachedOffMealDataSource.count;
+      final offCacheSizeBytes =
+          await _cachedOffMealDataSource.getStorageSizeBytes();
 
       emit(
         SettingsLoadedState(
@@ -42,9 +48,23 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           userConfig.hasAcceptedSendAnonymousData,
           userConfig.appTheme,
           usesImperialUnits,
+          showActivityTracking: userConfig.showActivityTracking,
+          showMealMacros: userConfig.showMealMacros,
+          notificationsEnabled: userConfig.notificationsEnabled,
+          notificationHour: userConfig.notificationHour,
+          notificationMinute: userConfig.notificationMinute,
+          selectedLocale: userConfig.selectedLocale,
+          offCacheCount: offCacheCount,
+          offCacheSizeBytes: offCacheSizeBytes,
+          showMicronutrients: userConfig.showMicronutrients,
         ),
       );
     });
+  }
+
+  Future<void> clearOffCache() async {
+    await _cachedOffMealDataSource.clear();
+    add(LoadSettingsEvent());
   }
 
   void setHasAcceptedAnonymousData(bool hasAcceptedAnonymousData) {
@@ -60,6 +80,31 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   void setUsesImperialUnits(bool usesImperialUnits) {
     _addConfigUsecase.setConfigUsesImperialUnits(usesImperialUnits);
   }
+
+  void setShowActivityTracking(bool showActivityTracking) {
+    _addConfigUsecase.setConfigShowActivityTracking(showActivityTracking);
+  }
+
+  void setShowMealMacros(bool showMealMacros) {
+    _addConfigUsecase.setConfigShowMealMacros(showMealMacros);
+  }
+
+  void setNotificationsEnabled(bool enabled) {
+    _addConfigUsecase.setNotificationsEnabled(enabled);
+  }
+
+  void setNotificationTime(int hour, int minute) {
+    _addConfigUsecase.setNotificationTime(hour, minute);
+  }
+
+  void setSelectedLocale(String? locale) {
+    _addConfigUsecase.setSelectedLocale(locale);
+  }
+
+  void setShowMicronutrients(bool show) {
+    _addConfigUsecase.setConfigShowMicronutrients(show);
+  }
+
 
   Future<double> getKcalAdjustment() async {
     final config = await _getConfigUsecase.getConfig();
@@ -81,16 +126,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     return config.userFatGoalPct;
   }
 
-  void setKcalAdjustment(double kcalAdjustment) {
-    _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
+  Future<void> setKcalAdjustment(double kcalAdjustment) async {
+    await _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
   }
 
-  void setMacroGoals(
+  Future<void> setMacroGoals(
     double carbGoalPct,
     double proteinGoalPct,
     double fatGoalPct,
-  ) {
-    _addConfigUsecase.setConfigMacroGoalPct(
+  ) async {
+    await _addConfigUsecase.setConfigMacroGoalPct(
       carbGoalPct.toInt() / 100,
       proteinGoalPct.toInt() / 100,
       fatGoalPct.toInt() / 100,

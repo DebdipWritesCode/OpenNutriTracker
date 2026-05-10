@@ -12,6 +12,13 @@ class ConfigEntity extends Equatable {
   final double? userCarbGoalPct;
   final double? userProteinGoalPct;
   final double? userFatGoalPct;
+  final bool showActivityTracking;
+  final bool showMealMacros;
+  final bool notificationsEnabled;
+  final int notificationHour;
+  final int notificationMinute;
+  final String? selectedLocale;
+  final bool showMicronutrients; // #237
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -23,6 +30,13 @@ class ConfigEntity extends Equatable {
     this.userCarbGoalPct,
     this.userProteinGoalPct,
     this.userFatGoalPct,
+    this.showActivityTracking = true,
+    this.showMealMacros = true,
+    this.notificationsEnabled = false,
+    this.notificationHour = 8,
+    this.notificationMinute = 0,
+    this.selectedLocale,
+    this.showMicronutrients = false,
   });
 
   factory ConfigEntity.fromConfigDBO(ConfigDBO dbo) => ConfigEntity(
@@ -35,6 +49,13 @@ class ConfigEntity extends Equatable {
         userCarbGoalPct: dbo.userCarbGoalPct,
         userProteinGoalPct: dbo.userProteinGoalPct,
         userFatGoalPct: dbo.userFatGoalPct,
+        showActivityTracking: dbo.showActivityTracking ?? true,
+        showMealMacros: dbo.showMealMacros ?? true,
+        notificationsEnabled: dbo.notificationsEnabled ?? false,
+        notificationHour: dbo.notificationHour ?? 8,
+        notificationMinute: dbo.notificationMinute ?? 0,
+        selectedLocale: dbo.selectedLocale,
+        showMicronutrients: dbo.showMicronutrients ?? false,
       );
 
   @override
@@ -47,5 +68,12 @@ class ConfigEntity extends Equatable {
         userCarbGoalPct,
         userProteinGoalPct,
         userFatGoalPct,
+        showActivityTracking,
+        showMealMacros,
+        notificationsEnabled,
+        notificationHour,
+        notificationMinute,
+        selectedLocale,
+        showMicronutrients,
       ];
 }

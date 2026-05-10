@@ -31,8 +31,9 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
           emit(
             ProductsLoadedState(
-              products: result,
+              products: result.meals,
               usesImperialUnits: config.usesImperialUnits,
+              remoteSourceEmpty: result.remoteSourceEmpty,
             ),
           );
         } catch (error) {
@@ -47,7 +48,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         final result = await _searchProductUseCase.searchOFFProductsByString(
           _searchString,
         );
-        emit(ProductsLoadedState(products: result));
+        emit(ProductsLoadedState(
+          products: result.meals,
+          remoteSourceEmpty: result.remoteSourceEmpty,
+        ));
       } catch (error) {
         log.severe(error);
         emit(ProductsFailedState());

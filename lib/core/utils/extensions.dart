@@ -58,7 +58,7 @@ extension DisplayDouble on double? {
 }
 
 extension FormatString on DateTime {
-  String toParsedDay() => DateFormat.yMd().format(this);
+  String toParsedDay() => DateFormat('yyyy-MM-dd').format(this);
 }
 
 extension ColorExtension on Color {

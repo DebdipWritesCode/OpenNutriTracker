@@ -45,4 +45,8 @@ class GetIntakeUsecase {
   Future<IntakeEntity?> getIntakeById(String intakeId) async {
     return _intakeRepository.getIntakeById(intakeId);
   }
+
+  Future<List<IntakeEntity>> getCustomMealIntakes() async {
+    return _intakeRepository.getCustomMealIntakes();
+  }
 }

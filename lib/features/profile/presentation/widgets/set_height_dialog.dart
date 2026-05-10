@@ -33,6 +33,7 @@ class _SetHeightDialogState extends State<SetHeightDialog> {
     final maxHeight =
         maxSelectableHeight(widget.userHeight, widget.usesImperialUnits);
 
+
     return AlertDialog(
       title: Text(S.of(context).selectHeightDialogLabel),
       content: Wrap(
@@ -67,10 +68,8 @@ class _SetHeightDialogState extends State<SetHeightDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(
-              context,
-              clampHeightSelection(selectedHeight, minHeight),
-            );
+            final hardMax = absoluteMaxHeight(widget.usesImperialUnits);
+            Navigator.pop(context, selectedHeight.clamp(minHeight, hardMax));
           },
           child: Text(S.of(context).dialogOKLabel),
         ),

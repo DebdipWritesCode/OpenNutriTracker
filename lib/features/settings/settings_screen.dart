@@ -5,6 +5,8 @@ import 'package:opennutritracker/core/presentation/widgets/app_banner_version.da
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:opennutritracker/core/utils/app_const.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/notification_service.dart';
+import 'package:opennutritracker/core/utils/locale_provider.dart';
 import 'package:opennutritracker/core/utils/theme_mode_provider.dart';
 import 'package:opennutritracker/core/utils/url_const.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -13,6 +15,7 @@ import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart'
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +45,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _diaryBloc = locator<DiaryBloc>();
     _calendarDayBloc = locator<CalendarDayBloc>();
     super.initState();
+    // SettingsBloc is registered as a singleton so the previous
+    // SettingsLoadedState survives across screen visits. The cache
+    // count and on-disk size in particular are written in the
+    // background by search and barcode-scan flows, so reading them
+    // once at the bloc's first transition out of SettingsInitial
+    // leaves stale values on the screen for the rest of the session.
+    // Refresh on every entry instead.
+    _settingsBloc.add(LoadSettingsEvent());
   }
 
   @override
@@ -70,15 +81,104 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).settingsCalculationsLabel),
                   onTap: () => _showCalculationsDialog(context),
                 ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.directions_run_outlined),
+                  title: Text(S.of(context).settingsShowActivityTracking),
+                  value: state.showActivityTracking,
+                  onChanged: (bool value) {
+                    _settingsBloc.setShowActivityTracking(value);
+                    _settingsBloc.add(LoadSettingsEvent());
+                    _homeBloc.add(LoadItemsEvent());
+                  },
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.bar_chart_outlined),
+                  title: Text(S.of(context).settingsShowMealMacros),
+                  value: state.showMealMacros,
+                  onChanged: (bool value) {
+                    _settingsBloc.setShowMealMacros(value);
+                    _settingsBloc.add(LoadSettingsEvent());
+                    _homeBloc.add(LoadItemsEvent());
+                  },
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.science_outlined),
+                  title: Text(S.of(context).settingsShowMicronutrientsLabel),
+                  value: state.showMicronutrients,
+                  onChanged: (bool value) {
+                    _settingsBloc.setShowMicronutrients(value);
+                    _settingsBloc.add(LoadSettingsEvent());
+                  },
+                ),
+                const Divider(),
+                // App
                 ListTile(
                   leading: const Icon(Icons.brightness_medium_outlined),
                   title: Text(S.of(context).settingsThemeLabel),
                   onTap: () => _showThemeDialog(context, state.appTheme),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.language_outlined),
+                  title: Text(S.of(context).settingsLanguageLabel),
+                  subtitle: Text(
+                      _localeDisplayName(state.selectedLocale) ??
+                          S.of(context).settingsThemeSystemDefaultLabel),
+                  onTap: () =>
+                      _showLanguageDialog(context, state.selectedLocale),
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.notifications_outlined),
+                  title: Text(S.of(context).settingsNotificationsLabel),
+                  subtitle: state.notificationsEnabled
+                      ? Text(S.of(context).settingsNotificationsTimeLabel(
+                          _formatNotificationTime(
+                              state.notificationHour, state.notificationMinute)))
+                      : null,
+                  value: state.notificationsEnabled,
+                  onChanged: (bool value) =>
+                      _onNotificationToggled(context, value, state),
+                ),
+                if (state.notificationsEnabled)
+                  ListTile(
+                    leading: const Icon(Icons.access_time_outlined),
+                    title: Text(S.of(context).settingsNotificationsTimeLabel(
+                        _formatNotificationTime(state.notificationHour,
+                            state.notificationMinute))),
+                    onTap: () => _pickNotificationTime(
+                        context,
+                        TimeOfDay(
+                            hour: state.notificationHour,
+                            minute: state.notificationMinute)),
+                  ),
+                const Divider(),
+                // Data
+                ListTile(
+                  leading: const Icon(Icons.restaurant_menu_outlined),
+                  title: Text(S.of(context).importCustomFoodDataLabel),
+                  onTap: () => _showImportCustomFoodDataDialog(context),
+                ),
+                ListTile(
                   leading: const Icon(Icons.import_export),
-                  title: Text(S.of(context).exportImportLabel),
+                  title: Text(S.of(context).exportImportAppDataLabel),
                   onTap: () => _showExportImportDialog(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.cached_outlined),
+                  title: Text(S.of(context).clearOffCacheLabel),
+                  subtitle: Text(S.of(context).clearOffCacheSubtitle(
+                    state.offCacheCount,
+                    _formatBytes(state.offCacheSizeBytes),
+                  )),
+                  enabled: state.offCacheCount > 0,
+                  onTap: () => _confirmClearOffCache(context),
+                ),
+                const Divider(),
+                // About
+                ListTile(
+                  leading: const Icon(Icons.policy_outlined),
+                  title: Text(S.of(context).settingsPrivacySettings),
+                  onTap: () =>
+                      _showPrivacyDialog(context, state.sendAnonymousData),
                 ),
                 ListTile(
                   leading: const Icon(Icons.description_outlined),
@@ -89,12 +189,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.bug_report_outlined),
                   title: Text(S.of(context).settingsReportErrorLabel),
                   onTap: () => _showReportErrorDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.policy_outlined),
-                  title: Text(S.of(context).settingsPrivacySettings),
-                  onTap: () =>
-                      _showPrivacyDialog(context, state.sendAnonymousData),
                 ),
                 ListTile(
                   leading: const Icon(Icons.error_outline_outlined),
@@ -110,6 +204,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       ),
     );
+  }
+
+  String _formatNotificationTime(int hour, int minute) {
+    final h = hour.toString().padLeft(2, '0');
+    final m = minute.toString().padLeft(2, '0');
+    return '$h:$m';
+  }
+
+  Future<void> _onNotificationToggled(
+      BuildContext context, bool enabled, SettingsLoadedState state) async {
+    final l10n = S.of(context);
+    final notificationService = locator<NotificationService>();
+    await notificationService.initialize();
+    if (enabled) {
+      final granted = await notificationService.requestPermission();
+      if (!granted) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.notificationsPermissionDeniedSnack)),
+          );
+        }
+        return;
+      }
+      await notificationService.scheduleDailyReminder(
+        hour: state.notificationHour,
+        minute: state.notificationMinute,
+        title: l10n.notificationsDailyReminderTitle,
+        body: l10n.notificationsDailyReminderBody,
+      );
+    } else {
+      await notificationService.cancelDailyReminder();
+    }
+    _settingsBloc.setNotificationsEnabled(enabled);
+    _settingsBloc.add(LoadSettingsEvent());
+  }
+
+  Future<void> _pickNotificationTime(
+      BuildContext context, TimeOfDay current) async {
+    final l10n = S.of(context);
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: current,
+    );
+    if (picked == null) return;
+    _settingsBloc.setNotificationTime(picked.hour, picked.minute);
+    final notificationService = locator<NotificationService>();
+    await notificationService.scheduleDailyReminder(
+      hour: picked.hour,
+      minute: picked.minute,
+      title: l10n.notificationsDailyReminderTitle,
+      body: l10n.notificationsDailyReminderBody,
+    );
+    _settingsBloc.add(LoadSettingsEvent());
   }
 
   void _showUnitsDialog(BuildContext context, bool usesImperialUnits) async {
@@ -192,6 +339,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(context: context, builder: (context) => ExportImportDialog());
   }
 
+  void _showImportCustomFoodDataDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => ImportCustomFoodDataDialog(),
+    );
+  }
+
+  Future<void> _confirmClearOffCache(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(S.of(context).clearOffCacheConfirmTitle),
+        content: Text(S.of(context).clearOffCacheConfirmContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(S.of(context).dialogCancelLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(S.of(context).dialogOKLabel),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await _settingsBloc.clearOffCache();
+    }
+  }
+
+  /// Format a byte count for display in the cache-clear tile subtitle.
+  /// Uses KB up to 1 MB, then MB with one decimal place above that.
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).round()} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+
   void _showThemeDialog(BuildContext context, AppThemeEntity currentAppTheme) {
     AppThemeEntity selectedTheme = currentAppTheme;
     showDialog(
@@ -250,6 +435,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     listen: false,
                   ).updateTheme(selectedTheme);
                 });
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static const _supportedLocales = <String, String>{
+    'en': 'English',
+    'de': 'Deutsch',
+    'tr': 'Türkçe',
+    'cs': 'Čeština',
+    'it': 'Italiano',
+    'uk': 'Українська',
+    'zh': '中文',
+    'pl': 'Polski',
+  };
+
+  String? _localeDisplayName(String? code) => _supportedLocales[code];
+
+  // Sentinel value meaning "follow system locale"
+  static const _systemLocale = '';
+
+  void _showLanguageDialog(BuildContext context, String? currentLocale) {
+    String selectedCode = currentLocale ?? _systemLocale;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsLanguageLabel),
+          content: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return RadioGroup<String>(
+                groupValue: selectedCode,
+                onChanged: (v) => setState(() => selectedCode = v as String),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<String>(
+                      title:
+                          Text(S.of(context).settingsThemeSystemDefaultLabel),
+                      value: _systemLocale,
+                    ),
+                    ..._supportedLocales.entries.map(
+                      (e) => RadioListTile<String>(
+                        title: Text(e.value),
+                        value: e.key,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () {
+                final locale =
+                    selectedCode.isEmpty ? null : selectedCode;
+                _settingsBloc.setSelectedLocale(locale);
+                _settingsBloc.add(LoadSettingsEvent());
+                Provider.of<LocaleProvider>(context, listen: false)
+                    .updateLocale(
+                  locale != null ? Locale(locale) : null,
+                );
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).dialogOKLabel),

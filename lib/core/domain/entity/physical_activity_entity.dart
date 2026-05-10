@@ -5,9 +5,9 @@ import 'package:opennutritracker/core/utils/custom_icons.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 /// A physical activity with it's measured MET value by the
-/// '2011 Compendium of Physical Activities'
-/// https://pubmed.ncbi.nlm.nih.gov/21681120/
-/// by Ainsworth et al.
+/// '2024 Adult Compendium of Physical Activities'
+/// https://pubmed.ncbi.nlm.nih.gov/38242596/
+/// by Herrmann et al.
 class PhysicalActivityEntity extends Equatable {
   final String code;
   final String specificActivity;
@@ -40,11 +40,17 @@ class PhysicalActivityEntity extends Equatable {
       "02010": S.of(context).paBicyclingStationaryGeneral,
       "02030": S.of(context).paCalisthenicsGeneral,
       "02050": S.of(context).paResistanceTraining,
+      "02055": S.of(context).paResistanceTrainingVigorous,
+      "02165": S.of(context).paPilates,
+      "02170": S.of(context).paStretching,
+      "02210": S.of(context).paHighIntensityIntervalExercise,
+      "02214": S.of(context).paHighIntensityIntervalExerciseVigorous,
       "02068": S.of(context).paRopeSkippingGeneral,
       "02120": S.of(context).paWaterAerobics,
       "03015": S.of(context).paDancingAerobicGeneral,
       "12020": S.of(context).paJoggingGeneral,
       "12150": S.of(context).paRunningGeneral,
+      "12180": S.of(context).paTreadmillRunning,
       "15010": S.of(context).paArcheryGeneral,
       "15030": S.of(context).paBadmintonGeneral,
       "15055": S.of(context).paBasketballGeneral,
@@ -106,10 +112,13 @@ class PhysicalActivityEntity extends Equatable {
       "15732": S.of(context).paTrackField,
       "15733": S.of(context).paTrackField,
       "15734": S.of(context).paTrackField,
+      "15740": S.of(context).paPickleball,
+      "15750": S.of(context).paActiveVideoGames,
       "17010": S.of(context).paBackpackingGeneral,
       "17080": S.of(context).paHikingCrossCountry,
       "17160": S.of(context).paWalkingForPleasure,
       "17165": S.of(context).paWalkingTheDog,
+      "17170": S.of(context).paNordicWalking,
       "18070": S.of(context).paCanoeingGeneral,
       "18090": S.of(context).paDivingSpringboardPlatform,
       "18100": S.of(context).paKayakingModerate,
@@ -126,6 +135,8 @@ class PhysicalActivityEntity extends Equatable {
       "19030": S.of(context).paIceSkatingGeneral,
       "19075": S.of(context).paSkiingGeneral,
       "19252": S.of(context).paSnowShovingModerate,
+      "19080": S.of(context).paCrossCountrySkiing,
+      "19260": S.of(context).paSnowshoeing,
     };
     return physicalActivityMap[code] ?? type.getName(context);
   }
@@ -138,11 +149,17 @@ class PhysicalActivityEntity extends Equatable {
       "02010": S.of(context).paBicyclingStationaryGeneralDesc,
       "02030": S.of(context).paCalisthenicsGeneralDesc,
       "02050": S.of(context).paResistanceTrainingDesc,
+      "02055": S.of(context).paResistanceTrainingVigorousDesc,
+      "02165": S.of(context).paGeneralDesc,
+      "02170": S.of(context).paStretchingDesc,
+      "02210": S.of(context).paHighIntensityIntervalExerciseDesc,
+      "02214": S.of(context).paHighIntensityIntervalExerciseVigorousDesc,
       "02068": S.of(context).paRopeSkippingGeneralDesc,
       "02120": S.of(context).paWaterAerobicsDesc,
       "03015": S.of(context).paDancingAerobicGeneralDesc,
       "12020": S.of(context).paJoggingGeneralDesc,
       "12150": S.of(context).paRunningGeneralDesc,
+      "12180": S.of(context).paTreadmillRunningDesc,
       "15010": S.of(context).paArcheryGeneralDesc,
       "15030": S.of(context).paBadmintonGeneralDesc,
       "15055": S.of(context).paBasketballGeneralDesc,
@@ -204,10 +221,13 @@ class PhysicalActivityEntity extends Equatable {
       "15732": S.of(context).paTrackField1Desc,
       "15733": S.of(context).paTrackField2Desc,
       "15734": S.of(context).paTrackField3Desc,
+      "15740": S.of(context).paGeneralDesc,
+      "15750": S.of(context).paActiveVideoGamesDesc,
       "17010": S.of(context).paBackpackingGeneralDesc,
       "17080": S.of(context).paHikingCrossCountryDesc,
       "17160": S.of(context).paWalkingForPleasureDesc,
       "17165": S.of(context).paWalkingTheDogDesc,
+      "17170": S.of(context).paGeneralDesc,
       "18070": S.of(context).paCanoeingGeneralDesc,
       "18090": S.of(context).paDivingSpringboardPlatformDesc,
       "18100": S.of(context).paKayakingModerateDesc,
@@ -224,6 +244,8 @@ class PhysicalActivityEntity extends Equatable {
       "19030": S.of(context).paIceSkatingGeneralDesc,
       "19075": S.of(context).paSkiingGeneralDesc,
       "19252": S.of(context).paSnowShovingModerateDesc,
+      "19080": S.of(context).paCrossCountrySkiingDesc,
+      "19260": S.of(context).paGeneralDesc,
     };
     return physicalActivityMap[code] ?? type.getName(context);
   }
@@ -249,6 +271,15 @@ class PhysicalActivityEntity extends Equatable {
       case "02050":
         iconData = CustomIcons.kettlebell;
         break;
+      case "02055":
+        iconData = CustomIcons.kettlebell;
+        break;
+      case "02165":
+        iconData = Icons.sports_gymnastics;
+        break;
+      case "02170":
+        iconData = Icons.self_improvement;
+        break;
       case "02068":
         iconData = CustomIcons.jump_rope;
         break;
@@ -263,6 +294,9 @@ class PhysicalActivityEntity extends Equatable {
         break;
       case "12150":
         iconData = CustomIcons.run_fast;
+        break;
+      case "12180":
+        iconData = Icons.directions_run;
         break;
       case "15010":
         iconData = CustomIcons.bow_arrow;
@@ -420,6 +454,12 @@ class PhysicalActivityEntity extends Equatable {
       case "15734":
         iconData = Icons.stadium;
         break;
+      case "15740":
+        iconData = Icons.sports_tennis;
+        break;
+      case "15750":
+        iconData = Icons.videogame_asset_outlined;
+        break;
       case "17010":
         iconData = Icons.hiking;
         break;
@@ -431,6 +471,9 @@ class PhysicalActivityEntity extends Equatable {
         break;
       case "17165":
         iconData = CustomIcons.dog;
+        break;
+      case "17170":
+        iconData = Icons.directions_walk;
         break;
       case "18070":
         iconData = Icons.water;
@@ -479,6 +522,12 @@ class PhysicalActivityEntity extends Equatable {
         break;
       case "19252":
         iconData = CustomIcons.snowflake;
+        break;
+      case "19080":
+        iconData = Icons.downhill_skiing;
+        break;
+      case "19260":
+        iconData = Icons.snowshoeing;
         break;
       default:
         iconData = CustomIcons.medal;

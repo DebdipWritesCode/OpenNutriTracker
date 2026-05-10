@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
+import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/activity_vertial_list.dart';
@@ -22,6 +23,7 @@ class DayInfoWidget extends StatelessWidget {
   final List<IntakeEntity> snackIntake;
 
   final bool usesImperialUnits;
+  final bool showMealMacros;
   final Function(IntakeEntity intake, TrackedDayEntity? trackedDayEntity)
       onDeleteIntake;
   final Function(
@@ -37,6 +39,10 @@ class DayInfoWidget extends StatelessWidget {
     UserActivityEntity userActivityEntity,
     TrackedDayEntity? trackedDayEntity,
   ) onCopyActivity;
+  final Function(BuildContext context, IntakeEntity intake, bool usesImperialUnits)?
+      onEditIntake;
+  final Function(BuildContext context, UserActivityEntity activity)?
+      onEditActivity;
 
   const DayInfoWidget({
     super.key,
@@ -48,10 +54,13 @@ class DayInfoWidget extends StatelessWidget {
     required this.dinnerIntake,
     required this.snackIntake,
     required this.usesImperialUnits,
+    this.showMealMacros = true,
     required this.onDeleteIntake,
     required this.onDeleteActivity,
     required this.onCopyIntake,
     required this.onCopyActivity,
+    this.onEditIntake,
+    this.onEditActivity,
   });
 
   @override
@@ -138,6 +147,12 @@ class DayInfoWidget extends StatelessWidget {
               title: S.of(context).activityLabel,
               userActivityList: userActivities,
               onItemLongPressedCallback: onActivityItemLongPressed,
+              onItemTappedCallback: onEditActivity,
+              onCopyActivityCallback:
+                  DateUtils.isSameDay(selectedDay, DateTime.now())
+                      ? null
+                      : (activity) =>
+                          onCopyActivity(activity, trackedDayEntity),
             ),
             IntakeVerticalList(
               day: selectedDay,
@@ -147,11 +162,13 @@ class DayInfoWidget extends StatelessWidget {
               intakeList: breakfastIntake,
               onDeleteIntakeCallback: onDeleteIntake,
               onItemLongPressedCallback: onIntakeItemLongPressed,
+              onItemTappedCallback: onEditIntake,
               onCopyIntakeCallback:
                   DateUtils.isSameDay(selectedDay, DateTime.now())
                       ? null
                       : onCopyIntake,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
               trackedDayEntity: trackedDay,
             ),
             IntakeVerticalList(
@@ -162,7 +179,9 @@ class DayInfoWidget extends StatelessWidget {
               intakeList: lunchIntake,
               onDeleteIntakeCallback: onDeleteIntake,
               onItemLongPressedCallback: onIntakeItemLongPressed,
+              onItemTappedCallback: onEditIntake,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
               onCopyIntakeCallback:
                   DateUtils.isSameDay(selectedDay, DateTime.now())
                       ? null
@@ -177,11 +196,13 @@ class DayInfoWidget extends StatelessWidget {
               intakeList: dinnerIntake,
               onDeleteIntakeCallback: onDeleteIntake,
               onItemLongPressedCallback: onIntakeItemLongPressed,
+              onItemTappedCallback: onEditIntake,
               onCopyIntakeCallback:
                   DateUtils.isSameDay(selectedDay, DateTime.now())
                       ? null
                       : onCopyIntake,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
             ),
             IntakeVerticalList(
               day: selectedDay,
@@ -191,7 +212,9 @@ class DayInfoWidget extends StatelessWidget {
               intakeList: snackIntake,
               onDeleteIntakeCallback: onDeleteIntake,
               onItemLongPressedCallback: onIntakeItemLongPressed,
+              onItemTappedCallback: onEditIntake,
               usesImperialUnits: usesImperialUnits,
+              showMealMacros: showMealMacros,
               onCopyIntakeCallback:
                   DateUtils.isSameDay(selectedDay, DateTime.now())
                       ? null
@@ -205,21 +228,23 @@ class DayInfoWidget extends StatelessWidget {
     );
   }
 
-  String _getCaloriesTrackedDisplayString(TrackedDayEntity trackedDay) {
-    int caloriesTracked;
-    if (trackedDay.caloriesTracked.isNegative) {
-      caloriesTracked = 0;
-    } else {
-      caloriesTracked = trackedDay.caloriesTracked.toInt();
-    }
+  // #182: Compute from actual intakes instead of stale cached values
+  List<IntakeEntity> get _allIntakes =>
+      [...breakfastIntake, ...lunchIntake, ...dinnerIntake, ...snackIntake];
 
+  String _getCaloriesTrackedDisplayString(TrackedDayEntity trackedDay) {
+    final actualKcal = _allIntakes.fold(0.0, (sum, i) => sum + i.totalKcal);
+    final caloriesTracked = actualKcal < 0 ? 0 : actualKcal.toInt();
     return '$caloriesTracked/${trackedDay.calorieGoal.toInt()} kcal';
   }
 
   String _getMacroTrackedDisplayString(TrackedDayEntity trackedDay) {
-    final carbsTracked = trackedDay.carbsTracked?.floor().toString() ?? '?';
-    final fatTracked = trackedDay.fatTracked?.floor().toString() ?? '?';
-    final proteinTracked = trackedDay.proteinTracked?.floor().toString() ?? '?';
+    final carbsTracked =
+        _allIntakes.fold(0.0, (sum, i) => sum + i.totalCarbsGram).floor();
+    final fatTracked =
+        _allIntakes.fold(0.0, (sum, i) => sum + i.totalFatsGram).floor();
+    final proteinTracked =
+        _allIntakes.fold(0.0, (sum, i) => sum + i.totalProteinsGram).floor();
 
     final carbsGoal = trackedDay.carbsGoal?.floor().toString() ?? '?';
     final fatGoal = trackedDay.fatGoal?.floor().toString() ?? '?';
@@ -246,7 +271,16 @@ class DayInfoWidget extends StatelessWidget {
   }
 
   void showCopyDialog(BuildContext context, IntakeEntity intakeEntity) async {
-    const copyDialog = CopyDialog();
+    final defaultMealType = switch (intakeEntity.type) {
+      IntakeTypeEntity.breakfast => AddMealType.breakfastType,
+      IntakeTypeEntity.lunch => AddMealType.lunchType,
+      IntakeTypeEntity.dinner => AddMealType.dinnerType,
+      IntakeTypeEntity.snack => AddMealType.snackType,
+    };
+
+    final copyDialog = CopyDialog(
+      initialValue: defaultMealType,
+    );
     final selectedMealType = await showDialog<AddMealType>(
       context: context,
       builder: (context) => copyDialog,
@@ -284,13 +318,26 @@ class DayInfoWidget extends StatelessWidget {
     BuildContext context,
     UserActivityEntity activityEntity,
   ) async {
-    final shouldDeleteActivity = await showDialog<bool>(
-      context: context,
-      builder: (context) => const DeleteDialog(),
-    );
-
-    if (shouldDeleteActivity != null) {
-      onDeleteActivity(activityEntity, trackedDayEntity);
+    if (DateUtils.isSameDay(selectedDay, DateTime.now())) {
+      final shouldDelete = await showDialog<bool>(
+        context: context,
+        builder: (context) => const DeleteDialog(),
+      );
+      if (shouldDelete != null) {
+        onDeleteActivity(activityEntity, trackedDayEntity);
+      }
+    } else {
+      final copyOrDelete = await showDialog<bool>(
+        context: context,
+        builder: (context) => const CopyOrDeleteDialog(),
+      );
+      if (context.mounted) {
+        if (copyOrDelete == false) {
+          onDeleteActivity(activityEntity, trackedDayEntity);
+        } else if (copyOrDelete == true) {
+          onCopyActivity(activityEntity, trackedDayEntity);
+        }
+      }
     }
   }
 }

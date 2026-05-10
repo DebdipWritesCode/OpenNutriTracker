@@ -10,13 +10,26 @@ class UserActivityRepository {
   Future<void> addUserActivity(UserActivityEntity activityEntity) async {
     final activityDBO = UserActivityDBO.fromUserActivityEntity(activityEntity);
 
-    _userActivityDataSource.addUserActivity(activityDBO);
+    await _userActivityDataSource.addUserActivity(activityDBO);
   }
 
   Future<void> addAllUserActivityDBOs(
     List<UserActivityDBO> userActivityDBOs,
   ) async {
     await _userActivityDataSource.addAllUserActivities(userActivityDBOs);
+  }
+
+  Future<UserActivityEntity?> updateUserActivity(
+    String id,
+    double newDuration,
+    double newBurnedKcal,
+  ) async {
+    final dbo = await _userActivityDataSource.updateUserActivity(
+      id,
+      newDuration,
+      newBurnedKcal,
+    );
+    return dbo == null ? null : UserActivityEntity.fromUserActivityDBO(dbo);
   }
 
   Future<void> deleteUserActivity(UserActivityEntity userActivityEntity) async {

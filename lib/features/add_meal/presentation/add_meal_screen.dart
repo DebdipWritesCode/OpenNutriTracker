@@ -131,22 +131,27 @@ class _AddMealScreenState extends State<AddMealScreen>
                               child: CircularProgressIndicator(),
                             );
                           } else if (state is ProductsLoadedState) {
-                            return state.products.isNotEmpty
-                                ? Flexible(
-                                    child: ListView.builder(
-                                      itemCount: state.products.length,
-                                      itemBuilder: (context, index) {
-                                        return MealItemCard(
-                                          day: _day,
-                                          mealEntity: state.products[index],
-                                          addMealType: _mealType,
-                                          usesImperialUnits:
-                                              state.usesImperialUnits,
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : const NoResultsWidget();
+                            if (state.products.isEmpty) {
+                              return const NoResultsWidget();
+                            }
+                            return Flexible(
+                              child: ListView.builder(
+                                itemCount: state.products.length +
+                                    (state.remoteSourceEmpty ? 1 : 0),
+                                itemBuilder: (context, index) {
+                                  if (index == state.products.length) {
+                                    return const NoResultsWidget();
+                                  }
+                                  return MealItemCard(
+                                    day: _day,
+                                    mealEntity: state.products[index],
+                                    addMealType: _mealType,
+                                    usesImperialUnits:
+                                        state.usesImperialUnits,
+                                  );
+                                },
+                              ),
+                            );
                           } else if (state is ProductsFailedState) {
                             return ErrorDialog(
                               errorText: S.of(context).errorFetchingProductData,
@@ -180,22 +185,27 @@ class _AddMealScreenState extends State<AddMealScreen>
                               child: CircularProgressIndicator(),
                             );
                           } else if (state is FoodLoadedState) {
-                            return state.food.isNotEmpty
-                                ? Flexible(
-                                    child: ListView.builder(
-                                      itemCount: state.food.length,
-                                      itemBuilder: (context, index) {
-                                        return MealItemCard(
-                                          day: _day,
-                                          mealEntity: state.food[index],
-                                          addMealType: _mealType,
-                                          usesImperialUnits:
-                                              state.usesImperialUnits,
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : const NoResultsWidget();
+                            if (state.food.isEmpty) {
+                              return const NoResultsWidget();
+                            }
+                            return Flexible(
+                              child: ListView.builder(
+                                itemCount: state.food.length +
+                                    (state.remoteSourceEmpty ? 1 : 0),
+                                itemBuilder: (context, index) {
+                                  if (index == state.food.length) {
+                                    return const NoResultsWidget();
+                                  }
+                                  return MealItemCard(
+                                    day: _day,
+                                    mealEntity: state.food[index],
+                                    addMealType: _mealType,
+                                    usesImperialUnits:
+                                        state.usesImperialUnits,
+                                  );
+                                },
+                              ),
+                            );
                           } else if (state is FoodFailedState) {
                             return ErrorDialog(
                               errorText: S.of(context).errorFetchingProductData,
@@ -318,7 +328,6 @@ class _AddMealScreenState extends State<AddMealScreen>
   }
 
   void _openEditMealScreen(bool usesImperialUnits) {
-    // TODO
     Navigator.of(context).pushNamed(
       NavigationOptions.editMealRoute,
       arguments: EditMealScreenArguments(

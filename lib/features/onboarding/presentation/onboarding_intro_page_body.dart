@@ -7,9 +7,16 @@ import 'package:opennutritracker/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingIntroPageBody extends StatefulWidget {
-  const OnboardingIntroPageBody({super.key, required this.setPageContent});
+  const OnboardingIntroPageBody({
+    super.key,
+    required this.setPageContent,
+    this.initialAcceptedPolicy = false,
+    this.initialAcceptedDataCollection = false,
+  });
 
   final Function(bool active, bool acceptedDataCollection) setPageContent;
+  final bool initialAcceptedPolicy;
+  final bool initialAcceptedDataCollection;
 
   @override
   State<OnboardingIntroPageBody> createState() =>
@@ -17,8 +24,8 @@ class OnboardingIntroPageBody extends StatefulWidget {
 }
 
 class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
-  bool _acceptedPolicy = false;
-  bool _acceptedDataCollection = false;
+  late bool _acceptedPolicy = widget.initialAcceptedPolicy;
+  late bool _acceptedDataCollection = widget.initialAcceptedDataCollection;
 
   @override
   Widget build(BuildContext context) {

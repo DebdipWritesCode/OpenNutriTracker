@@ -1,4 +1,5 @@
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:opennutritracker/core/data/dbo/calories_profile_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_gender_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_pal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_weight_goal_dbo.dart';
@@ -20,6 +21,10 @@ class UserDBO extends HiveObject {
   UserWeightGoalDBO goal;
   @HiveField(5)
   UserPALDBO pal;
+  @HiveField(6)
+  double? weeklyWeightGoalKg;
+  @HiveField(7)
+  CaloriesProfileDBO? caloriesProfile;
 
   UserDBO({
     required this.birthday,
@@ -28,6 +33,8 @@ class UserDBO extends HiveObject {
     required this.gender,
     required this.goal,
     required this.pal,
+    this.weeklyWeightGoalKg,
+    this.caloriesProfile,
   });
 
   factory UserDBO.fromUserEntity(UserEntity entity) {
@@ -38,6 +45,10 @@ class UserDBO extends HiveObject {
       gender: UserGenderDBO.fromUserGenderEntity(entity.gender),
       goal: UserWeightGoalDBO.fromUserWeightGoalEntity(entity.goal),
       pal: UserPALDBO.fromUserPALEntity(entity.pal),
+      weeklyWeightGoalKg: entity.weeklyWeightGoalKg,
+      caloriesProfile: entity.caloriesProfile == null
+          ? null
+          : CaloriesProfileDBO.fromEntity(entity.caloriesProfile!),
     );
   }
 }

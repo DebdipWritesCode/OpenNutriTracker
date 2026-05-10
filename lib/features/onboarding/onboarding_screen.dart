@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_activity_selection_entity.dart';
@@ -97,13 +98,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  List<PageViewModel> _getPageViewModels() => <PageViewModel>[
+  List<PageViewModel> _getPageViewModels() {
+    final selection = _onboardingBloc.userSelection;
+    return <PageViewModel>[
         PageViewModel(
           title: S.of(context).onboardingWelcomeLabel,
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget:
-              OnboardingIntroPageBody(setPageContent: _setIntroPageData),
+          bodyWidget: OnboardingIntroPageBody(
+            setPageContent: _setIntroPageData,
+            initialAcceptedPolicy: _introPageButtonActive,
+            initialAcceptedDataCollection: selection.acceptDataCollection,
+          ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonStartLabel,
             onButtonPressed: () => _scrollToPage(1),
@@ -115,8 +121,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // empty
           decoration: _pageDecoration,
           image: _defaultImageWidget,
-          bodyWidget:
-              OnboardingFirstPageBody(setPageContent: _setFirstPageData),
+          bodyWidget: OnboardingFirstPageBody(
+            setPageContent: _setFirstPageData,
+            initialGender: selection.gender,
+            initialCaloriesProfile: selection.caloriesProfile,
+            initialBirthday: selection.birthday,
+          ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
             onButtonPressed: () => _scrollToPage(2),
@@ -130,6 +140,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           image: _defaultImageWidget,
           bodyWidget: OnboardingSecondPageBody(
             setButtonContent: _setSecondPageData,
+            initialHeightCm: selection.height,
+            initialWeightKg: selection.weight,
+            initialUsesImperial: selection.usesImperialUnits,
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
@@ -144,6 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           image: _defaultImageWidget,
           bodyWidget: OnboardingThirdPageBody(
             setButtonContent: _setThirdPageButton,
+            initialActivity: selection.activity,
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
@@ -158,6 +172,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           image: _defaultImageWidget,
           bodyWidget: OnboardingFourthPageBody(
             setButtonContent: _setFourthPageButton,
+            initialGoal: selection.goal,
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
@@ -193,6 +208,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       ];
+  }
 
   void _scrollToPage(int page) {
     FocusScope.of(context).requestFocus(FocusNode()); // Dismiss Keyboard
@@ -211,10 +227,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _setFirstPageData(
     bool active,
     UserGenderSelectionEntity? selectedGender,
+    CaloriesProfileEntity? selectedCaloriesProfile,
     DateTime? selectedBirthday,
   ) {
     setState(() {
       _onboardingBloc.userSelection.gender = selectedGender;
+      _onboardingBloc.userSelection.caloriesProfile = selectedCaloriesProfile;
       _onboardingBloc.userSelection.birthday = selectedBirthday;
 
       _firstPageButtonActive = active;
@@ -274,18 +292,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
   }
 
-  void _onOverviewStartButtonPressed(BuildContext context) {
+  Future<void> _onOverviewStartButtonPressed(BuildContext context) async {
     final userEntity = _onboardingBloc.userSelection.toUserEntity();
     final hasAcceptedDataCollection =
         _onboardingBloc.userSelection.acceptDataCollection;
     final usesImperialUnits = _onboardingBloc.userSelection.usesImperialUnits;
     if (userEntity != null) {
-      _onboardingBloc.saveOnboardingData(
-        context,
+      await _onboardingBloc.saveOnboardingData(
         userEntity,
         hasAcceptedDataCollection,
         usesImperialUnits,
       );
+      if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
     } else {
       // Error with user input
