@@ -232,6 +232,52 @@ main section:last-child {
   color: var(--fg);
 }
 
+/* Verify your download */
+.verify-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.verify-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+}
+
+.verify-card h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.005em;
+}
+
+.verify-card-note {
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+  margin: 0 0 0.9rem;
+}
+
+.verify-card-note-small {
+  font-size: 0.85rem;
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+}
+
+.verify-hash {
+  display: block;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  word-break: break-all;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  color: var(--fg);
+  user-select: all;
+}
+
 /* Footer */
 footer {
   border-top: 1px solid var(--border);

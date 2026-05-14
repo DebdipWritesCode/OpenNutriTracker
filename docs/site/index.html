@@ -113,6 +113,71 @@
       </p>
     </section>
 
+    <section class="verify" id="verify">
+      <h2>Verify your download</h2>
+      <p>
+        If you side-load the Android APK from
+        <a href="https://github.com/simonoppowa/OpenNutriTracker/releases">GitHub Releases</a>
+        rather than installing through the Play Store, you may want to confirm that the file
+        on your disk is the one we signed. There are two values you can check against — both
+        are read automatically from the latest release and updated whenever a new one is cut.
+      </p>
+
+      <div class="verify-grid">
+        <div class="verify-card">
+          <h3>Signing certificate</h3>
+          <p class="verify-card-note">
+            The fingerprint of the certificate the APK was signed with. This value is the
+            cryptographically meaningful one — anyone with the matching private key could
+            produce a matching signature, and nobody else can. It stays the same across
+            every release.
+          </p>
+          <code class="verify-hash" data-field="signing-cert">loading…</code>
+          <p class="verify-card-note verify-card-note-small">
+            SHA-256, lower-case hex, no separators.
+            Issued to <span data-field="signing-cn">Simon Oppowa</span>.
+          </p>
+        </div>
+
+        <div class="verify-card">
+          <h3>Latest APK file</h3>
+          <p class="verify-card-note">
+            The SHA-256 of the APK bytes published for the latest release.
+            This changes every release, and lets you confirm the binary you downloaded
+            matches the one we published, with no in-flight tampering.
+          </p>
+          <code class="verify-hash" data-field="apk-hash">loading…</code>
+          <p class="verify-card-note verify-card-note-small">
+            Release <span data-field="release-tag">…</span>,
+            published <span data-field="release-date">…</span>.
+            <a data-field="release-link" href="https://github.com/simonoppowa/OpenNutriTracker/releases">View release →</a>
+          </p>
+        </div>
+      </div>
+
+      <p>
+        To verify the signing certificate yourself, run
+        <code>apksigner verify --print-certs /path/to/app-release.apk</code> against the
+        downloaded file. The <code>Signer #1 certificate SHA-256 digest</code> line in the
+        output should match the value above, byte for byte.
+      </p>
+      <p>
+        To verify the file hash, run <code>sha256sum app-release.apk</code> (Linux) or
+        <code>shasum -a 256 app-release.apk</code> (macOS) on the downloaded file. The
+        printed value should match the latest-APK value above.
+      </p>
+      <noscript>
+        <p>
+          JavaScript is disabled, so the values above are not loading. The canonical hashes
+          live in
+          <a href="https://github.com/simonoppowa/OpenNutriTracker/blob/main/docs/site/release-info.json">docs/site/release-info.json</a>
+          in the repository, and the
+          <a href="https://github.com/simonoppowa/OpenNutriTracker/blob/main/README.md">README</a>
+          has the verification instructions in text form.
+        </p>
+      </noscript>
+    </section>
+
     <section class="contribute">
       <h2>Contributing</h2>
       <p>
@@ -148,5 +213,46 @@
       <a href="https://github.com/simonoppowa/OpenNutriTracker/blob/main/LICENSE">GPLv3</a>.
     </p>
   </footer>
+
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('release-info.json', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const set = (field, value) => {
+          document.querySelectorAll(`[data-field="${field}"]`).forEach(el => {
+            if (el.tagName === 'A') {
+              el.href = value;
+            } else {
+              el.textContent = value;
+            }
+          });
+        };
+
+        const cert = data.signing_certificate || {};
+        if (cert.sha256) set('signing-cert', cert.sha256);
+        if (cert.common_name) set('signing-cn', cert.common_name);
+
+        const release = data.release || {};
+        if (release.tag) set('release-tag', release.tag);
+        if (release.url) set('release-link', release.url);
+        if (release.published) {
+          const d = new Date(release.published);
+          if (!isNaN(d)) {
+            set('release-date', d.toLocaleDateString(undefined, {
+              year: 'numeric', month: 'long', day: 'numeric'
+            }));
+          }
+        }
+
+        const apk = (data.assets || []).find(a => a.platform === 'Android');
+        if (apk && apk.sha256) set('apk-hash', apk.sha256);
+      } catch (e) {
+        // graceful degrade — the <noscript> block already covers the no-JS case
+      }
+    })();
+  </script>
 </body>
 </html>
