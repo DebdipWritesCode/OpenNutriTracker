@@ -17,7 +17,7 @@
 ## Description
 OpenNutriTracker is an open-source mobile application designed to simplify nutritional tracking and management. Whether you are looking to improve your health, lose weight, or simply maintain a balanced diet, OpenNutriTracker provides a minimalistic interface to easily track and analyze your daily nutrition.
 
-[Website](https://simonoppowa.github.io/OpenNutriTracker/site/)
+[Website](https://simonoppowa.github.io/OpenNutriTracker/)
 
 ## Screenshots
 <p align="center">
