@@ -1500,6 +1500,146 @@ class S {
     );
   }
 
+  /// `Use system colours`
+  String get settingsMaterialYouTitle {
+    return Intl.message(
+      'Use system colours',
+      name: 'settingsMaterialYouTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match your wallpaper accent on Android 12 and newer.`
+  String get settingsMaterialYouSubtitle {
+    return Intl.message(
+      'Match your wallpaper accent on Android 12 and newer.',
+      name: 'settingsMaterialYouSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentColourTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentColourTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Material You`
+  String get settingsAccentSubtitleMaterialYou {
+    return Intl.message(
+      'Material You',
+      name: 'settingsAccentSubtitleMaterialYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get settingsAccentSubtitleCustom {
+    return Intl.message(
+      'Custom',
+      name: 'settingsAccentSubtitleCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default`
+  String get settingsAccentSubtitleDefault {
+    return Intl.message(
+      'Default',
+      name: 'settingsAccentSubtitleDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a colour`
+  String get settingsAccentPresetsHeader {
+    return Intl.message(
+      'Pick a colour',
+      name: 'settingsAccentPresetsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom colour…`
+  String get settingsAccentCustomColour {
+    return Intl.message(
+      'Custom colour…',
+      name: 'settingsAccentCustomColour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the hue picker for a precise choice`
+  String get settingsAccentCustomSubtitle {
+    return Intl.message(
+      'Open the hue picker for a precise choice',
+      name: 'settingsAccentCustomSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hex code`
+  String get settingsAccentHexLabel {
+    return Intl.message(
+      'Hex code',
+      name: 'settingsAccentHexLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That hex code doesn’t look right — six digits, 0-9 and A-F.`
+  String get settingsAccentHexInvalid {
+    return Intl.message(
+      "That hex code doesn't look right — six digits, 0-9 and A-F.",
+      name: 'settingsAccentHexInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentHueTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentHueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn off system colours to choose a custom accent.`
+  String get settingsAccentHueDisabledHint {
+    return Intl.message(
+      'Turn off system colours to choose a custom accent.',
+      name: 'settingsAccentHueDisabledHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get settingsAccentHueReset {
+    return Intl.message(
+      'Reset',
+      name: 'settingsAccentHueReset',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsLicensesLabel {
     return Intl.message(
       'Licenses',

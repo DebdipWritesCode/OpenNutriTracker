@@ -1028,6 +1028,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Nastavenia"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Jazyk"),
+        "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage("Použiť systémové farby"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Zladí aplikáciu s farbou tapety v Androide 12 a novšom."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Farba zvýraznenia"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Vlastné"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Predvolené"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Vyberte farbu"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Vlastná farba…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Otvorte posuvník odtieňa pre presný výber"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex kód"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Tento hex kód nevyzerá správne — šesť znakov, 0-9 a A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Farba zvýraznenia"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Vypnite systémové farby, aby ste mohli vybrať vlastný akcent."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Obnoviť"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Rozdelenie makroživín"),
         "settingsLicensesLabel":

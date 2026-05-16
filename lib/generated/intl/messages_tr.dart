@@ -1089,6 +1089,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Günlük kcal ayarı"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Ayarlar"),
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("Dil"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Sistem renklerini kullan"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Android 12 ve daha yeni sürümlerde duvar kâğıdınızın vurgu rengiyle uyumlanır."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Özel"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Varsayılan"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Bir renk seç"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Özel renk…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Hassas seçim için ton kaydırıcısını aç"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex kod"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Bu hex kod doğru görünmüyor — altı karakter, 0-9 ve A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Özel bir vurgu seçmek için sistem renklerini kapatın."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Sıfırla"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Makro dağılımı"),
         "settingsLicensesLabel":

@@ -1112,6 +1112,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Impostazioni"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Lingua"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Usa i colori di sistema"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Riprende il colore d'accento dello sfondo su Android 12 e versioni successive."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Colore d'accento"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Personalizzato"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Predefinito"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Scegli un colore"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Colore personalizzato…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Apri il selettore di tonalità per una scelta precisa"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Codice esadecimale"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Quel codice esadecimale non sembra giusto — sei caratteri, 0-9 e A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Colore d\u2019accento"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Disattiva i colori di sistema per scegliere un accento personalizzato."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Reimposta"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Distribuzione macro"),
         "settingsLicensesLabel":
