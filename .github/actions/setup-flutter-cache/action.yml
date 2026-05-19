@@ -1,0 +1,33 @@
+name: Setup Flutter and cache pub packages
+description: Installs Flutter and restores/saves the pub cache.
+inputs:
+  flutter-version:
+    description: Flutter SDK version.
+    required: false
+    default: '3.41.7'
+  channel:
+    description: Flutter channel.
+    required: false
+    default: stable
+  cache-key-prefix:
+    description: Prefix used in the pub cache key.
+    required: false
+    default: pub-cache
+runs:
+  using: composite
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.flutter-version }}
+        channel: ${{ inputs.channel }}
+        cache: true
+
+    - name: Cache Flutter packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.pub-cache
+        key: ${{ runner.os }}-${{ inputs.cache-key-prefix }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-key-prefix }}-
+

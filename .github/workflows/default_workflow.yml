@@ -26,23 +26,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Setup Just
         uses: taiki-e/install-action@just
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
 
       # The envied package obfuscates `.env` values into env.g.dart at compile
       # time. CI doesn't have access to the real secrets and the test suite
@@ -50,13 +38,12 @@ jobs:
       # values must come from a developer's local .env when building for
       # release.
       - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       # `just ci` would also run `dart format --set-exit-if-changed`, but the
       # codebase currently has accumulated pre-existing format drift from the
@@ -123,32 +110,18 @@ jobs:
               - 'pubspec.lock'
               - 'ios/Podfile'
 
-      - name: Setup Flutter
+      - name: Setup Flutter + cache packages
         if: steps.changes.outputs.ios == 'true'
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        if: steps.changes.outputs.ios == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Generate stub .env for CI
         if: steps.changes.outputs.ios == 'true'
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       - name: Install Flutter packages
         if: steps.changes.outputs.ios == 'true'
@@ -183,20 +156,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Cache CocoaPods
         uses: actions/cache@v4
@@ -207,13 +168,12 @@ jobs:
             ${{ runner.os }}-pods-
 
       - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       - name: Install Flutter packages
         run: flutter pub get
@@ -266,20 +226,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Cache CocoaPods
         uses: actions/cache@v4
@@ -290,13 +238,12 @@ jobs:
             ${{ runner.os }}-pods-
 
       - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       - name: Install Flutter packages
         run: flutter pub get
@@ -342,20 +289,8 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -368,13 +303,12 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       - name: Install Flutter packages
         run: flutter pub get
@@ -402,20 +336,8 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -445,13 +367,12 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
+        uses: ./.github/actions/write-env-file
+        with:
+          fdc_api_key: ci-stub
+          sentry_dns: https://stub@sentry.io/0
+          supabase_project_url: https://stub.supabase.co
+          supabase_project_anon_key: ci-stub
 
       - name: Install Flutter packages
         run: flutter pub get
@@ -485,7 +406,7 @@ jobs:
           disable-animations: true
           script: flutter test integration_test/ --reporter expanded
 
-  ios-deploy:
+  ios-package:
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
@@ -511,12 +432,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Setup Ruby + Bundler
         uses: ruby/setup-ruby@v1
@@ -536,14 +453,6 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
       - name: Cache CocoaPods
         uses: actions/cache@v4
         with:
@@ -561,22 +470,17 @@ jobs:
         run: fvm install 3.41.7
 
       - name: Generate .env from GitHub Secrets
+        uses: ./.github/actions/write-env-file
         env:
           FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
           SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
           SUPABASE_PROJECT_ANON_KEY: ${{ secrets.SUPABASE_PROJECT_ANON_KEY }}
-        run: |
-          : "${FDC_API_KEY:?Missing FDC_API_KEY secret}"
-          : "${SENTRY_DNS:?Missing SENTRY_DNS secret}"
-          : "${SUPABASE_PROJECT_URL:?Missing SUPABASE_PROJECT_URL secret}"
-          : "${SUPABASE_PROJECT_ANON_KEY:?Missing SUPABASE_PROJECT_ANON_KEY secret}"
-          cat > .env <<EOF
-          FDC_API_KEY="$FDC_API_KEY"
-          SENTRY_DNS="$SENTRY_DNS"
-          SUPABASE_PROJECT_URL="$SUPABASE_PROJECT_URL"
-          SUPABASE_PROJECT_ANON_KEY="$SUPABASE_PROJECT_ANON_KEY"
-          EOF
+        with:
+          fdc_api_key: ${{ env.FDC_API_KEY }}
+          sentry_dns: ${{ env.SENTRY_DNS }}
+          supabase_project_url: ${{ env.SUPABASE_PROJECT_URL }}
+          supabase_project_anon_key: ${{ env.SUPABASE_PROJECT_ANON_KEY }}
 
       - name: Install Flutter packages
         run: flutter pub get
@@ -588,13 +492,13 @@ jobs:
         working-directory: ios
         run: bundle exec pod install
 
-      - name: Deploy iOS build to TestFlight via Fastlane
+      - name: Build signed iOS IPA via Fastlane
         working-directory: ios
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
-        run: bundle exec fastlane ios beta
+        run: bundle exec fastlane ios build
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
@@ -603,10 +507,58 @@ jobs:
           path: build/ios/ipa/*.ipa
           if-no-files-found: error
 
-  android-deploy:
+  ios-deploy:
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
+    needs:
+      - ios-package
+    runs-on: macos-26
+    permissions:
+      contents: read
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      BUNDLE_GEMFILE: ${{ github.workspace }}/ios/Gemfile
+      MATCH_READONLY: 'true'
+      MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      MATCH_GIT_SSH_PRIVATE_KEY: ${{ secrets.MATCH_GIT_SSH_PRIVATE_KEY }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64: 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby + Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Download iOS IPA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-ipa
+          path: build/ios/ipa
+
+      - name: Deploy iOS build to TestFlight via Fastlane
+        working-directory: ios
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+        run: bundle exec fastlane ios beta_from_ipa
+
+  android-package:
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'workflow_dispatch'
+    needs:
+      - linux-checks
+      - ios-build
+      - ios-integration-tests
+      - android-build
+      - android-integration-tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -622,26 +574,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
       - name: Setup Ruby + Bundler
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           bundler-cache: true
 
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
+      - name: Setup Flutter + cache packages
+        uses: ./.github/actions/setup-flutter-cache
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -654,22 +594,17 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Generate .env from GitHub Secrets
+        uses: ./.github/actions/write-env-file
         env:
           FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
           SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
           SUPABASE_PROJECT_ANON_KEY: ${{ secrets.SUPABASE_PROJECT_ANON_KEY }}
-        run: |
-          : "${FDC_API_KEY:?Missing FDC_API_KEY secret}"
-          : "${SENTRY_DNS:?Missing SENTRY_DNS secret}"
-          : "${SUPABASE_PROJECT_URL:?Missing SUPABASE_PROJECT_URL secret}"
-          : "${SUPABASE_PROJECT_ANON_KEY:?Missing SUPABASE_PROJECT_ANON_KEY secret}"
-          cat > .env <<EOF
-          FDC_API_KEY="$FDC_API_KEY"
-          SENTRY_DNS="$SENTRY_DNS"
-          SUPABASE_PROJECT_URL="$SUPABASE_PROJECT_URL"
-          SUPABASE_PROJECT_ANON_KEY="$SUPABASE_PROJECT_ANON_KEY"
-          EOF
+        with:
+          fdc_api_key: ${{ env.FDC_API_KEY }}
+          sentry_dns: ${{ env.SENTRY_DNS }}
+          supabase_project_url: ${{ env.SUPABASE_PROJECT_URL }}
+          supabase_project_anon_key: ${{ env.SUPABASE_PROJECT_ANON_KEY }}
 
       - name: Restore Android signing material
         env:
@@ -717,12 +652,39 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
 
+  android-deploy:
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'workflow_dispatch'
+    needs:
+      - android-package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby + Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Download Android AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-aab
+          path: release-assets/android
+
       - name: Upload Android App Bundle to Google Play Internal Testing via Fastlane
         working-directory: android
         run: bundle exec fastlane android internal
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
-          ANDROID_AAB_PATH: ${{ github.workspace }}/build/app/outputs/bundle/release/app-release.aab
+          ANDROID_AAB_PATH: ${{ github.workspace }}/release-assets/android/app-release.aab
 
   github-release:
     if: |
