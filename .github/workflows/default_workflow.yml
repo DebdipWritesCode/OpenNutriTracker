@@ -24,7 +24,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Flutter + cache packages
         uses: ./.github/actions/setup-flutter-cache
@@ -91,7 +91,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Need the merge base in scope so the paths-filter step below
           # can diff against the PR's target branch.
@@ -149,7 +149,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Check out the PR head so auto-commit lands on the right branch.
           # Falls back to github.ref for push and workflow_dispatch.
@@ -224,7 +224,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Flutter + cache packages
         uses: ./.github/actions/setup-flutter-cache
@@ -281,7 +281,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -328,7 +328,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -430,7 +430,7 @@ jobs:
       APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64: 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Flutter + cache packages
         uses: ./.github/actions/setup-flutter-cache
@@ -527,7 +527,7 @@ jobs:
       APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64: 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Ruby + Bundler
         uses: ruby/setup-ruby@v1
@@ -566,7 +566,7 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -665,7 +665,7 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Ruby + Bundler
         uses: ruby/setup-ruby@v1
@@ -698,7 +698,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download iOS IPA artifact
         uses: actions/download-artifact@v4
