@@ -12,7 +12,7 @@ platform :ios do
     sync_signing
     enforce_app_store_signing
     sh('cd .. && fvm flutter pub get')
-    sh('cd .. && fvm flutter build ipa --release --export-method app-store')
+    sh("cd .. && fvm flutter build ipa --release --export-method app-store --build-number=#{ENV.fetch('CI_BUILD_NUMBER', '1')}")
   end
 
   desc 'Upload the latest IPA to TestFlight'
