@@ -240,43 +240,13 @@ jobs:
         # App Store install and isn't what CI should validate.
         run: flutter build ios --no-codesign --release --flavor full
 
-  # Counts the files in integration_test/ so the (expensive) iOS and Android
-  # integration jobs can skip cleanly when there are none. The suite runs
-  # unsharded — one `flutter test integration_test/` per platform from a
-  # single build — because each test boots the app via `app.main()`, and
-  # `initLocator()` registers its GetIt singletons without a re-registration
-  # guard, so the assertions are bundled into one boot rather than fanned out.
-  discover-integration-tests:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      count: ${{ steps.discover.outputs.count }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Count integration test files
-        id: discover
-        run: |
-          # Gate the (expensive) integration jobs on there being at least one
-          # test to run. The suite runs unsharded — a single
-          # `flutter test integration_test/` per platform — so we only need
-          # the count here, not a per-file matrix.
-          mapfile -t files < <(find integration_test -maxdepth 1 -name '*_test.dart' -type f | sort)
-          echo "Discovered ${#files[@]} integration test files:"
-          printf '  %s\n' "${files[@]}"
-          echo "count=${#files[@]}" >> "$GITHUB_OUTPUT"
-
   ios-integration-tests:
-    # Deliberately not gated on ios-build. The integration run rebuilds the
-    # app from source anyway (it compiles its own test binary), so depending
-    # on ios-build only serialised ~6-11 min of build in front of this job
-    # for no shared output. Running them in parallel cuts the iOS feedback
-    # path by that much; the cost is one extra macOS build when the app does
-    # not compile, which this job's own build would surface regardless.
-    needs: [discover-integration-tests]
-    if: needs.discover-integration-tests.outputs.count != '0'
+    # Runs from the start of the workflow, in parallel with everything else.
+    # Not gated on ios-build: this job rebuilds the app itself (it compiles
+    # its own test binary), so the dependency shared no output and only
+    # serialised ~6-11 min of build in front of it. The cost is one extra
+    # macOS build when the app doesn't compile, which this job's own build
+    # surfaces regardless.
     runs-on: macos-26
     # Bound the job so a hung test fails fast rather than drifting toward
     # GitHub's 6-hour default. A healthy run is the ~11-12 min Xcode build
@@ -392,12 +362,8 @@ jobs:
         run: flutter build apk --flavor full --debug
 
   android-integration-tests:
-    # Not gated on android-build — same reasoning as iOS: this job rebuilds
-    # the app itself, so the dependency only serialised the build for no
-    # shared artifact. Running in parallel is cheaper here anyway since it is
-    # all ubuntu minutes.
-    needs: [discover-integration-tests]
-    if: needs.discover-integration-tests.outputs.count != '0'
+    # Same as iOS: runs in parallel from the start, gated on neither
+    # android-build (it rebuilds the app itself) nor a file-discovery job.
     runs-on: ubuntu-latest
     # Same bound as iOS so a hung test fails fast rather than running to the
     # 6-hour default.
