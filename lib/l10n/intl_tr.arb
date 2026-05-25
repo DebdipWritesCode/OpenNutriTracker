@@ -404,9 +404,12 @@
   "notAvailableLabel": "Mevcut Değil",
   "nothingAddedLabel": "Hiçbir şey eklenmedi",
   "notificationsDailyReminderBody": "Bugün öğünlerinizi kaydetmeyi unutmayın!",
+  "notificationsDailyReminderChannelName": "Günlük hatırlatıcılar",
+  "notificationsDailyReminderChannelDescription": "Öğünlerinizi kaydetmeniz için günlük hatırlatma",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "Bildirim izni reddedildi.",
   "nutrientPanelAllHiddenLabel": "Tüm besinler gizli — bazılarını Ayarlar → Besinler bölümünden aç.",
+  "nutrientPanelLimitLabel": "sınır",
   "nutrientPanelDayLabel": "Gün",
   "nutrientPanelWeekLabel": "Hafta",
   "nutritionInfoLabel": "Beslenme Bilgileri",
@@ -985,6 +988,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Oruç zamanlayıcısı",
+  "fastingNotificationChannelDescription": "Bir oruç hedefe ulaştığında tek seferlik bildirimler.",
   "fastingNotificationCompleteTitle": "Oruç süresi tamamlandı",
   "fastingNotificationCompleteBody": "Hedef sürene ulaştın."
 }

@@ -373,9 +373,12 @@
   "notAvailableLabel": "N/D",
   "nothingAddedLabel": "Niente aggiunto",
   "notificationsDailyReminderBody": "Non dimenticare di registrare i tuoi pasti oggi!",
+  "notificationsDailyReminderChannelName": "Promemoria giornalieri",
+  "notificationsDailyReminderChannelDescription": "Promemoria giornaliero per registrare i pasti",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "Autorizzazione alle notifiche negata.",
   "nutrientPanelAllHiddenLabel": "Tutti i nutrienti nascosti — attivane alcuni in Impostazioni → Nutrienti.",
+  "nutrientPanelLimitLabel": "limite",
   "nutrientPanelDayLabel": "Giorno",
   "nutrientPanelWeekLabel": "Settimana",
   "nutritionInfoLabel": "Informazioni nutrizionali",
@@ -954,6 +957,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Timer del digiuno",
+  "fastingNotificationChannelDescription": "Notifiche occasionali quando un digiuno raggiunge il suo obiettivo.",
   "fastingNotificationCompleteTitle": "Sessione di digiuno completata",
   "fastingNotificationCompleteBody": "Il tuo tempo obiettivo è stato raggiunto."
 }

@@ -105,6 +105,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("上限"),
+        "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("每日提醒"),
+        "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("每日记录餐食的提醒"),
+        "fastingNotificationChannelName": MessageLookupByLibrary.simpleMessage("断食计时器"),
+        "fastingNotificationChannelDescription": MessageLookupByLibrary.simpleMessage("断食达到目标时的一次性提醒。"),
         "activityExample":
             MessageLookupByLibrary.simpleMessage("例如：跑步、骑车、瑜伽..."),
         "activityLabel": MessageLookupByLibrary.simpleMessage("活动"),

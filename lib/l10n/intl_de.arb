@@ -404,9 +404,12 @@
   "notAvailableLabel": "N/A",
   "nothingAddedLabel": "Nichts hinzugefügt",
   "notificationsDailyReminderBody": "Vergiss nicht, heute deine Mahlzeiten zu protokollieren!",
+  "notificationsDailyReminderChannelName": "Tägliche Erinnerungen",
+  "notificationsDailyReminderChannelDescription": "Tägliche Erinnerung zum Erfassen deiner Mahlzeiten",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "Benachrichtigungsberechtigung verweigert.",
   "nutrientPanelAllHiddenLabel": "Alle Nährstoffe ausgeblendet — schalte einige unter Einstellungen → Nährstoffe ein.",
+  "nutrientPanelLimitLabel": "Limit",
   "nutrientPanelDayLabel": "Tag",
   "nutrientPanelWeekLabel": "Woche",
   "nutritionInfoLabel": "Nährwertangaben",
@@ -985,6 +988,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Fasten-Timer",
+  "fastingNotificationChannelDescription": "Einmalige Hinweise, wenn eine Fastenphase ihr Ziel erreicht.",
   "fastingNotificationCompleteTitle": "Fastenzeit abgeschlossen",
   "fastingNotificationCompleteBody": "Deine Zielzeit wurde erreicht."
 }

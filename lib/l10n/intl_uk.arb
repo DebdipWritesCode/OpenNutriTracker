@@ -373,9 +373,12 @@
   "notAvailableLabel": "Н/Д",
   "nothingAddedLabel": "Нічого не додано",
   "notificationsDailyReminderBody": "Не забудьте сьогодні записати свої страви!",
+  "notificationsDailyReminderChannelName": "Щоденні нагадування",
+  "notificationsDailyReminderChannelDescription": "Щоденне нагадування записати прийоми їжі",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "У дозволі на сповіщення відмовлено.",
   "nutrientPanelAllHiddenLabel": "Усі поживні речовини приховано — увімкни деякі в Налаштування → Поживні речовини.",
+  "nutrientPanelLimitLabel": "ліміт",
   "nutrientPanelDayLabel": "День",
   "nutrientPanelWeekLabel": "Тиждень",
   "nutritionInfoLabel": "Інформація про харчування",
@@ -954,6 +957,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Таймер голодування",
+  "fastingNotificationChannelDescription": "Одноразові сповіщення, коли голодування досягає своєї мети.",
   "fastingNotificationCompleteTitle": "Сесія голодування завершена",
   "fastingNotificationCompleteBody": "Цільовий час досягнуто."
 }

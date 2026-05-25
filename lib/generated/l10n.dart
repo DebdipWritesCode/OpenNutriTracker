@@ -1908,6 +1908,56 @@ class S {
     );
   }
 
+  /// `Daily Reminders`
+  String get notificationsDailyReminderChannelName {
+    return Intl.message(
+      'Daily Reminders',
+      name: 'notificationsDailyReminderChannelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily meal logging reminder`
+  String get notificationsDailyReminderChannelDescription {
+    return Intl.message(
+      'Daily meal logging reminder',
+      name: 'notificationsDailyReminderChannelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting timer`
+  String get fastingNotificationChannelName {
+    return Intl.message(
+      'Fasting timer',
+      name: 'fastingNotificationChannelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off pings when a fasting session reaches its target.`
+  String get fastingNotificationChannelDescription {
+    return Intl.message(
+      'One-off pings when a fasting session reaches its target.',
+      name: 'fastingNotificationChannelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `limit`
+  String get nutrientPanelLimitLabel {
+    return Intl.message(
+      'limit',
+      name: 'nutrientPanelLimitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Don't forget to log your meals today!`
   String get notificationsDailyReminderBody {
     return Intl.message(

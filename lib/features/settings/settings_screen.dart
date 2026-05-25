@@ -386,6 +386,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         minute: state.notificationMinute,
         title: l10n.notificationsDailyReminderTitle,
         body: l10n.notificationsDailyReminderBody,
+        channelName: l10n.notificationsDailyReminderChannelName,
+        channelDescription: l10n.notificationsDailyReminderChannelDescription,
       );
     } else {
       await notificationService.cancelDailyReminder();
@@ -408,6 +410,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       minute: picked.minute,
       title: l10n.notificationsDailyReminderTitle,
       body: l10n.notificationsDailyReminderBody,
+      channelName: l10n.notificationsDailyReminderChannelName,
+      channelDescription: l10n.notificationsDailyReminderChannelDescription,
     );
     _settingsBloc.add(LoadSettingsEvent());
   }

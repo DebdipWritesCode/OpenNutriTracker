@@ -373,9 +373,12 @@
   "notAvailableLabel": "neuvedeno",
   "nothingAddedLabel": "Nezadáno",
   "notificationsDailyReminderBody": "Nezapomeňte si dnes zaznamenat svá jídla!",
+  "notificationsDailyReminderChannelName": "Denní připomenutí",
+  "notificationsDailyReminderChannelDescription": "Denní připomenutí k zaznamenání jídel",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "Oprávnění k upozorněním bylo odepřeno.",
   "nutrientPanelAllHiddenLabel": "Všechny živiny skryté — zapni některé v Nastavení → Živiny.",
+  "nutrientPanelLimitLabel": "limit",
   "nutrientPanelDayLabel": "Den",
   "nutrientPanelWeekLabel": "Týden",
   "nutritionInfoLabel": "Nutriční hodnoty",
@@ -954,6 +957,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Časovač půstu",
+  "fastingNotificationChannelDescription": "Jednorázová upozornění, když půst dosáhne svého cíle.",
   "fastingNotificationCompleteTitle": "Půst dokončen",
   "fastingNotificationCompleteBody": "Cílový čas byl dosažen."
 }

@@ -462,9 +462,12 @@
   "notAvailableLabel": "N/A",
   "nothingAddedLabel": "Nothing added",
   "notificationsDailyReminderBody": "Don't forget to log your meals today!",
+  "notificationsDailyReminderChannelName": "Daily Reminders",
+  "notificationsDailyReminderChannelDescription": "Daily meal logging reminder",
   "notificationsDailyReminderTitle": "OpenNutriTracker",
   "notificationsPermissionDeniedSnack": "Notification permission denied.",
   "nutrientPanelAllHiddenLabel": "All nutrients hidden — turn some on in Settings → Nutrients.",
+  "nutrientPanelLimitLabel": "limit",
   "nutrientPanelDayLabel": "Day",
   "nutrientPanelWeekLabel": "Week",
   "nutritionInfoLabel": "Nutrition Information",
@@ -1026,6 +1029,8 @@
       "remaining": { "type": "String" }
     }
   },
+  "fastingNotificationChannelName": "Fasting timer",
+  "fastingNotificationChannelDescription": "One-off pings when a fasting session reaches its target.",
   "fastingNotificationCompleteTitle": "Fasting session complete",
   "fastingNotificationCompleteBody": "Your target time has been reached."
 }

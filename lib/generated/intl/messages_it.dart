@@ -108,6 +108,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("limite"),
+        "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Promemoria giornalieri"),
+        "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Promemoria giornaliero per registrare i pasti"),
+        "fastingNotificationChannelName": MessageLookupByLibrary.simpleMessage("Timer del digiuno"),
+        "fastingNotificationChannelDescription": MessageLookupByLibrary.simpleMessage("Notifiche occasionali quando un digiuno raggiunge il suo obiettivo."),
         "activityExample": MessageLookupByLibrary.simpleMessage(
             "es. corsa, bicicletta, yoga ..."),
         "activityLabel": MessageLookupByLibrary.simpleMessage("Attività"),
