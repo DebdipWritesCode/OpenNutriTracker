@@ -620,8 +620,11 @@ jobs:
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
+    # Deploy only when BOTH platforms packaged successfully (see android-deploy)
+    # so a one-sided failure never publishes half a release.
     needs:
       - ios-package
+      - android-package
     # Must run on macOS. The TestFlight upload goes through Apple's iTunes
     # Transporter, which needs the macOS toolchain (xcrun/altool); on
     # ubuntu it failed with "No such file or directory @ dir_chdir0" as the
@@ -785,8 +788,13 @@ jobs:
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
+    # Deploy only when BOTH platforms packaged successfully. A half-success
+    # (e.g. iOS packaging fails) would otherwise still upload the Android AAB,
+    # consuming a Play versionCode and forcing a build-number bump on the
+    # retry. Gating both deploys on both package jobs keeps a release atomic.
     needs:
       - android-package
+      - ios-package
     runs-on: ubuntu-latest
     permissions:
       contents: read
