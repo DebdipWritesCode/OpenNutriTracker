@@ -49,7 +49,8 @@ class SearchProductsUseCase {
     bool skipRemote = false,
   }) async {
     if (skipRemote) {
-      return _buildResult(searchString, const [], remoteSkipped: true);
+      return _buildResult(searchString, const [],
+          remoteSkipped: true, cacheSource: MealSourceEntity.off);
     }
     final remote = await _safeRemoteCall(
       'OFF',
@@ -61,7 +62,8 @@ class SearchProductsUseCase {
     // get their timestamp refreshed and stay until 90 days after the
     // last selection.
     await _cacheRemoteResults(remote);
-    return _buildResult(searchString, remote);
+    return _buildResult(searchString, remote,
+        cacheSource: MealSourceEntity.off);
   }
 
   Future<SearchProductsResult> searchFDCFoodByString(
@@ -69,14 +71,16 @@ class SearchProductsUseCase {
     bool skipRemote = false,
   }) async {
     if (skipRemote) {
-      return _buildResult(searchString, const [], remoteSkipped: true);
+      return _buildResult(searchString, const [],
+          remoteSkipped: true, cacheSource: MealSourceEntity.fdc);
     }
     final remote = await _safeRemoteCall(
       'FDC',
       () => _productsRepository.getSupabaseFDCFoodsByString(searchString),
     );
     await _cacheRemoteResults(remote);
-    return _buildResult(searchString, remote);
+    return _buildResult(searchString, remote,
+        cacheSource: MealSourceEntity.fdc);
   }
 
   Future<void> _cacheRemoteResults(List<MealEntity> remote) async {
@@ -114,6 +118,7 @@ class SearchProductsUseCase {
     String searchString,
     List<MealEntity> remoteResults, {
     bool remoteSkipped = false,
+    required MealSourceEntity cacheSource,
   }) async {
     // When the remote source was deliberately skipped (short query), don't
     // claim it returned nothing — that would show a misleading "no results"
@@ -166,9 +171,17 @@ class SearchProductsUseCase {
     // Sorted with the most recently touched entries first so an item the
     // user just selected (logged) appears at the top of the next search
     // result list, ahead of other cached items they haven't touched.
-    final fromOffCache = _cachedOffMealDataSource
+    //
+    // The cache box holds both OFF and FDC entries (cacheFromSearch writes
+    // whatever either remote returned), so filter to the source of the tab
+    // being built. Without this, a prior OFF search leaks branded products
+    // into the FDC "Food" tab and vice versa, since both tabs share this
+    // helper. Custom meals, recipes and intake history above are the user's
+    // own and are intentionally surfaced in both tabs.
+    final fromCache = _cachedOffMealDataSource
         .getAllByMostRecentlyTouched()
         .map(MealEntity.fromMealDBO)
+        .where((meal) => meal.source == cacheSource)
         .where((meal) => _mealMatchesSearch(meal, normalizedSearchString))
         .toList();
 
@@ -183,7 +196,7 @@ class SearchProductsUseCase {
         ...fromCustomMealBox,
         ...fromRecipes,
         ...fromIntakeHistory,
-        ...fromOffCache,
+        ...fromCache,
         ...remoteResults,
       ]),
       remoteSourceEmpty: remoteSourceEmpty,
