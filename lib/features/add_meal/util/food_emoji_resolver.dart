@@ -6,8 +6,9 @@
 /// Lookup is name-only — no category fallback. USDA descriptions follow
 /// `Head noun, qualifier, qualifier, …`, so the first token is the
 /// real identity of the food ("Milk, fluid, nonfat..." → "milk").
-/// OFF product names happen to follow the same loose convention often
-/// enough that the same resolver also helps for unimaged OFF entries.
+/// The only caller applies this to FDC base-food items; OFF products are
+/// branded, so they keep their placeholder icon rather than risk a
+/// misleading head-noun match.
 ///
 /// Returns `null` when the head noun isn't in the curated map — callers
 /// should fall back to their existing iconography. Keeping the map small

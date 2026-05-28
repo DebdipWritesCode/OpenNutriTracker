@@ -73,9 +73,11 @@ class MealItemCard extends StatelessWidget {
                             ? Theme.of(context).colorScheme.primaryContainer
                             : Theme.of(context).colorScheme.secondaryContainer,
                         child: emoji != null
-                            ? Text(
-                                emoji,
-                                style: const TextStyle(fontSize: 32),
+                            ? ExcludeSemantics(
+                                child: Text(
+                                  emoji,
+                                  style: const TextStyle(fontSize: 32),
+                                ),
                               )
                             : Icon(
                                 isRecipe
