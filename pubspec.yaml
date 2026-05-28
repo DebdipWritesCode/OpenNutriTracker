@@ -54,6 +54,8 @@ dependencies:
   file_picker: ^11.0.2
 
   flutter_bloc: ^9.1.1
+  bloc_concurrency: ^0.3.0
+  stream_transform: ^2.1.1
   equatable: ^2.0.8
 
   percent_indicator: ^4.2.5
