@@ -48,6 +48,7 @@ class OFFConst {
   static const _offServingSizeTag = "serving_size";
   static const _offNutrimentsTag = "nutriments";
   static const _offPopularityKeyTag = "popularity_key";
+  static const _offCountriesTagsTag = "countries_tags";
 
   // Search-a-licious only indexes a thin projection of each product: the
   // serving_* and product_quantity fields are absent from its index, so they
@@ -66,6 +67,7 @@ class OFFConst {
     _offQuantityTag,
     _offNutrimentsTag,
     _offPopularityKeyTag,
+    _offCountriesTagsTag,
   ];
 
   // The v2 product endpoint carries the full record, including the serving

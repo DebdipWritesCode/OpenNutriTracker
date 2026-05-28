@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:logging/logging.dart';
+import 'package:opennutritracker/core/utils/off_country.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/fdc_data_source.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/off_data_source.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/sp_fdc_data_source.dart';
@@ -18,6 +21,12 @@ class ProductsRepository {
   // products up and sinking sparse/duplicate entries — validated across brand
   // ("nutella"), descriptive ("oat milk", "greek yogurt") and specific queries.
   static const _rankFusionK = 10;
+
+  // Soft multiplier applied to the fused score of products sold in the user's
+  // country. 1.3 lifts locally-available products a clear notch without burying
+  // a much more popular/relevant global match — non-local products still
+  // appear, just lower. Tuned against live results for a GB user.
+  static const _localCountryBoost = 1.3;
 
   final OFFDataSource _offDataSource;
   final FDCDataSource _fdcDataSource;
@@ -39,13 +48,18 @@ class ProductsRepository {
     // re-rank by fusing relevance position with OFF's popularity_key so
     // popular, well-maintained products surface first — without letting
     // popularity drag in off-topic matches the way a hard popularity sort does.
+    final userCountryTag = OffCountry.fromLocale(Platform.localeName);
     final candidates = <_RankedOffProduct>[];
     for (var i = 0; i < offWordResponse.products.length; i++) {
       final dto = offWordResponse.products[i];
       if (dto.nutriments == null) continue;
       final meal = MealEntity.fromOFFProduct(dto);
       if (!_keepIfConsistent(meal)) continue;
-      candidates.add(_RankedOffProduct(meal, dto.popularity_key ?? 0, i));
+      final inUserCountry = userCountryTag != null &&
+          (dto.countries_tags?.contains(userCountryTag) ?? false);
+      candidates.add(
+        _RankedOffProduct(meal, dto.popularity_key ?? 0, i, inUserCountry),
+      );
     }
 
     return _fuseRelevanceAndPopularity(candidates);
@@ -65,9 +79,11 @@ class ProductsRepository {
       popularityRank[byPopularity[i]] = i;
     }
 
-    double score(_RankedOffProduct p) =>
-        1 / (_rankFusionK + p.relevanceRank) +
-        1 / (_rankFusionK + popularityRank[p]!);
+    double score(_RankedOffProduct p) {
+      final fused = 1 / (_rankFusionK + p.relevanceRank) +
+          1 / (_rankFusionK + popularityRank[p]!);
+      return p.inUserCountry ? fused * _localCountryBoost : fused;
+    }
 
     // Soft Atwater demotion: products whose declared energy is incoherent with
     // their macros sink below all coherent ones (then by fused score within
@@ -149,13 +165,20 @@ class ProductsRepository {
   }
 }
 
-/// A search candidate paired with the two ranking signals used to fuse a final
-/// order: its [popularity] (OFF popularity_key, 0 when absent) and its
-/// [relevanceRank] (position in the API's relevance-ordered response).
+/// A search candidate paired with the ranking signals used to fuse a final
+/// order: its [popularity] (OFF popularity_key, 0 when absent), its
+/// [relevanceRank] (position in the API's relevance-ordered response), and
+/// [inUserCountry] (whether it is sold in the user's country, for a soft boost).
 class _RankedOffProduct {
   final MealEntity meal;
   final num popularity;
   final int relevanceRank;
+  final bool inUserCountry;
 
-  _RankedOffProduct(this.meal, this.popularity, this.relevanceRank);
+  _RankedOffProduct(
+    this.meal,
+    this.popularity,
+    this.relevanceRank,
+    this.inUserCountry,
+  );
 }

@@ -61,6 +61,11 @@ class OFFProductDTO {
   // results — the v2 barcode endpoint omits it, which is fine (single product).
   final num? popularity_key;
 
+  // Open Food Facts country tags (e.g. `en:united-kingdom`). Used to softly
+  // boost products sold in the user's country up the search ranking. Only
+  // present on Search-a-licious results.
+  final List<String>? countries_tags;
+
   final OFFProductNutrimentsDTO? nutriments;
 
   String? getLocaleName(SupportedLanguage supportedLanguage) {
@@ -128,6 +133,7 @@ class OFFProductDTO {
     required this.serving_size,
     required this.nutriments,
     this.popularity_key,
+    this.countries_tags,
   });
 
   factory OFFProductDTO.fromJson(Map<String, dynamic> json) =>

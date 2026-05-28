@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/utils/off_country.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/fdc_data_source.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/off_data_source.dart';
 import 'package:opennutritracker/features/add_meal/data/data_sources/sp_fdc_data_source.dart';
@@ -12,7 +15,12 @@ import 'package:opennutritracker/features/add_meal/data/repository/products_repo
 // [atwaterConsistent] false declares 100 kcal against macros that imply ~33,
 // which is physically plausible (passes _keepIfConsistent) but Atwater-
 // incoherent (>25% energy gap), so it should be demoted in ranking.
-OFFProductDTO _p(String name, {num? popularity, bool atwaterConsistent = true}) =>
+OFFProductDTO _p(
+  String name, {
+  num? popularity,
+  bool atwaterConsistent = true,
+  List<String>? countries,
+}) =>
     OFFProductDTO(
       code: name,
       product_name: name,
@@ -31,6 +39,7 @@ OFFProductDTO _p(String name, {num? popularity, bool atwaterConsistent = true}) 
       serving_quantity: null,
       serving_size: null,
       popularity_key: popularity,
+      countries_tags: countries,
       nutriments: atwaterConsistent
           ? OFFProductNutrimentsDTO(
               energy_kcal_100g: 100,
@@ -155,6 +164,39 @@ void main() {
 
       final result = await repo.getOFFProductsByString('q');
       expect(result.length, lessThanOrEqualTo(25));
+    });
+
+    // The repository derives the user's country from Platform.localeName; these
+    // tests tag the "local" product with whatever that resolves to so they
+    // exercise the real boost path on any host whose locale carries a mapped
+    // country (the typical dev/CI case).
+    final userTag = OffCountry.fromLocale(Platform.localeName);
+
+    test('a product sold in the user country is softly boosted above a '
+        'comparable non-local one', () async {
+      if (userTag == null) return; // host locale has no mappable country
+      final repo = _repoReturning([
+        _p('non-local', popularity: 100),
+        _p('local', popularity: 100, countries: [userTag]),
+      ]);
+
+      final result = await repo.getOFFProductsByString('q');
+      final names = result.map((m) => m.name).toList();
+      expect(names.indexOf('local'), lessThan(names.indexOf('non-local')));
+    });
+
+    test('the country boost is soft: a clearly dominant global product still '
+        'outranks a weak local one', () async {
+      if (userTag == null) return;
+      final items = <OFFProductDTO>[
+        _p('global-strong', popularity: 1000000000),
+        ...List.generate(30, (i) => _p('filler$i', popularity: 500 - i)),
+        _p('local-weak', popularity: 1, countries: [userTag]),
+      ];
+      final repo = _repoReturning(items);
+
+      final result = await repo.getOFFProductsByString('q');
+      expect(result.first.name, 'global-strong');
     });
   });
 }
