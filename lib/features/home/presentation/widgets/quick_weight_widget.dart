@@ -74,13 +74,12 @@ class QuickWeightWidget extends StatelessWidget {
       ),
     );
 
+    // addEntry already persisted today's weight onto the user record, so
+    // re-load it and route through ProfileBloc.updateUser purely so the
+    // profile screen, diary, and home all refresh in one go. Going through
+    // AddUserUsecase directly would update Hive but leave the profile
+    // screen showing the pre-edit weight until the next manual reload.
     final user = await locator<GetUserUsecase>().getUserData();
-    user.weightKG = newWeightKg;
-
-    // Route through ProfileBloc.updateUser so the profile screen, diary,
-    // and home all refresh in one go. Going through AddUserUsecase
-    // directly would update Hive but leave the profile screen showing the
-    // pre-edit weight until the next manual reload.
     await locator<ProfileBloc>().updateUser(user);
   }
 }
