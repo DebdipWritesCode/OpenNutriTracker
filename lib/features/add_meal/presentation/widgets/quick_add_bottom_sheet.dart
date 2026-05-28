@@ -11,6 +11,7 @@ import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/id_generator.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -109,8 +110,12 @@ class _QuickAddBottomSheetState extends State<QuickAddBottomSheet> {
 
       if (!mounted) return;
       final mealTypeLabel = _intakeTypeLabel(context, widget.intakeType);
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+        NavigationOptions.mainRoute,
+        (route) => false,
+      );
+      scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text(S.of(context).quickAddAddedSnack(mealTypeLabel)),
         ),
