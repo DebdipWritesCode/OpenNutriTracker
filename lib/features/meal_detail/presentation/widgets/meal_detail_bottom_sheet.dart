@@ -171,6 +171,30 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
                           ),
                         ],
                       ),
+                      if (!productMissingRequiredInfo) ...[
+                        const SizedBox(height: Dimens.spacing12),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Wrap(
+                            spacing: Dimens.spacing8,
+                            children: [
+                              // Quick-quantity presets — one tap to a common
+                              // serving size instead of typing.
+                              for (final preset in const [50, 100, 150, 200, 250])
+                                ActionChip(
+                                  label: Text('$preset'),
+                                  onPressed: () {
+                                    widget.quantityTextController.text = '$preset';
+                                    widget.onQuantityOrUnitChanged(
+                                      '$preset',
+                                      widget.selectedUnit,
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: Dimens.spacing16),
                       Semantics(
                         identifier: 'meal-detail-add',
