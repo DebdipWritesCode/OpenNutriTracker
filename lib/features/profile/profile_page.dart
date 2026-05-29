@@ -292,12 +292,31 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         const SizedBox(height: Dimens.spacing24),
-        _SectionHeader(label: S.of(context).settingsLabel, palette: palette),
-        const SizedBox(height: Dimens.spacing12),
-        // The full settings surface, hosted inline so You is the single home for
-        // identity, goals and app preferences. Reuses the SettingsScreen logic
-        // unchanged; the pushed route still works for any other caller.
-        const SettingsScreen(embedded: true),
+        // The full settings surface lives inline so You is the single home for
+        // identity, goals and app preferences — but collapsed by default so the
+        // tab stays scannable. Reuses SettingsScreen unchanged; the pushed route
+        // still works for any other caller.
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              shape: const Border(),
+              collapsedShape: const Border(),
+              tilePadding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spacing16,
+                vertical: Dimens.spacing4,
+              ),
+              leading: Icon(Icons.settings_rounded, color: palette.textMuted),
+              title: Text(
+                S.of(context).settingsLabel,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              childrenPadding: const EdgeInsets.only(bottom: Dimens.spacing8),
+              children: const [SettingsScreen(embedded: true)],
+            ),
+          ),
+        ),
       ],
     );
   }
