@@ -141,60 +141,72 @@ class _AddMealScreenState extends State<AddMealScreen> {
   /// has explicitly chosen Food. Keeps the chip selection and the results in sync.
   _SearchSource _resolveSource(String trimmed) {
     if (trimmed.isEmpty) return _SearchSource.recent;
-    return _source == _SearchSource.recent ? _SearchSource.products : _source;
+    // Typing searches every source at once (All); an explicit Products / Food
+    // choice narrows that merged list.
+    return _source == _SearchSource.recent ? _SearchSource.all : _source;
   }
+
+  bool _searchesProducts(_SearchSource s) =>
+      s == _SearchSource.all || s == _SearchSource.products;
+  bool _searchesFood(_SearchSource s) =>
+      s == _SearchSource.all || s == _SearchSource.food;
 
   void _onSearchSubmit(String inputText) {
     final trimmed = inputText.trim();
     final source = _resolveSource(trimmed);
     if (source != _source) setState(() => _source = source);
-    switch (source) {
-      case _SearchSource.products:
-        if (isValidBarcodeCheckDigit(trimmed)) {
-          Navigator.of(context).pushNamed(
-            NavigationOptions.scannerRoute,
-            arguments: ScannerScreenArguments(
-              _day,
-              _mealType.getIntakeType(),
-              initialBarcode: trimmed,
-            ),
-          );
-          return;
-        }
-        _productsBloc.add(LoadProductsEvent(searchString: inputText));
-      case _SearchSource.food:
-        _foodBloc.add(LoadFoodEvent(searchString: inputText));
-      case _SearchSource.recent:
-        _recentMealBloc.add(LoadRecentMealEvent(searchString: inputText));
+    // A scannable barcode jumps straight to the scanner (product sources only).
+    if (_searchesProducts(source) && isValidBarcodeCheckDigit(trimmed)) {
+      Navigator.of(context).pushNamed(
+        NavigationOptions.scannerRoute,
+        arguments: ScannerScreenArguments(
+          _day,
+          _mealType.getIntakeType(),
+          initialBarcode: trimmed,
+        ),
+      );
+      return;
+    }
+    if (_searchesProducts(source)) {
+      _productsBloc.add(LoadProductsEvent(searchString: inputText));
+    }
+    if (_searchesFood(source)) {
+      _foodBloc.add(LoadFoodEvent(searchString: inputText));
+    }
+    if (source == _SearchSource.recent) {
+      _recentMealBloc.add(LoadRecentMealEvent(searchString: inputText));
     }
   }
 
   /// Debounced search-as-you-type. Recent filters local intake history; the
-  /// remote sources debounce via their own *InputChanged events.
+  /// remote sources debounce via their own *InputChanged events. "All" searches
+  /// products and food together into one merged list.
   void _onSearchChanged(String inputText) {
     final trimmed = inputText.trim();
     final source = _resolveSource(trimmed);
     if (source != _source) setState(() => _source = source);
-    switch (source) {
-      case _SearchSource.products:
-        _productsBloc.add(SearchInputChangedEvent(searchString: inputText));
-      case _SearchSource.food:
-        _foodBloc.add(SearchFoodInputChangedEvent(searchString: inputText));
-      case _SearchSource.recent:
-        _recentMealBloc.add(LoadRecentMealEvent(searchString: inputText));
+    if (_searchesProducts(source)) {
+      _productsBloc.add(SearchInputChangedEvent(searchString: inputText));
+    }
+    if (_searchesFood(source)) {
+      _foodBloc.add(SearchFoodInputChangedEvent(searchString: inputText));
+    }
+    if (source == _SearchSource.recent) {
+      _recentMealBloc.add(LoadRecentMealEvent(searchString: inputText));
     }
   }
 
   void _selectSource(_SearchSource source) {
     setState(() => _source = source);
     final query = _searchStringListener.value;
-    switch (source) {
-      case _SearchSource.products:
-        _productsBloc.add(LoadProductsEvent(searchString: query));
-      case _SearchSource.food:
-        _foodBloc.add(LoadFoodEvent(searchString: query));
-      case _SearchSource.recent:
-        _recentMealBloc.add(LoadRecentMealEvent(searchString: query));
+    if (_searchesProducts(source)) {
+      _productsBloc.add(LoadProductsEvent(searchString: query));
+    }
+    if (_searchesFood(source)) {
+      _foodBloc.add(LoadFoodEvent(searchString: query));
+    }
+    if (source == _SearchSource.recent) {
+      _recentMealBloc.add(LoadRecentMealEvent(searchString: query));
     }
   }
 
@@ -215,6 +227,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
         child: Row(
           children: [
             chip(_SearchSource.recent, S.of(context).recentlyAddedLabel),
+            chip(_SearchSource.all, S.of(context).allItemsLabel),
             chip(_SearchSource.products, S.of(context).searchProductsPage),
             chip(_SearchSource.food, S.of(context).searchFoodPage),
           ],
@@ -237,6 +250,55 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
   Widget _buildResults(BuildContext context, AppPalette palette) {
     switch (_source) {
+      case _SearchSource.all:
+        // One merged list across product sources; each card already shows its
+        // own brand/source, so provenance stays clear.
+        return Column(
+          children: [
+            _resultsHeader(context, palette),
+            Expanded(
+              child: BlocBuilder<ProductsBloc, ProductsState>(
+                bloc: _productsBloc,
+                builder: (context, ps) {
+                  return BlocBuilder<FoodBloc, FoodState>(
+                    bloc: _foodBloc,
+                    builder: (context, fs) {
+                      final products =
+                          ps is ProductsLoadedState ? ps.products : const <MealEntity>[];
+                      final foods =
+                          fs is FoodLoadedState ? fs.food : const <MealEntity>[];
+                      final merged = [...products, ...foods];
+                      if (merged.isEmpty) {
+                        if (ps is ProductsLoadingState || fs is FoodLoadingState) {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 32),
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (ps is ProductsInitial && fs is FoodInitial) {
+                          return const DefaultsResultsWidget();
+                        }
+                        return const NoResultsWidget();
+                      }
+                      final imperial = ps is ProductsLoadedState
+                          ? ps.usesImperialUnits
+                          : (fs is FoodLoadedState ? fs.usesImperialUnits : false);
+                      return ListView.builder(
+                        itemCount: merged.length,
+                        itemBuilder: (context, index) => MealItemCard(
+                          day: _day,
+                          mealEntity: merged[index],
+                          addMealType: _mealType,
+                          usesImperialUnits: imperial,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
       case _SearchSource.products:
         return Column(
           children: [
@@ -426,4 +488,4 @@ class AddMealScreenArguments {
   AddMealScreenArguments(this.mealType, this.day);
 }
 
-enum _SearchSource { recent, products, food }
+enum _SearchSource { recent, all, products, food }
