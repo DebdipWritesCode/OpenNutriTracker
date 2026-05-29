@@ -1266,6 +1266,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("şeker"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans yağ"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kaloriler"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("bu hafta hedefteki gün"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Eğilimler"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Birim"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("A vitamini"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("B12 vitamini"),
@@ -1281,6 +1284,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ayarlanmadı"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Siz"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("çinko"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Kilo geçmişi"),

@@ -170,6 +170,46 @@ class S {
     );
   }
 
+  /// `Trends`
+  String get trendsLabel {
+    return Intl.message(
+      'Trends',
+      name: 'trendsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You`
+  String get youLabel {
+    return Intl.message(
+      'You',
+      name: 'youLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories`
+  String get trendsCaloriesLabel {
+    return Intl.message(
+      'Calories',
+      name: 'trendsCaloriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `days on track this week`
+  String get trendsDaysOnTrack {
+    return Intl.message(
+      'days on track this week',
+      name: 'trendsDaysOnTrack',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Diary`
   String get diaryLabel {
     return Intl.message(

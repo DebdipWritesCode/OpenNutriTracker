@@ -36,7 +36,12 @@ import 'package:opennutritracker/features/settings/presentation/widgets/nutrient
 import 'package:opennutritracker/features/settings/presentation/widgets/per_meal_kcal_share_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  /// When true, renders the settings list inline (no Scaffold/AppBar, the list
+  /// shrink-wraps) so it can be hosted inside the You tab's scroll. The pushed
+  /// route uses the default (full-screen) form.
+  final bool embedded;
+
+  const SettingsScreen({super.key, this.embedded = false});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -69,9 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).settingsLabel)),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
+    final Widget body = BlocBuilder<SettingsBloc, SettingsState>(
         bloc: _settingsBloc,
         builder: (context, state) {
           if (state is SettingsInitial) {
@@ -83,12 +86,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             final palette = isDark ? AppPalette.dark : AppPalette.light;
             final error = Theme.of(context).colorScheme.error;
             return ListView(
-              padding: const EdgeInsets.fromLTRB(
-                Dimens.spacing16,
-                Dimens.spacing16,
-                Dimens.spacing16,
-                Dimens.spacing32,
-              ),
+              shrinkWrap: widget.embedded,
+              physics:
+                  widget.embedded ? const NeverScrollableScrollPhysics() : null,
+              padding: widget.embedded
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.fromLTRB(
+                      Dimens.spacing16,
+                      Dimens.spacing16,
+                      Dimens.spacing16,
+                      Dimens.spacing32,
+                    ),
               children: [
                 _SettingsGroup(
                   palette: palette,
@@ -364,7 +372,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }
           return const SizedBox();
         },
-      ),
+    );
+    if (widget.embedded) return body;
+    return Scaffold(
+      appBar: AppBar(title: Text(S.of(context).settingsLabel)),
+      body: body,
     );
   }
 

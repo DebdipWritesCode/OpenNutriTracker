@@ -25,6 +25,7 @@ import 'package:opennutritracker/features/profile/presentation/widgets/set_targe
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:opennutritracker/features/settings/settings_screen.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/water_goal_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -293,20 +294,10 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: Dimens.spacing24),
         _SectionHeader(label: S.of(context).settingsLabel, palette: palette),
         const SizedBox(height: Dimens.spacing12),
-        _ProfileGroup(
-          palette: palette,
-          tiles: [
-            _ProfileTile(
-              identifier: 'profile-settings',
-              palette: palette,
-              icon: Icons.settings_rounded,
-              title: S.of(context).settingsLabel,
-              showChevron: true,
-              onTap: () =>
-                  Navigator.of(context).pushNamed(NavigationOptions.settingsRoute),
-            ),
-          ],
-        ),
+        // The full settings surface, hosted inline so You is the single home for
+        // identity, goals and app preferences. Reuses the SettingsScreen logic
+        // unchanged; the pushed route still works for any other caller.
+        const SettingsScreen(embedded: true),
       ],
     );
   }

@@ -1280,6 +1280,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukry"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("přijato"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalorie"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dní v cíli tento týden"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamin A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamin B12"),
@@ -1295,6 +1298,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nenastaveno"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnost"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Vy"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinek"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Historie hmotnosti"),

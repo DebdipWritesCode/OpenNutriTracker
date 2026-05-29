@@ -1,66 +1,51 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
-import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
-// NOTE: Prototype first cut. Strings are inline English for the sign-off build;
-// they move to the ARB files (all locales) and the data load moves to a
-// TrendsBloc during the propagation phase.
-class TrendsPage extends StatefulWidget {
+class TrendsPage extends StatelessWidget {
   const TrendsPage({super.key});
 
   @override
-  State<TrendsPage> createState() => _TrendsPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider<TrendsBloc>(
+      create: (_) => locator<TrendsBloc>()..add(const LoadTrendsEvent()),
+      child: const _TrendsView(),
+    );
+  }
 }
 
-class _TrendsPageState extends State<TrendsPage> {
-  List<TrackedDayEntity> _week = [];
-  List<WeightLogEntity> _weight = [];
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final week = await locator<GetTrackedDayUsecase>()
-        .getTrackedDaysByRange(today.subtract(const Duration(days: 6)), today);
-    final weight = await locator<GetWeightLogUsecase>()
-        .getEntriesInRange(today.subtract(const Duration(days: 29)), today);
-    if (!mounted) return;
-    setState(() {
-      _week = week;
-      _weight = weight..sort((a, b) => a.date.compareTo(b.date));
-      _loading = false;
-    });
-  }
+class _TrendsView extends StatelessWidget {
+  const _TrendsView();
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final palette = isDark ? AppPalette.dark : AppPalette.light;
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(Dimens.spacing16, Dimens.spacing8, Dimens.spacing16, Dimens.spacing32),
-      children: [
-        _StreakCard(week: _week, palette: palette),
-        const SizedBox(height: Dimens.spacing16),
-        _WeeklyCaloriesCard(week: _week, palette: palette),
-        const SizedBox(height: Dimens.spacing16),
-        _WeightCard(entries: _weight, palette: palette),
-      ],
+    return BlocBuilder<TrendsBloc, TrendsState>(
+      builder: (context, state) {
+        if (state is! TrendsLoaded) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(
+              Dimens.spacing16, Dimens.spacing8, Dimens.spacing16, Dimens.spacing32),
+          children: [
+            _StreakCard(week: state.week, palette: palette),
+            const SizedBox(height: Dimens.spacing16),
+            _WeeklyCaloriesCard(week: state.week, palette: palette),
+            const SizedBox(height: Dimens.spacing16),
+            _WeightCard(entries: state.weight, palette: palette),
+          ],
+        );
+      },
     );
   }
 }
@@ -89,8 +74,8 @@ class _StreakCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('$onTrack of 7 days on track', style: text.titleLarge),
-              Text('This week', style: text.bodyMedium?.copyWith(color: palette.textMuted)),
+              Text('$onTrack / 7', style: text.titleLarge),
+              Text(S.of(context).trendsDaysOnTrack, style: text.bodyMedium?.copyWith(color: palette.textMuted)),
             ],
           ),
         ],
@@ -110,7 +95,6 @@ class _WeeklyCaloriesCard extends StatelessWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     const weekdayInitials = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    // Map tracked days by yyyy-mm-dd for quick lookup.
     final byDay = {for (final d in week) DateTime(d.day.year, d.day.month, d.day.day): d};
     final days = [for (int i = 6; i >= 0; i--) today.subtract(Duration(days: i))];
     final maxVal = days.fold<double>(1, (m, day) {
@@ -123,7 +107,7 @@ class _WeeklyCaloriesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Calories', style: text.titleMedium),
+          Text(S.of(context).trendsCaloriesLabel, style: text.titleMedium),
           const SizedBox(height: Dimens.spacing20),
           SizedBox(
             height: 130,
@@ -199,7 +183,7 @@ class _WeightCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Weight', style: text.titleMedium),
+          Text(S.of(context).weightHistoryWeightLabel, style: text.titleMedium),
           const SizedBox(height: Dimens.spacing20),
           SizedBox(height: 150, child: _buildChart(context)),
         ],
@@ -212,7 +196,7 @@ class _WeightCard extends StatelessWidget {
     if (entries.length < 2) {
       return Center(
         child: Text(
-          'Log your weight a few times to see the trend here.',
+          S.of(context).weightHistoryChartEmptyState,
           textAlign: TextAlign.center,
           style: text.bodyMedium?.copyWith(color: palette.textMuted),
         ),

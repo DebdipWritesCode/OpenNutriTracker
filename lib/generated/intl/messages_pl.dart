@@ -1290,6 +1290,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukier"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("dostarczone"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("tłuszcze trans"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalorie"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dni zgodnie z planem w tym tygodniu"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednostka"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("witamina A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("witamina B12"),
@@ -1305,6 +1308,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nie ustawiono"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Waga"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Ty"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("cynk"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Historia wagi"),

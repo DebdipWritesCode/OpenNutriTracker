@@ -1194,6 +1194,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukor"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("prijaté"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalórie"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dní v pláne tento týždeň"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamín A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamín B12"),
@@ -1221,6 +1224,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Hmotnosť"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnosť"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Ty"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinok"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Dnešné živiny"),

@@ -1133,6 +1133,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("糖"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("提供"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("反式脂肪"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("卡路里"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("本周达标天数"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("趋势"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("单位"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("维生素 A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("维生素 B12"),
@@ -1148,6 +1151,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("未设置"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("体重"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("我的"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("锌"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("体重历史"),

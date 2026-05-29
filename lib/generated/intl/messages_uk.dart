@@ -1294,6 +1294,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("цукор"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("спожито"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("трансжири"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Калорії"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("днів у нормі цього тижня"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Тренди"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("вітамін A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("вітамін B12"),
@@ -1309,6 +1312,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Не встановлено"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Ви"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Історія ваги"),

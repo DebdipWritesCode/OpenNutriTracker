@@ -35,9 +35,8 @@ class _MainScreenState extends State<MainScreen> {
     _appbarPages = [
       const HomeAppbar(),
       MainAppbar(title: S.of(context).diaryLabel, iconData: Icons.book),
-      // TODO(l10n): replace literals with trendsLabel / youLabel during propagation.
-      MainAppbar(title: 'Trends', iconData: Icons.insights),
-      MainAppbar(title: 'You', iconData: Icons.account_circle),
+      MainAppbar(title: S.of(context).trendsLabel, iconData: Icons.insights),
+      MainAppbar(title: S.of(context).youLabel, iconData: Icons.account_circle),
     ];
     super.didChangeDependencies();
   }
@@ -93,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
               id: 'nav-trends',
               icon: Icons.insights_outlined,
               selectedIcon: Icons.insights_rounded,
-              label: 'Trends',
+              label: S.of(context).trendsLabel,
               index: 2,
               selectedIndex: _selectedPageIndex,
               palette: palette,
@@ -103,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               id: 'nav-you',
               icon: Icons.account_circle_outlined,
               selectedIcon: Icons.account_circle_rounded,
-              label: 'You',
+              label: S.of(context).youLabel,
               index: 3,
               selectedIndex: _selectedPageIndex,
               palette: palette,
