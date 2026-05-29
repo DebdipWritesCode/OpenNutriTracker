@@ -1061,6 +1061,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "retryLabel": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
         "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("doymuş yağ"),
         "scanProductLabel": MessageLookupByLibrary.simpleMessage("Ürünü Tara"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Dikey kilitle"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Kodu elle gir"),
         "scannerManualEntryCancel":
@@ -1072,6 +1074,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
             "Bu barkod geçerli görünmüyor. Lütfen rakamları kontrol edip tekrar deneyin."),
         "scannerManualEntrySubmit": MessageLookupByLibrary.simpleMessage("Ara"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Döndürmeye izin ver"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Lütfen bir arama kelimesi girin"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Yiyecek"),

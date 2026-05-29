@@ -41,6 +41,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         fastingWarningAcknowledged: fields[25] as bool?,
         useMaterialYou: fields[20] as bool?,
         accentColor: (fields[26] as num?)?.toInt(),
+        scannerPortraitLock: fields[27] as bool?,
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -50,7 +51,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(27)
+      ..writeByte(28)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -104,7 +105,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(25)
       ..write(obj.fastingWarningAcknowledged)
       ..writeByte(26)
-      ..write(obj.accentColor);
+      ..write(obj.accentColor)
+      ..writeByte(27)
+      ..write(obj.scannerPortraitLock);
   }
 
   @override
@@ -155,6 +158,7 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         fastingWarningAcknowledged: json['fastingWarningAcknowledged'] as bool?,
         useMaterialYou: json['useMaterialYou'] as bool?,
         accentColor: (json['accentColor'] as num?)?.toInt(),
+        scannerPortraitLock: json['scannerPortraitLock'] as bool?,
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -188,6 +192,7 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'fastingWarningAcknowledged': instance.fastingWarningAcknowledged,
   'useMaterialYou': instance.useMaterialYou,
   'accentColor': instance.accentColor,
+  'scannerPortraitLock': instance.scannerPortraitLock,
 };
 
 const _$AppThemeDBOEnumMap = {

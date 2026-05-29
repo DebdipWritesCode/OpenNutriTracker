@@ -1093,6 +1093,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("gesättigtes Fett"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Produkt scannen"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Auf Hochformat sperren"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Code manuell eingeben"),
         "scannerManualEntryCancel":
@@ -1105,6 +1107,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Dieser Barcode sieht nicht gültig aus. Bitte überprüfe die Ziffern und versuche es erneut."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Suchen"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Drehung erlauben"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Bitte geben Sie ein Suchwort ein"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Lebensmittel"),

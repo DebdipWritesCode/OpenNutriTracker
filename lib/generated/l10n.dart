@@ -4219,6 +4219,26 @@ class S {
     );
   }
 
+  /// `Lock to portrait`
+  String get scannerLockOrientationTooltip {
+    return Intl.message(
+      'Lock to portrait',
+      name: 'scannerLockOrientationTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow rotation`
+  String get scannerUnlockOrientationTooltip {
+    return Intl.message(
+      'Allow rotation',
+      name: 'scannerUnlockOrientationTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Cancel`
   String get scannerManualEntryCancel {
     return Intl.message(

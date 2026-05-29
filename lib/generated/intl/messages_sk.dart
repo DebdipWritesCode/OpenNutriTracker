@@ -1036,6 +1036,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("nasýtené tuky"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Naskenovať produkt"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Uzamknúť na výšku"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Zadať kód ručne"),
         "scannerManualEntryCancel":
@@ -1048,6 +1050,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tento čiarový kód nevyzerá platne. Skontrolujte číslice a skúste to znova."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Vyhľadať"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Povoliť otáčanie"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Zadajte prosím hľadané slovo"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Potraviny"),

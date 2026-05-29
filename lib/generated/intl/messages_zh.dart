@@ -942,6 +942,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "retryLabel": MessageLookupByLibrary.simpleMessage("重试"),
         "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("饱和脂肪"),
         "scanProductLabel": MessageLookupByLibrary.simpleMessage("扫描产品"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("锁定为竖屏"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("手动输入条码"),
         "scannerManualEntryCancel": MessageLookupByLibrary.simpleMessage("取消"),
@@ -952,6 +954,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "scannerManualEntryInvalid":
             MessageLookupByLibrary.simpleMessage("此条码似乎无效。请检查数字后重试。"),
         "scannerManualEntrySubmit": MessageLookupByLibrary.simpleMessage("查找"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("允许旋转"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage("请输入搜索词"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("食物"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("搜索"),

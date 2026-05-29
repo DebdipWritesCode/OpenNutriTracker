@@ -1013,5 +1013,7 @@
   "quickAddActivityEnergyLabelKcal": "Yakılan enerji (kcal)",
   "quickAddActivityEnergyLabelKj": "Yakılan enerji (kJ)",
   "quickAddActivityAddedSnack": "Aktivite eklendi",
-  "quickAddActivityNameLabel": "Ad (isteğe bağlı)"
+  "quickAddActivityNameLabel": "Ad (isteğe bağlı)",
+  "scannerLockOrientationTooltip": "Dikey kilitle",
+  "scannerUnlockOrientationTooltip": "Döndürmeye izin ver"
 }

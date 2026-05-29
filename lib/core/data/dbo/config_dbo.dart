@@ -94,6 +94,12 @@ class ConfigDBO extends HiveObject {
   // the static palette elsewhere.
   @HiveField(26)
   int? accentColor;
+  // #165: whether the barcode scanner forces portrait. Null means the user
+  // has not made a deliberate choice, which the scanner treats as "follow the
+  // device" — locked on phone-sized screens (so the camera preview can't tip
+  // sideways) and free on tablets (so a landscape tablet isn't forced upright).
+  @HiveField(27)
+  bool? scannerPortraitLock;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -120,6 +126,7 @@ class ConfigDBO extends HiveObject {
     this.fastingWarningAcknowledged,
     this.useMaterialYou,
     this.accentColor,
+    this.scannerPortraitLock,
   });
 
   factory ConfigDBO.empty() =>

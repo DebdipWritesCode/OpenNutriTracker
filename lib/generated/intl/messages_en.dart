@@ -1065,6 +1065,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("saturated fat"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Scan Product"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Lock to portrait"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Type code manually"),
         "scannerManualEntryCancel":
@@ -1077,6 +1079,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "That barcode doesn\'t look valid. Please check the digits and try again."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Look up"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Allow rotation"),
         "searchDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Please enter a search word"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Food"),

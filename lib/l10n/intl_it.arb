@@ -982,5 +982,7 @@
   "quickAddActivityEnergyLabelKcal": "Energia bruciata (kcal)",
   "quickAddActivityEnergyLabelKj": "Energia bruciata (kJ)",
   "quickAddActivityAddedSnack": "Attività aggiunta",
-  "quickAddActivityNameLabel": "Nome (facoltativo)"
+  "quickAddActivityNameLabel": "Nome (facoltativo)",
+  "scannerLockOrientationTooltip": "Blocca in verticale",
+  "scannerUnlockOrientationTooltip": "Consenti rotazione"
 }
