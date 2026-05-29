@@ -1011,5 +1011,6 @@
   "quickAddActivityDurationLabel": "Trvanie (min, voliteľné)",
   "quickAddActivityEnergyLabelKcal": "Spálená energia (kcal)",
   "quickAddActivityEnergyLabelKj": "Spálená energia (kJ)",
-  "quickAddActivityAddedSnack": "Aktivita pridaná"
+  "quickAddActivityAddedSnack": "Aktivita pridaná",
+  "quickAddActivityNameLabel": "Názov (voliteľné)"
 }

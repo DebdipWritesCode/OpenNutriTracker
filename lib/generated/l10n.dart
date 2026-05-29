@@ -810,6 +810,15 @@ class S {
     );
   }
 
+  String get quickAddActivityNameLabel {
+    return Intl.message(
+      'Name (optional)',
+      name: 'quickAddActivityNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get mealImageLabel {
     return Intl.message(
       'Add a photo',

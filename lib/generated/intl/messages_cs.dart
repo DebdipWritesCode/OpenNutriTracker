@@ -108,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "quickAddActivityNameLabel": MessageLookupByLibrary.simpleMessage("Název (volitelné)"),
         "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage("Rychlé přidání aktivity"),
         "quickAddActivityDurationLabel": MessageLookupByLibrary.simpleMessage("Doba trvání (min, volitelné)"),
         "quickAddActivityEnergyLabelKcal": MessageLookupByLibrary.simpleMessage("Spálená energie (kcal)"),

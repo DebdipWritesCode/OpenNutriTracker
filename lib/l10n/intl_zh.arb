@@ -982,5 +982,6 @@
   "quickAddActivityDurationLabel": "时长（分钟，可选）",
   "quickAddActivityEnergyLabelKcal": "消耗能量（kcal）",
   "quickAddActivityEnergyLabelKj": "消耗能量（kJ）",
-  "quickAddActivityAddedSnack": "已添加活动"
+  "quickAddActivityAddedSnack": "已添加活动",
+  "quickAddActivityNameLabel": "名称（可选）"
 }

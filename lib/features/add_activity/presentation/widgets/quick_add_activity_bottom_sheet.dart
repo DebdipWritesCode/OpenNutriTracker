@@ -41,6 +41,7 @@ class _QuickAddActivityBottomSheetState
     extends State<QuickAddActivityBottomSheet> {
   final _log = Logger('QuickAddActivityBottomSheet');
 
+  final _nameController = TextEditingController();
   final _durationController = TextEditingController();
   final _energyController = TextEditingController();
 
@@ -55,6 +56,7 @@ class _QuickAddActivityBottomSheetState
   @override
   void dispose() {
     _energyController.removeListener(_onRequiredFieldChanged);
+    _nameController.dispose();
     _durationController.dispose();
     _energyController.dispose();
     super.dispose();
@@ -83,6 +85,7 @@ class _QuickAddActivityBottomSheetState
     final enteredEnergy = _parsed(_energyController)!;
     final kcal = usesKj ? UnitCalc.kjToKcal(enteredEnergy) : enteredEnergy;
     final duration = _parsed(_durationController) ?? 0;
+    final name = _nameController.text.trim();
 
     try {
       final activity = UserActivityEntity(
@@ -90,7 +93,9 @@ class _QuickAddActivityBottomSheetState
         duration,
         kcal,
         widget.day,
-        PhysicalActivityEntity.custom,
+        name.isEmpty
+            ? PhysicalActivityEntity.custom
+            : PhysicalActivityEntity.customNamed(name),
         userKcal: kcal,
       );
       await locator<AddUserActivityUsecase>().addUserActivity(activity);
@@ -167,13 +172,20 @@ class _QuickAddActivityBottomSheetState
               ),
             ),
             _field(
+              controller: _nameController,
+              identifier: 'quick-add-activity-name',
+              label: s.quickAddActivityNameLabel,
+              isRequired: false,
+              numeric: false,
+              autofocus: true,
+            ),
+            _field(
               controller: _energyController,
               identifier: 'quick-add-activity-energy',
               label: usesKj
                   ? s.quickAddActivityEnergyLabelKj
                   : s.quickAddActivityEnergyLabelKcal,
               isRequired: true,
-              autofocus: true,
             ),
             _field(
               controller: _durationController,
@@ -206,6 +218,7 @@ class _QuickAddActivityBottomSheetState
     required String identifier,
     required String label,
     required bool isRequired,
+    bool numeric = true,
     bool autofocus = false,
   }) {
     return Padding(
@@ -215,10 +228,14 @@ class _QuickAddActivityBottomSheetState
         child: TextField(
           controller: controller,
           autofocus: autofocus,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-          ],
+          textCapitalization:
+              numeric ? TextCapitalization.none : TextCapitalization.sentences,
+          keyboardType: numeric
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.text,
+          inputFormatters: numeric
+              ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))]
+              : null,
           decoration: InputDecoration(
             labelText: isRequired ? '$label *' : label,
             border: const OutlineInputBorder(),

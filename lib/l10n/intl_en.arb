@@ -1053,5 +1053,6 @@
   "quickAddActivityDurationLabel": "Duration (min, optional)",
   "quickAddActivityEnergyLabelKcal": "Energy burned (kcal)",
   "quickAddActivityEnergyLabelKj": "Energy burned (kJ)",
-  "quickAddActivityAddedSnack": "Activity added"
+  "quickAddActivityAddedSnack": "Activity added",
+  "quickAddActivityNameLabel": "Name (optional)"
 }

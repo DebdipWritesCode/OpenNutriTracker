@@ -981,5 +981,6 @@
   "quickAddActivityDurationLabel": "Durata (min, facoltativo)",
   "quickAddActivityEnergyLabelKcal": "Energia bruciata (kcal)",
   "quickAddActivityEnergyLabelKj": "Energia bruciata (kJ)",
-  "quickAddActivityAddedSnack": "Attività aggiunta"
+  "quickAddActivityAddedSnack": "Attività aggiunta",
+  "quickAddActivityNameLabel": "Nome (facoltativo)"
 }

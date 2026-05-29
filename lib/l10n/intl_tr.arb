@@ -1012,5 +1012,6 @@
   "quickAddActivityDurationLabel": "Süre (dk, isteğe bağlı)",
   "quickAddActivityEnergyLabelKcal": "Yakılan enerji (kcal)",
   "quickAddActivityEnergyLabelKj": "Yakılan enerji (kJ)",
-  "quickAddActivityAddedSnack": "Aktivite eklendi"
+  "quickAddActivityAddedSnack": "Aktivite eklendi",
+  "quickAddActivityNameLabel": "Ad (isteğe bağlı)"
 }

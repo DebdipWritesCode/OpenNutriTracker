@@ -981,5 +981,6 @@
   "quickAddActivityDurationLabel": "Тривалість (хв, необов'язково)",
   "quickAddActivityEnergyLabelKcal": "Спалена енергія (ккал)",
   "quickAddActivityEnergyLabelKj": "Спалена енергія (кДж)",
-  "quickAddActivityAddedSnack": "Активність додано"
+  "quickAddActivityAddedSnack": "Активність додано",
+  "quickAddActivityNameLabel": "Назва (необов'язково)"
 }
