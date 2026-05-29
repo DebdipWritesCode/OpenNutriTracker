@@ -19,16 +19,19 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
       try {
         final now = DateTime.now();
         final today = DateTime(now.year, now.month, now.day);
-        final week = await _getTrackedDayUsecase.getTrackedDaysByRange(
-          today.subtract(const Duration(days: 6)),
+        final days = await _getTrackedDayUsecase.getTrackedDaysByRange(
+          today.subtract(Duration(days: event.rangeDays - 1)),
           today,
         );
+        // Weight always spans at least 30 days so a short calorie window still
+        // shows a meaningful weight trend.
+        final weightDays = event.rangeDays < 30 ? 30 : event.rangeDays;
         final weight = await _getWeightLogUsecase.getEntriesInRange(
-          today.subtract(const Duration(days: 29)),
+          today.subtract(Duration(days: weightDays - 1)),
           today,
         );
         weight.sort((a, b) => a.date.compareTo(b.date));
-        emit(TrendsLoaded(week: week, weight: weight));
+        emit(TrendsLoaded(rangeDays: event.rangeDays, days: days, weight: weight));
       } catch (e) {
         emit(TrendsFailed(e.toString()));
       }
