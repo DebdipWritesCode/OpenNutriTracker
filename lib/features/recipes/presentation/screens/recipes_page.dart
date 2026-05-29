@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_recipe_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
+import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
+import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
+import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
 import 'package:opennutritracker/features/recipes/presentation/screens/recipe_detail_screen.dart';
 import 'package:opennutritracker/features/recipes/presentation/widgets/custom_meals_tab.dart';
@@ -70,29 +73,103 @@ class _RecipesPageState extends State<RecipesPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _customMealsBloc,
-      child: Column(
-        children: [
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: S.of(context).recipesLabel),
-              Tab(text: S.of(context).settingsCustomMealsLabel),
+    // Standalone pushed screen (reached from Add and from You): it owns its
+    // Scaffold + AppBar, so the title bar clears the status bar / notch on
+    // iPhone and the create/import actions live where you'd expect them.
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).recipesLabel),
+        actions: [
+          PopupMenuButton<_RecipesAction>(
+            tooltip: S.of(context).addLabel,
+            icon: const Icon(Icons.add),
+            onSelected: (action) => _onAddSelected(context, action),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _RecipesAction.newRecipe,
+                child: Row(
+                  children: [
+                    const Icon(Icons.menu_book_outlined),
+                    const SizedBox(width: Dimens.spacing12),
+                    Text(S.of(context).createRecipeTitle),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _RecipesAction.newCustomMeal,
+                child: Row(
+                  children: [
+                    const Icon(Icons.restaurant_outlined),
+                    const SizedBox(width: Dimens.spacing12),
+                    Text(S.of(context).newCustomMealLabel),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _RecipesAction.importRecipe,
+                child: Row(
+                  children: [
+                    const Icon(Icons.qr_code_scanner_outlined),
+                    const SizedBox(width: Dimens.spacing12),
+                    Text(S.of(context).importRecipeLabel),
+                  ],
+                ),
+              ),
             ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildRecipesTab(),
-                CustomMealsTab(usesImperialUnits: _usesImperialUnits),
-              ],
-            ),
           ),
         ],
       ),
+      body: BlocProvider.value(
+        value: _customMealsBloc,
+        child: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: S.of(context).recipesLabel),
+                Tab(text: S.of(context).settingsCustomMealsLabel),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildRecipesTab(),
+                  CustomMealsTab(usesImperialUnits: _usesImperialUnits),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  Future<void> _onAddSelected(
+    BuildContext context,
+    _RecipesAction action,
+  ) async {
+    switch (action) {
+      case _RecipesAction.newRecipe:
+        await Navigator.of(context).pushNamed(NavigationOptions.recipeBuilderRoute);
+        _bloc.add(const LoadRecipesEvent());
+      case _RecipesAction.newCustomMeal:
+        await Navigator.of(context).pushNamed(
+          NavigationOptions.editMealRoute,
+          arguments: EditMealScreenArguments(
+            DateTime.now(),
+            MealEntity.empty(),
+            IntakeTypeEntity.breakfast,
+            false,
+            editOnly: true,
+          ),
+        );
+        _customMealsBloc.add(LoadCustomMealsEvent());
+      case _RecipesAction.importRecipe:
+        await Navigator.of(context)
+            .pushNamed(NavigationOptions.importRecipeScannerRoute);
+        _bloc.add(const LoadRecipesEvent());
+    }
   }
 
   Widget _buildRecipesTab() {
@@ -371,3 +448,5 @@ class _RecipesPageState extends State<RecipesPage>
     );
   }
 }
+
+enum _RecipesAction { newRecipe, newCustomMeal, importRecipe }

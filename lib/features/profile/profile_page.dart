@@ -292,6 +292,23 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         const SizedBox(height: Dimens.spacing24),
+        _SectionHeader(label: S.of(context).recipesLabel, palette: palette),
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-recipes',
+              palette: palette,
+              icon: Icons.menu_book_rounded,
+              title: S.of(context).recipesLabel,
+              showChevron: true,
+              onTap: () =>
+                  Navigator.of(context).pushNamed(NavigationOptions.recipesRoute),
+            ),
+          ],
+        ),
+        const SizedBox(height: Dimens.spacing24),
         // The full settings surface lives inline so You is the single home for
         // identity, goals and app preferences — but collapsed by default so the
         // tab stays scannable. Reuses SettingsScreen unchanged; the pushed route
