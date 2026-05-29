@@ -42,7 +42,7 @@ class _TrendsView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(
               Dimens.spacing16, Dimens.spacing8, Dimens.spacing16, Dimens.spacing32),
           children: [
-            _StreakCard(week: week, palette: palette),
+            _StreakCard(week: week, priorWeek: state.priorWeek, palette: palette),
             const SizedBox(height: Dimens.spacing16),
             _RangeSelector(rangeDays: state.rangeDays),
             const SizedBox(height: Dimens.spacing16),
@@ -83,14 +83,20 @@ class _RangeSelector extends StatelessWidget {
 
 class _StreakCard extends StatelessWidget {
   final List<TrackedDayEntity> week;
+  final List<TrackedDayEntity> priorWeek;
   final AppPalette palette;
-  const _StreakCard({required this.week, required this.palette});
+  const _StreakCard({required this.week, required this.priorWeek, required this.palette});
+
+  int _onTrackCount(BuildContext context, List<TrackedDayEntity> days) {
+    final errorColor = Theme.of(context).colorScheme.error;
+    return days.where((d) => d.getCalendarDayRatingColor(context) != errorColor).length;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final errorColor = Theme.of(context).colorScheme.error;
     final accent = Theme.of(context).colorScheme.primary;
-    final onTrack = week.where((d) => d.getCalendarDayRatingColor(context) != errorColor).length;
+    final onTrack = _onTrackCount(context, week);
+    final delta = onTrack - _onTrackCount(context, priorWeek);
     final text = Theme.of(context).textTheme;
     return AppCard(
       padding: const EdgeInsets.all(Dimens.spacing20),
@@ -102,13 +108,47 @@ class _StreakCard extends StatelessWidget {
             child: Icon(Icons.local_fire_department_rounded, color: accent, size: 28),
           ),
           const SizedBox(width: Dimens.spacing16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$onTrack / 7', style: text.titleLarge),
-              Text(S.of(context).trendsDaysOnTrack, style: text.bodyMedium?.copyWith(color: palette.textMuted)),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$onTrack / 7', style: text.titleLarge),
+                Text(S.of(context).trendsDaysOnTrack,
+                    style: text.bodyMedium?.copyWith(color: palette.textMuted)),
+              ],
+            ),
           ),
+          if (delta != 0) _WeekDeltaChip(delta: delta, palette: palette),
+        ],
+      ),
+    );
+  }
+}
+
+/// Week-over-week change in on-track days, shown as a coloured arrow + number
+/// (locale-neutral — no wording needed).
+class _WeekDeltaChip extends StatelessWidget {
+  final int delta;
+  final AppPalette palette;
+  const _WeekDeltaChip({required this.delta, required this.palette});
+
+  @override
+  Widget build(BuildContext context) {
+    final up = delta > 0;
+    final color = up ? palette.proteinColor : palette.fatColor;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.16),
+        borderRadius: Dimens.borderRadiusS,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: color, size: 16),
+          const SizedBox(width: 2),
+          Text('${delta.abs()}',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color)),
         ],
       ),
     );
@@ -161,6 +201,17 @@ class _CaloriesTrendCard extends StatelessWidget {
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 titlesData: const FlTitlesData(show: false),
+                lineTouchData: LineTouchData(
+                  touchTooltipData: LineTouchTooltipData(
+                    getTooltipItems: (spots) => [
+                      for (final s in spots)
+                        LineTooltipItem(
+                          s.y.toInt().toString(),
+                          text.labelMedium ?? const TextStyle(),
+                        ),
+                    ],
+                  ),
+                ),
                 // Dashed average-goal reference: the line above/below it reads
                 // as days over / under goal at a glance.
                 extraLinesData: avgGoal <= 0
@@ -303,6 +354,17 @@ class _WeightCard extends StatelessWidget {
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
         titlesData: const FlTitlesData(show: false),
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (spots) => [
+              for (final s in spots)
+                LineTooltipItem(
+                  s.y.toStringAsFixed(1),
+                  text.labelMedium ?? const TextStyle(),
+                ),
+            ],
+          ),
+        ),
         lineBarsData: [
           LineChartBarData(
             spots: spots,

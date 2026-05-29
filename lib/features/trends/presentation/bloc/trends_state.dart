@@ -18,16 +18,18 @@ class TrendsLoading extends TrendsState {
 class TrendsLoaded extends TrendsState {
   final int rangeDays;
   final List<TrackedDayEntity> days; // tracked days over the selected window
+  final List<TrackedDayEntity> priorWeek; // the 7 days before this week
   final List<WeightLogEntity> weight;
 
   const TrendsLoaded({
     required this.rangeDays,
     required this.days,
+    required this.priorWeek,
     required this.weight,
   });
 
   @override
-  List<Object?> get props => [rangeDays, days, weight];
+  List<Object?> get props => [rangeDays, days, priorWeek, weight];
 }
 
 class TrendsFailed extends TrendsState {

@@ -31,7 +31,17 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
           today,
         );
         weight.sort((a, b) => a.date.compareTo(b.date));
-        emit(TrendsLoaded(rangeDays: event.rangeDays, days: days, weight: weight));
+        // The 7 days before this week, for a week-over-week consistency delta.
+        final priorWeek = await _getTrackedDayUsecase.getTrackedDaysByRange(
+          today.subtract(const Duration(days: 13)),
+          today.subtract(const Duration(days: 7)),
+        );
+        emit(TrendsLoaded(
+          rangeDays: event.rangeDays,
+          days: days,
+          priorWeek: priorWeek,
+          weight: weight,
+        ));
       } catch (e) {
         emit(TrendsFailed(e.toString()));
       }
