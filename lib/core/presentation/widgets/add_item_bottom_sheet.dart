@@ -1,39 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
+import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_activity/presentation/add_activity_screen.dart';
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.dart';
+import 'package:opennutritracker/features/add_meal/presentation/widgets/meal_item_card.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class AddItemBottomSheet extends StatelessWidget {
   final DateTime day;
   final bool showActivityTracking;
+  final bool usesImperialUnits;
 
   const AddItemBottomSheet({
     super.key,
     required this.day,
     this.showActivityTracking = true,
+    this.usesImperialUnits = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              S.of(context).addItemLabel,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                S.of(context).addItemLabel,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
             ),
-          ),
+            _buildRecentSection(context),
           if (showActivityTracking) ...[
             Semantics(
               identifier: 'add-item-activity',
@@ -198,6 +206,51 @@ class AddItemBottomSheet extends StatelessWidget {
           ),
         ],
       ),
+      ),
+    );
+  }
+
+  Widget _buildRecentSection(BuildContext context) {
+    // Guard for widget tests / early startup where the use case isn't wired.
+    if (!locator.isRegistered<GetIntakeUsecase>()) {
+      return const SizedBox.shrink();
+    }
+    return FutureBuilder<List<IntakeEntity>>(
+      future: locator<GetIntakeUsecase>().getRecentIntake(),
+      builder: (context, snapshot) {
+        final intakes = snapshot.data;
+        if (intakes == null || intakes.isEmpty) return const SizedBox.shrink();
+        // Distinct foods, most recent first, capped to a quick-pick few. Tapping
+        // a card opens its detail pre-filled, so a repeat meal is two taps.
+        final seen = <String?>{};
+        final recent = <IntakeEntity>[];
+        for (final intake in intakes) {
+          if (seen.add(intake.meal.code)) recent.add(intake);
+          if (recent.length >= 4) break;
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text(
+                S.of(context).recentlyAddedLabel,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ),
+            for (final intake in recent)
+              MealItemCard(
+                day: day,
+                mealEntity: intake.meal,
+                addMealType: AddMealExtension.fromIntakeTypeEntity(intake.type),
+                usesImperialUnits: usesImperialUnits,
+              ),
+            const Divider(indent: 16, endIndent: 16),
+          ],
+        );
+      },
     );
   }
 
