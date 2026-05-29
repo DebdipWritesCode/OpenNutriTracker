@@ -46,7 +46,9 @@ class _AddMealScreenState extends State<AddMealScreen>
     _productsBloc = locator<ProductsBloc>();
     _foodBloc = locator<FoodBloc>();
     _recentMealBloc = locator<RecentMealBloc>();
-    _tabController = TabController(length: 3, vsync: this);
+    // Default to Recently Added so re-logging a common food is immediate — the
+    // Products / Food source tabs are one tap away when searching something new.
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 2);
     _tabController.addListener(() {
       // Update search results when tab changes
       _onSearchSubmit(_searchStringListener.value);
