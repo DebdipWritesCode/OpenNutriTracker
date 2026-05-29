@@ -288,59 +288,45 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
             _onItemDropped(intake.data);
           },
           builder: (context, candidateData, rejectedData) {
-            return SizedBox(
-              height: 120,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.intakeList.length + 1,
-                // index 0 = + button (always visible), 1..n = intake cards
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return PlaceholderCard(
-                      day: widget.day,
-                      onTap: () => _onPlaceholderCardTapped(context),
-                      firstListElement: true,
-                      semanticIdentifier: 'add-meal-placeholder',
-                    );
-                  }
-                  final intakeEntity = widget.intakeList[index - 1];
-                  return LongPressDraggable<IntakeEntity>(
-                    onDragStarted: () {
-                      widget.onItemDragCallback?.call(true);
-                    },
-                    onDragEnd: (details) {
-                      widget.onItemDragCallback?.call(false);
-                    },
+            return Column(
+              children: [
+                for (final intakeEntity in widget.intakeList)
+                  LongPressDraggable<IntakeEntity>(
+                    key: ValueKey(intakeEntity.meal.code),
                     data: intakeEntity,
+                    onDragStarted: () => widget.onItemDragCallback?.call(true),
+                    onDragEnd: (_) => widget.onItemDragCallback?.call(false),
                     feedback: Material(
                       color: Colors.transparent,
-                      shape: Dimens.shapeM,
-                      child: Opacity(
-                        opacity: 0.7,
-                        child: IntakeCard(
-                          key: ValueKey(intakeEntity.meal.code),
-                          intake: intakeEntity,
-                          firstListElement: false,
-                          usesImperialUnits: widget.usesImperialUnits,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Opacity(
+                          opacity: 0.85,
+                          child: IntakeCard(
+                            key: ValueKey('fb-${intakeEntity.meal.code}'),
+                            intake: intakeEntity,
+                            firstListElement: false,
+                            usesImperialUnits: widget.usesImperialUnits,
+                          ),
                         ),
                       ),
                     ),
-                    childWhenDragging: Row(
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 120,
-                          margin: const EdgeInsets.all(Dimens.spacing4),
-                          decoration: BoxDecoration(
-                            color: palette.surfaceMuted,
-                            borderRadius: Dimens.borderRadiusM,
-                            border: Border.all(
-                              color: palette.border,
-                              width: Dimens.hairline,
-                            ),
+                    childWhenDragging: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacing16,
+                        vertical: Dimens.spacing4,
+                      ),
+                      child: Container(
+                        height: 76,
+                        decoration: BoxDecoration(
+                          color: palette.surfaceMuted,
+                          borderRadius: Dimens.borderRadiusM,
+                          border: Border.all(
+                            color: palette.border,
+                            width: Dimens.hairline,
                           ),
                         ),
-                      ],
+                      ),
                     ),
                     child: IntakeCard(
                       key: ValueKey(intakeEntity.meal.code),
@@ -350,9 +336,14 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                       firstListElement: false,
                       usesImperialUnits: widget.usesImperialUnits,
                     ),
-                  );
-                },
-              ),
+                  ),
+                PlaceholderCard(
+                  day: widget.day,
+                  onTap: () => _onPlaceholderCardTapped(context),
+                  firstListElement: true,
+                  semanticIdentifier: 'add-meal-placeholder',
+                ),
+              ],
             );
           },
         ),

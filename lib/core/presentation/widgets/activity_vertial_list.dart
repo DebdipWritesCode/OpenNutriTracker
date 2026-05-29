@@ -108,32 +108,23 @@ class _ActivityVerticalListState extends State<ActivityVerticalList> {
             ],
           ),
         ),
-        SizedBox(
-          height: 160,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.userActivityList.length + 1,
-            itemBuilder: (BuildContext context, int index) {
-              final firstListElement = index == 0 ? true : false;
-              if (index == widget.userActivityList.length) {
-                return PlaceholderCard(
-                  day: widget.day,
-                  onTap: () => _onPlaceholderCardTapped(context),
-                  firstListElement: firstListElement,
-                  semanticIdentifier: 'add-activity-placeholder',
-                );
-              } else {
-                final userActivity = widget.userActivityList[index];
-                return ActivityCard(
-                  activityEntity: userActivity,
-                  onItemLongPressed: widget.onItemLongPressedCallback,
-                  onItemTapped: widget.onItemTappedCallback,
-                  onItemDragCallback: widget.onItemDragCallback,
-                  firstListElement: firstListElement,
-                );
-              }
-            },
-          ),
+        Column(
+          children: [
+            for (final userActivity in widget.userActivityList)
+              ActivityCard(
+                activityEntity: userActivity,
+                onItemLongPressed: widget.onItemLongPressedCallback,
+                onItemTapped: widget.onItemTappedCallback,
+                onItemDragCallback: widget.onItemDragCallback,
+                firstListElement: false,
+              ),
+            PlaceholderCard(
+              day: widget.day,
+              onTap: () => _onPlaceholderCardTapped(context),
+              firstListElement: true,
+              semanticIdentifier: 'add-activity-placeholder',
+            ),
+          ],
         ),
       ],
     );

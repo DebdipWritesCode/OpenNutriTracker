@@ -5,6 +5,8 @@ import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/energy_display.dart';
 
+/// A logged activity, rendered as a full-width row to match the meal rows: an
+/// accent icon chip, the activity name and duration, and the burned energy.
 class ActivityCard extends StatelessWidget {
   final UserActivityEntity activityEntity;
   final Function(BuildContext, UserActivityEntity) onItemLongPressed;
@@ -25,92 +27,76 @@ class ActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
+    final textTheme = Theme.of(context).textTheme;
     final radius = BorderRadius.circular(Dimens.radiusM);
-    final card = Row(
-      children: [
-        SizedBox(
-          width: firstListElement ? Dimens.spacing16 : 0,
-        ),
-        SizedBox(
-          width: 120,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 120,
-                child: AppCard(
-                  padding: EdgeInsets.zero,
-                  borderRadius: Dimens.radiusM,
-                  child: ClipRRect(
-                    borderRadius: radius,
-                    child: InkWell(
-                      onTap: onItemTapped != null
-                          ? () => onItemTapped!(context, activityEntity)
-                          : null,
-                      onLongPress: onItemDragCallback == null
-                          ? () => onItemLongPressed(context, activityEntity)
-                          : null,
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(Dimens.spacing8),
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                            decoration: BoxDecoration(
-                              color: palette.surfaceMuted,
-                              borderRadius:
-                                  BorderRadius.circular(Dimens.radiusS),
-                            ),
-                            child: Text(
-                              "🔥${EnergyDisplay.formatWithUnit(context, activityEntity.burnedKcal)}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: palette.textStrong,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                            ),
-                          ),
-                          Center(
-                            child: Icon(
-                              activityEntity.physicalActivityEntity.displayIcon,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 26,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+    final card = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.spacing16,
+        vertical: Dimens.spacing4,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: radius,
+          onTap: onItemTapped != null
+              ? () => onItemTapped!(context, activityEntity)
+              : null,
+          onLongPress: onItemDragCallback == null
+              ? () => onItemLongPressed(context, activityEntity)
+              : null,
+          child: AppCard(
+            borderRadius: Dimens.radiusM,
+            padding: const EdgeInsets.all(Dimens.spacing12),
+            child: Row(
+              children: [
+                Container(
+                  width: IntakeThumb.size,
+                  height: IntakeThumb.size,
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(Dimens.radiusS),
+                  ),
+                  child: Icon(
+                    activityEntity.physicalActivityEntity.displayIcon,
+                    color: accent,
+                    size: 24,
                   ),
                 ),
-              ),
-              const SizedBox(height: Dimens.spacing8),
-              Padding(
-                padding: const EdgeInsets.only(left: Dimens.spacing4),
-                child: Text(
-                  activityEntity.physicalActivityEntity.getName(context),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: palette.textStrong,
+                const SizedBox(width: Dimens.spacing12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        activityEntity.physicalActivityEntity.getName(context),
+                        style: textTheme.titleSmall?.copyWith(color: palette.textStrong),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: Dimens.spacing4),
-                child: Text(
-                  '${activityEntity.duration.toInt()} min',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: palette.textMuted,
+                      const SizedBox(height: 2),
+                      Text(
+                        '${activityEntity.duration.toInt()} min',
+                        style: textTheme.bodySmall?.copyWith(color: palette.textMuted),
                       ),
-                  maxLines: 1,
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: Dimens.spacing8),
+                Text(
+                  "🔥${EnergyDisplay.formatWithUnit(context, activityEntity.burnedKcal)}",
+                  style: textTheme.labelMedium?.copyWith(
+                    color: palette.textStrong,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ],
+      ),
     );
 
     if (onItemDragCallback == null) return card;
@@ -122,21 +108,18 @@ class ActivityCard extends StatelessWidget {
       onDraggableCanceled: (velocity, offset) => onItemDragCallback!.call(false),
       feedback: Material(
         color: Colors.transparent,
-        child: AppCard(
-          width: 80,
-          height: 80,
-          borderRadius: Dimens.radiusM,
-          child: Center(
-            child: Icon(
-              activityEntity.physicalActivityEntity.displayIcon,
-              size: 36,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Opacity(opacity: 0.85, child: card),
         ),
       ),
-      childWhenDragging: Opacity(opacity: 0.4, child: card),
+      childWhenDragging: Opacity(opacity: 0.35, child: card),
       child: card,
     );
   }
+}
+
+/// Shared thumbnail size so meal and activity rows line up.
+abstract final class IntakeThumb {
+  static const double size = 52;
 }

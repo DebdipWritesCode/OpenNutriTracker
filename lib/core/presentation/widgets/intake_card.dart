@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -13,7 +12,12 @@ import 'package:opennutritracker/core/utils/energy_display.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/user_image_storage.dart';
 
+/// A logged intake, rendered as a full-width row: a rounded thumbnail, the meal
+/// name and amount, and the energy on the trailing edge. Replaces the old
+/// 120x120 tile so a day's meals read as a clean scannable list.
 class IntakeCard extends StatelessWidget {
+  static const double thumbSize = 52;
+
   final IntakeEntity intake;
   final Function(BuildContext, IntakeEntity)? onItemLongPressed;
   final Function(BuildContext, IntakeEntity, bool)? onItemTapped;
@@ -33,109 +37,64 @@ class IntakeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final textTheme = Theme.of(context).textTheme;
     final radius = BorderRadius.circular(Dimens.radiusM);
-    return Row(
-      children: [
-        SizedBox(width: firstListElement ? Dimens.spacing16 : 0),
-        SizedBox(
-          width: 120,
-          height: 120,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.spacing16,
+        vertical: Dimens.spacing4,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: radius,
+          onTap: onItemTapped != null
+              ? () => onTappedItem(context, usesImperialUnits)
+              : null,
+          onLongPress: onItemLongPressed != null
+              ? () => onLongPressedItem(context)
+              : null,
           child: AppCard(
-            padding: EdgeInsets.zero,
             borderRadius: Dimens.radiusM,
-            child: ClipRRect(
-              borderRadius: radius,
-              child: InkWell(
-                onLongPress: onItemLongPressed != null
-                    ? () => onLongPressedItem(context)
-                    : null,
-                onTap: onItemTapped != null
-                    ? () => onTappedItem(context, usesImperialUnits)
-                    : null,
-                child: Stack(
-                  children: [
-                    // Prefer the user-attached local photo for custom meals
-                    // (#64 follow-up). Falls through to the OFF / FDC remote
-                    // image when the user hasn't picked one, and finally to
-                    // the placeholder icon for entries that have neither.
-                    if (intake.meal.localImagePath != null)
-                      _LocalMealBackground(
-                          relativePath: intake.meal.localImagePath!)
-                    else if (intake.meal.mainImageUrl != null)
-                      CachedNetworkImage(
-                        cacheManager: locator<CacheManager>(),
-                        imageUrl: intake.meal.mainImageUrl ?? "",
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                    else
-                      Center(
-                        child: Icon(
-                          Icons.restaurant_rounded,
-                          color: palette.textMuted,
-                          size: 26,
-                        ),
+            padding: const EdgeInsets.all(Dimens.spacing12),
+            child: Row(
+              children: [
+                _Thumbnail(intake: intake, palette: palette),
+                const SizedBox(width: Dimens.spacing12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        intake.meal.name ?? "?",
+                        style: textTheme.titleSmall?.copyWith(color: palette.textStrong),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    Container(
-                      // Soft scrim so the name and pill stay legible over a photo.
-                      decoration: BoxDecoration(
-                        color: palette.surface.withValues(alpha: 0.45),
+                      const SizedBox(height: 2),
+                      MealValueUnitText(
+                        value: intake.amount,
+                        meal: intake.meal,
+                        usesImperialUnits: usesImperialUnits,
+                        textStyle: textTheme.bodySmall?.copyWith(color: palette.textMuted),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(Dimens.spacing8),
-                      padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                      decoration: BoxDecoration(
-                        color: palette.surfaceMuted.withValues(alpha: 0.92),
-                        borderRadius: BorderRadius.circular(Dimens.radiusS),
-                      ),
-                      child: Text(
-                        EnergyDisplay.formatWithUnit(context, intake.totalKcal),
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: palette.textStrong,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(Dimens.spacing8),
-                      alignment: Alignment.bottomLeft,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AutoSizeText(
-                            intake.meal.name ?? "?",
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  color: palette.textStrong,
-                                ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          MealValueUnitText(
-                            value: intake.amount,
-                            meal: intake.meal,
-                            usesImperialUnits: usesImperialUnits,
-                            textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: palette.textMuted,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: Dimens.spacing8),
+                Text(
+                  EnergyDisplay.formatWithUnit(context, intake.totalKcal),
+                  style: textTheme.labelMedium?.copyWith(
+                    color: palette.textStrong,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -148,13 +107,50 @@ class IntakeCard extends StatelessWidget {
   }
 }
 
-/// Renders a user-attached meal photo behind the intake-card overlay.
-/// Mirrors the `CachedNetworkImage` branch's BoxFit / decoration so the
-/// card's gradient + kcal pill sit on top exactly as they did before.
-class _LocalMealBackground extends StatelessWidget {
+/// The leading thumbnail: a user photo, the remote OFF/FDC image, or a soft
+/// fallback chip with a food icon — clipped to a rounded square.
+class _Thumbnail extends StatelessWidget {
+  final IntakeEntity intake;
+  final AppPalette palette;
+
+  const _Thumbnail({required this.intake, required this.palette});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget content;
+    if (intake.meal.localImagePath != null) {
+      content = _LocalMealImage(relativePath: intake.meal.localImagePath!);
+    } else if (intake.meal.mainImageUrl != null) {
+      content = CachedNetworkImage(
+        cacheManager: locator<CacheManager>(),
+        imageUrl: intake.meal.mainImageUrl ?? "",
+        fit: BoxFit.cover,
+        errorWidget: (context, url, error) => _fallback(),
+        placeholder: (context, url) => _fallback(),
+      );
+    } else {
+      content = _fallback();
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Dimens.radiusS),
+      child: SizedBox(
+        width: IntakeCard.thumbSize,
+        height: IntakeCard.thumbSize,
+        child: content,
+      ),
+    );
+  }
+
+  Widget _fallback() => Container(
+        color: palette.surfaceMuted,
+        child: Icon(Icons.restaurant_rounded, color: palette.textMuted, size: 24),
+      );
+}
+
+class _LocalMealImage extends StatelessWidget {
   final String relativePath;
 
-  const _LocalMealBackground({required this.relativePath});
+  const _LocalMealImage({required this.relativePath});
 
   @override
   Widget build(BuildContext context) {
@@ -164,14 +160,7 @@ class _LocalMealBackground extends StatelessWidget {
         if (!snapshot.hasData) return const SizedBox.shrink();
         final file = File(snapshot.data!);
         if (!file.existsSync()) return const SizedBox.shrink();
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: FileImage(file),
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
+        return Image.file(file, fit: BoxFit.cover);
       },
     );
   }
