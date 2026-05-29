@@ -207,6 +207,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 context,
               ).pushNamed(NavigationOptions.weightHistoryRoute),
             ),
+            _ProfileTile(
+              identifier: 'profile-fasting-entry',
+              palette: palette,
+              icon: Icons.timer_rounded,
+              title: S.of(context).profileFastingEntry,
+              showChevron: true,
+              onTap: () =>
+                  Navigator.of(context).pushNamed(NavigationOptions.fastingRoute),
+            ),
           ],
         ),
         const SizedBox(height: Dimens.spacing24),
@@ -225,15 +234,6 @@ class _ProfilePageState extends State<ProfilePage> {
               title: S.of(context).settingsWaterGoalLabel,
               subtitle: '$effectiveWaterGoalMl ${S.of(context).mlLabel}',
               onTap: () => _showWaterGoalDialog(context),
-            ),
-            _ProfileTile(
-              identifier: 'profile-fasting-entry',
-              palette: palette,
-              icon: Icons.timer_rounded,
-              title: S.of(context).profileFastingEntry,
-              showChevron: true,
-              onTap: () =>
-                  Navigator.of(context).pushNamed(NavigationOptions.fastingRoute),
             ),
           ],
         ),
