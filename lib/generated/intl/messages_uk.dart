@@ -1082,6 +1082,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("насичені жири"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Сканувати продукт"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Зафіксувати вертикально"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Ввести код вручну"),
         "scannerManualEntryCancel":
@@ -1094,6 +1096,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Цей штрихкод виглядає недійсним. Будь ласка, перевірте цифри та спробуйте знову."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Знайти"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Дозволити обертання"),
         "searchDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Введіть слово для пошуку"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Їжа"),

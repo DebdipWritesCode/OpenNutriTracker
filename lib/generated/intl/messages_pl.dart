@@ -1078,6 +1078,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("tłuszcze nasycone"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Skanuj produkt"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Zablokuj w pionie"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Wpisz kod ręcznie"),
         "scannerManualEntryCancel":
@@ -1090,6 +1092,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Ten kod kreskowy wygląda na nieprawidłowy. Sprawdź cyfry i spróbuj ponownie."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Wyszukaj"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Zezwól na obrót"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Wprowadź słowo do wyszukania"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Jedzenie"),

@@ -150,4 +150,8 @@ class ConfigRepository {
   Future<void> setConfigAccentColor(int? value) async {
     await _configDataSource.setConfigAccentColor(value);
   }
+
+  Future<void> setConfigScannerPortraitLock(bool value) async {
+    await _configDataSource.setConfigScannerPortraitLock(value);
+  }
 }

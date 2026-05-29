@@ -239,6 +239,10 @@ class ConfigDataSource {
     await _update((c) => c.accentColor = value);
   }
 
+  Future<void> setConfigScannerPortraitLock(bool value) async {
+    await _update((c) => c.scannerPortraitLock = value);
+  }
+
   Future<ConfigDBO> getConfig() async => _readMerged();
 
   Future<bool> getHasAcceptedAnonymousData() async =>

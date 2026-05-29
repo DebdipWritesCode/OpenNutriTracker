@@ -1012,5 +1012,7 @@
   "quickAddActivityEnergyLabelKcal": "Spálená energia (kcal)",
   "quickAddActivityEnergyLabelKj": "Spálená energia (kJ)",
   "quickAddActivityAddedSnack": "Aktivita pridaná",
-  "quickAddActivityNameLabel": "Názov (voliteľné)"
+  "quickAddActivityNameLabel": "Názov (voliteľné)",
+  "scannerLockOrientationTooltip": "Uzamknúť na výšku",
+  "scannerUnlockOrientationTooltip": "Povoliť otáčanie"
 }

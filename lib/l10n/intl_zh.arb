@@ -983,5 +983,7 @@
   "quickAddActivityEnergyLabelKcal": "消耗能量（kcal）",
   "quickAddActivityEnergyLabelKj": "消耗能量（kJ）",
   "quickAddActivityAddedSnack": "已添加活动",
-  "quickAddActivityNameLabel": "名称（可选）"
+  "quickAddActivityNameLabel": "名称（可选）",
+  "scannerLockOrientationTooltip": "锁定为竖屏",
+  "scannerUnlockOrientationTooltip": "允许旋转"
 }

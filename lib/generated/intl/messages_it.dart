@@ -1081,6 +1081,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("grassi saturi"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Scansiona prodotto"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Blocca in verticale"),
         "scannerManualEntryButton": MessageLookupByLibrary.simpleMessage(
             "Inserisci il codice manualmente"),
         "scannerManualEntryCancel":
@@ -1093,6 +1095,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Questo codice a barre non sembra valido. Controlla le cifre e riprova."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Cerca"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Consenti rotazione"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Inserisci una parola da cercare"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Cibo"),

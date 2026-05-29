@@ -1072,6 +1072,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("nasycené mastné kyseliny"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Skenovat produkt"),
+        "scannerLockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Uzamknout na výšku"),
         "scannerManualEntryButton":
             MessageLookupByLibrary.simpleMessage("Zadat kód ručně"),
         "scannerManualEntryCancel":
@@ -1084,6 +1086,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tento čárový kód nevypadá platně. Zkontrolujte prosím číslice a zkuste to znovu."),
         "scannerManualEntrySubmit":
             MessageLookupByLibrary.simpleMessage("Vyhledat"),
+        "scannerUnlockOrientationTooltip":
+            MessageLookupByLibrary.simpleMessage("Povolit otáčení"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Zadejte prosím slovo k vyhledání"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Potraviny"),
