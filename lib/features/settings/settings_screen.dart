@@ -98,6 +98,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Dimens.spacing32,
                     ),
               children: [
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryUnits),
                 _SettingsGroup(
                   palette: palette,
                   tiles: [
@@ -119,6 +121,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: () =>
                           _showEnergyUnitDialog(context, state.usesKilojoules),
                     ),
+                  ],
+                ),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryGoals),
+                _SettingsGroup(
+                  palette: palette,
+                  tiles: [
                     // The old Calculations dialog had grown into a wall of
                     // sliders covering daily kcal, macros, per-meal split,
                     // ten nutrient goals, and the diary day boundary. Each
@@ -160,6 +170,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: S.of(context).settingsDayStartLabel,
                       onTap: () => _showDayBoundaryDialog(context),
                     ),
+                  ],
+                ),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryDisplay),
+                _SettingsGroup(
+                  palette: palette,
+                  tiles: [
                     _SettingsSwitchTile(
                       palette: palette,
                       icon: Icons.directions_run_rounded,
@@ -211,7 +229,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: Dimens.spacing16),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryAppearance),
                 _SettingsGroup(
                   palette: palette,
                   tiles: [
@@ -248,6 +268,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: () =>
                           _showLanguageDialog(context, state.selectedLocale),
                     ),
+                  ],
+                ),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(context, palette,
+                    S.of(context).settingsNotificationsLabel),
+                _SettingsGroup(
+                  palette: palette,
+                  tiles: [
                     _SettingsSwitchTile(
                       palette: palette,
                       icon: Icons.notifications_rounded,
@@ -284,7 +312,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                   ],
                 ),
-                const SizedBox(height: Dimens.spacing16),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryData),
                 _SettingsGroup(
                   palette: palette,
                   tiles: [
@@ -324,7 +354,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: Dimens.spacing16),
+                const SizedBox(height: Dimens.spacing20),
+                _categoryHeader(
+                    context, palette, S.of(context).settingsCategoryAbout),
                 _SettingsGroup(
                   palette: palette,
                   tiles: [
@@ -377,6 +409,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).settingsLabel)),
       body: body,
+    );
+  }
+
+  Widget _categoryHeader(BuildContext context, AppPalette palette, String label) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Dimens.spacing12,
+        Dimens.spacing4,
+        Dimens.spacing12,
+        Dimens.spacing8,
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: palette.textMuted,
+              fontWeight: FontWeight.w700,
+            ),
+      ),
     );
   }
 

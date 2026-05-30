@@ -1184,6 +1184,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Energy-expenditure research has historically used binary sex categories, so there is no single validated TDEE formula for non-binary people. OpenNutriTracker therefore lets you choose between an averaged reference, an estrogen-typical reference, or a testosterone-typical reference under Settings → Calculations. If an accurate number genuinely matters for your care, please speak to a clinician familiar with your hormone status."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("View source"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("About"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Data"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Display"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Goals & nutrition"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Units & energy"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Distance"),
         "settingsImperialLabel":

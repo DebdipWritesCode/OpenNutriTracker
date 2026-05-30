@@ -150,6 +150,66 @@ class S {
     );
   }
 
+  /// `Units & energy`
+  String get settingsCategoryUnits {
+    return Intl.message(
+      'Units & energy',
+      name: 'settingsCategoryUnits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Goals & nutrition`
+  String get settingsCategoryGoals {
+    return Intl.message(
+      'Goals & nutrition',
+      name: 'settingsCategoryGoals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display`
+  String get settingsCategoryDisplay {
+    return Intl.message(
+      'Display',
+      name: 'settingsCategoryDisplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Appearance`
+  String get settingsCategoryAppearance {
+    return Intl.message(
+      'Appearance',
+      name: 'settingsCategoryAppearance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get settingsCategoryData {
+    return Intl.message(
+      'Data',
+      name: 'settingsCategoryData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About`
+  String get settingsCategoryAbout {
+    return Intl.message(
+      'About',
+      name: 'settingsCategoryAbout',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settingsLabel {
     return Intl.message(

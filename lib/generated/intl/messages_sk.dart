@@ -1114,6 +1114,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Výskum energetického výdaja historicky používal binárne pohlavné kategórie, takže pre nebinárne osoby neexistuje jediný validovaný vzorec TDEE. OpenNutriTracker vám preto v Nastavenia → Výpočty ponúka voľbu medzi spriemerovanou referenciou, estrogénovo-typickou referenciou a testosterónovo-typickou referenciou. Ak na presnom čísle pre vašu starostlivosť skutočne záleží, prosím poraďte sa s klinikom, ktorý pozná váš hormonálny stav."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Zobraziť zdroj"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("O aplikácii"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Vzhľad"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Údaje"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Zobrazenie"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Ciele a výživa"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Jednotky a energia"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Vzdialenosť"),
         "settingsImperialLabel":

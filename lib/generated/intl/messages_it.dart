@@ -1205,6 +1205,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "La ricerca sul dispendio energetico ha storicamente usato solo categorie binarie di sesso, quindi non esiste una formula TDEE validata per le persone non binarie. OpenNutriTracker permette quindi di scegliere tra un riferimento medio, un riferimento di tipo estrogenico e uno di tipo testosteronico in Impostazioni → Calcoli. Se per te è davvero importante un valore accurato, ti consigliamo di parlarne con un medico che conosca il tuo profilo ormonale."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Apri la fonte"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Informazioni"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Aspetto"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Dati"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Visualizzazione"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Obiettivi e nutrizione"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Unità ed energia"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Distanza"),
         "settingsImperialLabel":

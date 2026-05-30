@@ -1183,6 +1183,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enerji harcaması üzerine yapılan araştırmalar tarihsel olarak yalnızca ikili cinsiyet kategorilerini kullanmıştır; bu nedenle non-binary kişiler için doğrulanmış tek bir TDEE formülü yoktur. Bu yüzden OpenNutriTracker, Ayarlar → Hesaplamalar bölümünde ortalanmış bir referans, östrojen-tipik bir referans ve testosteron-tipik bir referans arasında seçim yapmanı sağlar. Bakımın için kesin bir değer gerçekten önemliyse lütfen hormon durumunu bilen bir klinisyenle görüş."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Kaynağı aç"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Hakkında"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Görünüm"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Veriler"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Görüntüleme"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Hedefler ve beslenme"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Birimler ve enerji"),
         "settingsDistanceLabel": MessageLookupByLibrary.simpleMessage("Mesafe"),
         "settingsImperialLabel":
             MessageLookupByLibrary.simpleMessage("İmperial (lbs, ft, oz)"),

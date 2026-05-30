@@ -1204,6 +1204,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Дослідження енергетичних витрат історично використовували лише бінарні категорії статі, тому для небінарних осіб не існує єдиної підтвердженої формули TDEE. Тому OpenNutriTracker у Налаштування → Розрахунки пропонує вибір між усередненим орієнтиром, орієнтиром, типовим для естрогену, та орієнтиром, типовим для тестостерону. Якщо точне значення є дійсно важливим для тебе, будь ласка, поговори з лікарем, який знає твій гормональний стан."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Відкрити джерело"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Про застосунок"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Вигляд"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Дані"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Відображення"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Цілі та харчування"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Одиниці та енергія"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Відстань"),
         "settingsImperialLabel": MessageLookupByLibrary.simpleMessage(
