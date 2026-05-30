@@ -229,7 +229,7 @@ class _KcalAdjustmentDialogState extends State<KcalAdjustmentDialog> {
                               ),
                             ),
                             SizedBox(
-                              width: 80,
+                              width: 104,
                               child: Semantics(
                                 identifier: 'kcal-adjustment-input',
                                 child: TextField(
@@ -248,6 +248,10 @@ class _KcalAdjustmentDialogState extends State<KcalAdjustmentDialog> {
                                   decoration: InputDecoration(
                                     suffixText: unitLabel,
                                     isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 12,
+                                    ),
                                   ),
                                   onSubmitted: (_) => _applyKcalInput(),
                                   onEditingComplete: _applyKcalInput,

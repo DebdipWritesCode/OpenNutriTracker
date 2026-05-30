@@ -512,7 +512,7 @@ class _NutrientRow extends StatelessWidget {
             children: [
               Expanded(child: Text(label)),
               SizedBox(
-                width: 80,
+                width: 100,
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.numberWithOptions(
@@ -529,6 +529,10 @@ class _NutrientRow extends StatelessWidget {
                   decoration: InputDecoration(
                     suffixText: unit,
                     isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
                   ),
                   onSubmitted: (_) => onTextSubmitted(),
                   onEditingComplete: onTextSubmitted,

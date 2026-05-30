@@ -19,5 +19,4 @@ class NavigationOptions {
   static const fastingRoute = "fasting";
   static const accentColourRoute = "accentColour";
   static const manageProfilesRoute = "manageProfiles";
-  static const trendsRoute = "trends";
 }

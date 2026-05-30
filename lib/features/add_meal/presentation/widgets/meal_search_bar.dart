@@ -4,7 +4,7 @@ import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/custom_icons.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-class MealSearchBar extends StatelessWidget {
+class MealSearchBar extends StatefulWidget {
   final ValueNotifier<String> searchStringListener;
   final Function(String) onSearchSubmit;
   // Fired on every keystroke for debounced search-as-you-type. Optional so
@@ -14,15 +14,30 @@ class MealSearchBar extends StatelessWidget {
   // ingredient picker) can omit the suffix icon entirely.
   final Function()? onBarcodePressed;
 
-  final _searchTextController = TextEditingController();
-
-  MealSearchBar({
+  const MealSearchBar({
     super.key,
     required this.searchStringListener,
     required this.onSearchSubmit,
     required this.onBarcodePressed,
     this.onSearchChanged,
   });
+
+  @override
+  State<MealSearchBar> createState() => _MealSearchBarState();
+}
+
+class _MealSearchBarState extends State<MealSearchBar> {
+  // Owned by the State so it survives parent rebuilds. The add-meal screen
+  // switches search source on the first keystroke, which rebuilds this widget;
+  // a controller created per build would be replaced and would swallow that
+  // first character (the "first input ignored" bug).
+  final _searchTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +57,20 @@ class MealSearchBar extends StatelessWidget {
             textInputAction: TextInputAction.search,
             style: Theme.of(context).textTheme.bodyLarge,
             onChanged: (input) {
-              searchStringListener.value = input;
-              onSearchChanged?.call(input);
+              widget.searchStringListener.value = input;
+              widget.onSearchChanged?.call(input);
             },
-            onSubmitted: onSearchSubmit,
+            onSubmitted: widget.onSearchSubmit,
             decoration: InputDecoration(
               hintText: S.of(context).searchLabel,
               hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: palette.textMuted),
               prefixIcon: Icon(Icons.search_rounded, size: 24, color: palette.textMuted),
-              suffixIcon: onBarcodePressed != null
+              suffixIcon: widget.onBarcodePressed != null
                   ? Semantics(
                       identifier: 'meal-search-barcode',
                       child: IconButton(
                         icon: Icon(CustomIcons.barcode_scan, size: 22, color: palette.textMuted),
-                        onPressed: onBarcodePressed,
+                        onPressed: widget.onBarcodePressed,
                       ),
                     )
                   : null,
@@ -77,7 +92,7 @@ class MealSearchBar extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               FocusManager.instance.primaryFocus?.unfocus(); // Hide Keyboard
-              onSearchSubmit(_searchTextController.text);
+              widget.onSearchSubmit(_searchTextController.text);
             },
             icon: const Icon(Icons.search_rounded, size: 24),
             style: IconButton.styleFrom(

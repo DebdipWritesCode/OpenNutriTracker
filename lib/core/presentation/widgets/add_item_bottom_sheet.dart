@@ -220,21 +220,10 @@ class AddItemBottomSheet extends StatelessWidget {
       builder: (context, snapshot) {
         final intakes = snapshot.data;
         if (intakes == null || intakes.isEmpty) return const SizedBox.shrink();
-        // Rank distinct foods by how often they appear in recent history (most
-        // logged first), ties broken by recency, capped to a quick-pick few —
-        // so the food you reach for most is the first tap. Tapping a card opens
-        // its detail pre-filled, so a repeat meal is two taps.
-        final counts = <String?, int>{};
-        final mostRecent = <String?, IntakeEntity>{};
-        for (final intake in intakes) {
-          final code = intake.meal.code;
-          counts[code] = (counts[code] ?? 0) + 1;
-          mostRecent.putIfAbsent(code, () => intake);
-        }
-        final recent = mostRecent.values.toList()
-          ..sort((a, b) =>
-              (counts[b.meal.code] ?? 0).compareTo(counts[a.meal.code] ?? 0));
-        if (recent.length > 4) recent.removeRange(4, recent.length);
+        // getRecentIntake() already returns the most-recent *unique* foods
+        // (the data source dedupes by meal), so take the first few for quick
+        // re-logging. Tapping a card opens its detail pre-filled.
+        final recent = intakes.take(4).toList();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

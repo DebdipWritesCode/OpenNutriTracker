@@ -278,7 +278,7 @@ class _MacroRow extends StatelessWidget {
           children: [
             Expanded(child: Text(label)),
             SizedBox(
-              width: 60,
+              width: 72,
               child: TextField(
                 controller: controller,
                 keyboardType: TextInputType.number,
@@ -287,6 +287,7 @@ class _MacroRow extends StatelessWidget {
                 decoration: const InputDecoration(
                   suffixText: '%',
                   isDense: true,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 ),
                 onSubmitted: (_) => onTextSubmitted(),
                 onEditingComplete: onTextSubmitted,
