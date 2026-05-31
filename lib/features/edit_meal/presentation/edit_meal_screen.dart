@@ -248,8 +248,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
         appBar: AppBar(
           backgroundColor: palette.canvas,
           surfaceTintColor: Colors.transparent,
+          toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
           title: Text(
             S.of(context).editMealLabel,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
           actions: [

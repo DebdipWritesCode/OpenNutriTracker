@@ -257,7 +257,14 @@ class _NutrientGoalsScreenState extends State<NutrientGoalsScreen> {
     final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(s.settingsNutrientGoalsLabel),
+        // Grow the bar with the text scale so the title can wrap to two lines
+        // beside the actions rather than clipping at large font sizes.
+        toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
+        title: Text(
+          s.settingsNutrientGoalsLabel,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           Semantics(
             identifier: 'nutrient-goals-reset',

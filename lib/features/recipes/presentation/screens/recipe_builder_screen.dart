@@ -125,10 +125,13 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
           },
           child: Scaffold(
             appBar: AppBar(
+            toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
             title: Text(
               state.isExistingRecipe
                   ? S.of(context).editRecipeTitle
                   : S.of(context).createRecipeTitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             actions: [
               if (state.isSaving)

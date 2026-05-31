@@ -260,24 +260,35 @@ class _FastingScreenState extends State<FastingScreen> {
                       backgroundColor: palette.surfaceMuted,
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        elapsed,
-                        style: textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: palette.textStrong,
-                        ),
+                  // The ring is a fixed 220px, but the time text scales with
+                  // the user's font setting. Scale the centre content down to
+                  // fit so a large font never overflows the ring.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.spacing24,
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            elapsed,
+                            style: textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: palette.textStrong,
+                            ),
+                          ),
+                          const SizedBox(height: Dimens.spacing4),
+                          Text(
+                            l10n.fastingElapsedLabel,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: palette.textMuted,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: Dimens.spacing4),
-                      Text(
-                        l10n.fastingElapsedLabel,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: palette.textMuted,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),

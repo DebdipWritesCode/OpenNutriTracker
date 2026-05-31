@@ -169,7 +169,7 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
               Flexible(
                 child: Text(
                   widget.title,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.titleLarge?.copyWith(
                     color: palette.textStrong,

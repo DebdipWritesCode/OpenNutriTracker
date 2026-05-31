@@ -61,7 +61,12 @@ class _AddActivityScreenState extends State<AddActivityScreen>
       backgroundColor: palette.canvas,
       appBar: AppBar(
         backgroundColor: palette.canvas,
-        title: Text(S.of(context).activityLabel),
+        toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
+        title: Text(
+          S.of(context).activityLabel,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           Semantics(
             identifier: 'add-activity-quick-add',
