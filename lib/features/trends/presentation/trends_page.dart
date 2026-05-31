@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/add_weight_log_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -319,8 +324,23 @@ class _WeightCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(S.of(context).weightHistoryWeightLabel, style: text.titleMedium),
-          const SizedBox(height: Dimens.spacing20),
+          Row(
+            children: [
+              Expanded(
+                child: Text(S.of(context).weightHistoryWeightLabel,
+                    style: text.titleMedium),
+              ),
+              Semantics(
+                identifier: 'trends-log-weight',
+                child: IconButton(
+                  tooltip: S.of(context).weightHistoryAddEntry,
+                  icon: const Icon(Icons.add_rounded),
+                  onPressed: () => _logWeight(context),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimens.spacing12),
           Semantics(
             label: S.of(context).weightHistoryWeightLabel,
             child: SizedBox(height: 150, child: _buildChart(context)),
@@ -328,6 +348,43 @@ class _WeightCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Logs a weight entry from the trends view, reusing the same dialog and
+  /// persistence path as the home weight chip, then reloads the trend so the
+  /// chart reflects the new point. Keeping weight editable here means it no
+  /// longer lives only behind the home widget.
+  Future<void> _logWeight(BuildContext context) async {
+    final trendsBloc = context.read<TrendsBloc>();
+    final rangeDays = trendsBloc.state is TrendsLoaded
+        ? (trendsBloc.state as TrendsLoaded).rangeDays
+        : 7;
+    final user = await locator<GetUserUsecase>().getUserData();
+    final config = await locator<GetConfigUsecase>().getConfig();
+    final usesImperial = config.usesImperialUnits;
+    final current = usesImperial ? user.weightKG * 2.20462 : user.weightKG;
+    if (!context.mounted) return;
+    final entered = await showDialog<double>(
+      context: context,
+      builder: (_) => SetWeightDialog(
+        userWeight: current,
+        usesImperialUnits: usesImperial,
+      ),
+    );
+    if (entered == null) return;
+    final kg = usesImperial ? entered / 2.20462 : entered;
+    final now = DateTime.now();
+    await locator<AddWeightLogUsecase>().addEntry(
+      WeightLogEntity(
+        date: DateTime(now.year, now.month, now.day),
+        weightKg: kg,
+      ),
+    );
+    final updated = await locator<GetUserUsecase>().getUserData();
+    await locator<ProfileBloc>().updateUser(updated);
+    if (context.mounted) {
+      trendsBloc.add(LoadTrendsEvent(rangeDays: rangeDays));
+    }
   }
 
   Widget _buildChart(BuildContext context) {
