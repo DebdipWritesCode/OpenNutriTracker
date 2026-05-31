@@ -169,18 +169,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Dimens.spacing16,
                 Dimens.spacing4,
               ),
-              child: Row(
+              // Wrap rather than Row so the two chips drop onto a second line
+              // at large text scale instead of overflowing off the edge.
+              child: Wrap(
+                spacing: Dimens.spacing12,
+                runSpacing: Dimens.spacing8,
                 children: [
                   QuickWeightWidget(
                     weightKg: userWeightKg,
                     usesImperialUnits: usesImperialUnits,
                   ),
-                  const SizedBox(width: Dimens.spacing12),
                   QuickWaterWidget(
                     waterMlToday: waterMlToday,
                     waterGoalMl: waterGoalMl,
                   ),
-                  const Spacer(),
                 ],
               ),
             ),

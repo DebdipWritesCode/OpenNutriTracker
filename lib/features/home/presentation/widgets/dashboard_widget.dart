@@ -244,7 +244,7 @@ class _MacroTile extends StatelessWidget {
             children: [
               Container(width: 9, height: 9, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
               const SizedBox(width: 6),
-              Text(label, style: textTheme.labelMedium),
+              Flexible(child: Text(label, style: textTheme.labelMedium)),
             ],
           ),
           const SizedBox(height: Dimens.spacing12),
