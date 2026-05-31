@@ -166,7 +166,12 @@ class _ScannerScreenState extends State<ScannerScreen>
       backgroundColor: palette.canvas,
       appBar: AppBar(
         backgroundColor: palette.canvas,
-        title: Text(S.of(context).scanProductLabel),
+        toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
+        title: Text(
+          S.of(context).scanProductLabel,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           IconButton(
             icon: ValueListenableBuilder(
