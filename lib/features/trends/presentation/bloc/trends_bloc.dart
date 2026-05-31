@@ -64,8 +64,9 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
         }
 
         // For a fixed chip the window is the chip; for "All" it stretches back
-        // to the earliest data point (across days, weight, and water), with a
-        // 30-day floor so a near-empty history still reads as a chart.
+        // to exactly the earliest data point (across days, weight, and water)
+        // so the charts begin at the first entry rather than padding empty
+        // days in front of it. A 2-day floor keeps a single entry renderable.
         int windowDays;
         if (!isAll) {
           windowDays = event.rangeDays;
@@ -84,8 +85,8 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
             consider(k);
           }
           windowDays = earliest == null
-              ? 30
-              : (today.difference(earliest!).inDays + 1).clamp(30, 3650);
+              ? 30 // no data yet: a sensible empty-chart width
+              : (today.difference(earliest!).inDays + 1).clamp(2, 3650);
         }
 
         emit(TrendsLoaded(
