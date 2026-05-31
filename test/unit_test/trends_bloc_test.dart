@@ -1,7 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
+import 'package:opennutritracker/core/domain/entity/config_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 
@@ -28,21 +36,63 @@ class _FakeGetTrackedDayUsecase implements GetTrackedDayUsecase {
   Future<TrackedDayEntity?> getTrackedDay(DateTime day) async => null;
 }
 
+/// The bloc pulls the full weight history (getAllEntries) and windows it in
+/// the UI, mirroring the weight-history screen.
 class _FakeGetWeightLogUsecase implements GetWeightLogUsecase {
-  final List<({DateTime start, DateTime end})> rangeCalls = [];
   List<WeightLogEntity> result = [];
+  int getAllCalls = 0;
+
+  @override
+  Future<List<WeightLogEntity>> getAllEntries() async {
+    getAllCalls++;
+    return List.of(result);
+  }
 
   @override
   Future<List<WeightLogEntity>> getEntriesInRange(
     DateTime start,
     DateTime end,
-  ) async {
-    rangeCalls.add((start: start, end: end));
-    return result;
-  }
+  ) async =>
+      List.of(result);
+}
+
+class _FakeGetUserUsecase implements GetUserUsecase {
+  double? targetWeightKg;
 
   @override
-  Future<List<WeightLogEntity>> getAllEntries() async => result;
+  Future<UserEntity> getUserData() async => UserEntity(
+        birthday: DateTime(1990, 1, 1),
+        heightCM: 175,
+        weightKG: 75,
+        gender: UserGenderEntity.female,
+        goal: UserWeightGoalEntity.maintainWeight,
+        pal: UserPALEntity.active,
+        targetWeightKg: targetWeightKg,
+      );
+
+  @override
+  Future<bool> hasUserData() async => true;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      super.noSuchMethod(invocation);
+}
+
+class _FakeGetConfigUsecase implements GetConfigUsecase {
+  bool usesImperialUnits = false;
+
+  @override
+  Future<ConfigEntity> getConfig() async => ConfigEntity(
+        true,
+        true,
+        false,
+        AppThemeEntity.system,
+        usesImperialUnits: usesImperialUnits,
+      );
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      super.noSuchMethod(invocation);
 }
 
 WeightLogEntity _wl(DateTime date, double kg) =>
@@ -57,12 +107,16 @@ void main() {
   group('TrendsBloc', () {
     late _FakeGetTrackedDayUsecase trackedDay;
     late _FakeGetWeightLogUsecase weightLog;
+    late _FakeGetUserUsecase user;
+    late _FakeGetConfigUsecase config;
     late TrendsBloc bloc;
 
     setUp(() {
       trackedDay = _FakeGetTrackedDayUsecase();
       weightLog = _FakeGetWeightLogUsecase();
-      bloc = TrendsBloc(trackedDay, weightLog);
+      user = _FakeGetUserUsecase();
+      config = _FakeGetConfigUsecase();
+      bloc = TrendsBloc(trackedDay, weightLog, user, config);
     });
 
     tearDown(() async {
@@ -84,8 +138,7 @@ void main() {
 
     test('default load emits Loading then Loaded with rangeDays 7', () async {
       final emitted = await load(const LoadTrendsEvent());
-      expect(emitted.map((s) => s.runtimeType),
-          [TrendsLoading, TrendsLoaded]);
+      expect(emitted.map((s) => s.runtimeType), [TrendsLoading, TrendsLoaded]);
       expect((emitted.last as TrendsLoaded).rangeDays, 7);
     });
 
@@ -102,20 +155,16 @@ void main() {
           today.subtract(const Duration(days: 7)));
     });
 
-    test('a short calorie window still pulls a 30-day weight window', () async {
-      await load(const LoadTrendsEvent());
-      expect(weightLog.rangeCalls.single.start,
-          today.subtract(const Duration(days: 29)));
-      expect(weightLog.rangeCalls.single.end, today);
-    });
-
-    test('a 90-day window pulls 90 days of both calories and weight', () async {
+    test('a 90-day window pulls 90 days of calories', () async {
       final emitted = await load(const LoadTrendsEvent(rangeDays: 90));
       expect((emitted.last as TrendsLoaded).rangeDays, 90);
       expect(trackedDay.rangeCalls.first.start,
           today.subtract(const Duration(days: 89)));
-      expect(weightLog.rangeCalls.single.start,
-          today.subtract(const Duration(days: 89)));
+    });
+
+    test('weight uses the full history, not a windowed range', () async {
+      await load(const LoadTrendsEvent());
+      expect(weightLog.getAllCalls, 1);
     });
 
     test('weight entries are sorted ascending by date', () async {
@@ -136,11 +185,20 @@ void main() {
       );
     });
 
+    test('carries the units and target weight through to the loaded state',
+        () async {
+      config.usesImperialUnits = true;
+      user.targetWeightKg = 68;
+      final emitted = await load(const LoadTrendsEvent());
+      final loaded = emitted.last as TrendsLoaded;
+      expect(loaded.usesImperialUnits, isTrue);
+      expect(loaded.targetWeightKg, 68);
+    });
+
     test('a failing data source surfaces TrendsFailed', () async {
       trackedDay.throws = true;
       final emitted = await load(const LoadTrendsEvent());
-      expect(emitted.map((s) => s.runtimeType),
-          [TrendsLoading, TrendsFailed]);
+      expect(emitted.map((s) => s.runtimeType), [TrendsLoading, TrendsFailed]);
     });
   });
 }

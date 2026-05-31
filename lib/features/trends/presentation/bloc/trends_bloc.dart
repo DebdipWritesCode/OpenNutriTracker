@@ -2,7 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
 
 part 'trends_event.dart';
@@ -11,9 +13,15 @@ part 'trends_state.dart';
 class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
   final GetTrackedDayUsecase _getTrackedDayUsecase;
   final GetWeightLogUsecase _getWeightLogUsecase;
+  final GetUserUsecase _getUserUsecase;
+  final GetConfigUsecase _getConfigUsecase;
 
-  TrendsBloc(this._getTrackedDayUsecase, this._getWeightLogUsecase)
-      : super(const TrendsInitial()) {
+  TrendsBloc(
+    this._getTrackedDayUsecase,
+    this._getWeightLogUsecase,
+    this._getUserUsecase,
+    this._getConfigUsecase,
+  ) : super(const TrendsInitial()) {
     on<LoadTrendsEvent>((event, emit) async {
       emit(const TrendsLoading());
       try {
@@ -23,24 +31,25 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
           today.subtract(Duration(days: event.rangeDays - 1)),
           today,
         );
-        // Weight always spans at least 30 days so a short calorie window still
-        // shows a meaningful weight trend.
-        final weightDays = event.rangeDays < 30 ? 30 : event.rangeDays;
-        final weight = await _getWeightLogUsecase.getEntriesInRange(
-          today.subtract(Duration(days: weightDays - 1)),
-          today,
-        );
+        // The full weight history; the chart windows it for display. This
+        // mirrors the weight-history screen, so a reading from weeks ago
+        // still shows once the range is wide enough to include it.
+        final weight = await _getWeightLogUsecase.getAllEntries();
         weight.sort((a, b) => a.date.compareTo(b.date));
         // The 7 days before this week, for a week-over-week consistency delta.
         final priorWeek = await _getTrackedDayUsecase.getTrackedDaysByRange(
           today.subtract(const Duration(days: 13)),
           today.subtract(const Duration(days: 7)),
         );
+        final user = await _getUserUsecase.getUserData();
+        final config = await _getConfigUsecase.getConfig();
         emit(TrendsLoaded(
           rangeDays: event.rangeDays,
           days: days,
           priorWeek: priorWeek,
           weight: weight,
+          usesImperialUnits: config.usesImperialUnits,
+          targetWeightKg: user.targetWeightKg,
         ));
       } catch (e) {
         emit(TrendsFailed(e.toString()));

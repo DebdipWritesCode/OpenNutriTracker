@@ -12,6 +12,7 @@ import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/weight_trend_chart.dart';
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -55,7 +56,13 @@ class _TrendsView extends StatelessWidget {
             const SizedBox(height: Dimens.spacing16),
             _MacrosTrendCard(days: state.days, palette: palette),
             const SizedBox(height: Dimens.spacing16),
-            _WeightCard(entries: state.weight, palette: palette),
+            _WeightCard(
+              entries: state.weight,
+              usesImperialUnits: state.usesImperialUnits,
+              targetWeightKg: state.targetWeightKg,
+              rangeDays: state.rangeDays,
+              palette: palette,
+            ),
           ],
         );
       },
@@ -313,8 +320,17 @@ class _MacrosTrendCard extends StatelessWidget {
 
 class _WeightCard extends StatelessWidget {
   final List<WeightLogEntity> entries;
+  final bool usesImperialUnits;
+  final double? targetWeightKg;
+  final int rangeDays;
   final AppPalette palette;
-  const _WeightCard({required this.entries, required this.palette});
+  const _WeightCard({
+    required this.entries,
+    required this.usesImperialUnits,
+    required this.targetWeightKg,
+    required this.rangeDays,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -344,9 +360,11 @@ class _WeightCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Dimens.spacing12),
-          Semantics(
-            label: S.of(context).weightHistoryWeightLabel,
-            child: SizedBox(height: 150, child: _buildChart(context)),
+          WeightTrendChart(
+            entries: entries,
+            usesImperialUnits: usesImperialUnits,
+            targetWeightKg: targetWeightKg,
+            windowDays: rangeDays < 30 ? 30 : rangeDays,
           ),
         ],
       ),
@@ -389,58 +407,5 @@ class _WeightCard extends StatelessWidget {
     if (context.mounted) {
       trendsBloc.add(LoadTrendsEvent(rangeDays: rangeDays));
     }
-  }
-
-  Widget _buildChart(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    if (entries.length < 2) {
-      return Center(
-        child: Text(
-          S.of(context).weightHistoryChartEmptyState,
-          textAlign: TextAlign.center,
-          style: text.bodyMedium?.copyWith(color: palette.textMuted),
-        ),
-      );
-    }
-    final accent = Theme.of(context).colorScheme.primary;
-    final start = entries.first.date;
-    final spots = [
-      for (final e in entries) FlSpot(e.date.difference(start).inDays.toDouble(), e.weightKg),
-    ];
-    final ys = spots.map((s) => s.y);
-    final minY = ys.reduce((a, b) => a < b ? a : b);
-    final maxY = ys.reduce((a, b) => a > b ? a : b);
-    final pad = ((maxY - minY) * 0.2).clamp(0.5, 5.0);
-    return LineChart(
-      LineChartData(
-        minY: minY - pad,
-        maxY: maxY + pad,
-        gridData: const FlGridData(show: false),
-        borderData: FlBorderData(show: false),
-        titlesData: const FlTitlesData(show: false),
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipItems: (spots) => [
-              for (final s in spots)
-                LineTooltipItem(
-                  s.y.toStringAsFixed(1),
-                  text.labelMedium ?? const TextStyle(),
-                ),
-            ],
-          ),
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            preventCurveOverShooting: true,
-            color: accent,
-            barWidth: 3,
-            dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(show: true, color: accent.withValues(alpha: 0.12)),
-          ),
-        ],
-      ),
-    );
   }
 }
