@@ -1,0 +1,146 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
+import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
+import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
+
+/// Records the (start, end) ranges it is asked for so the bloc's date-window
+/// arithmetic can be asserted, and returns a canned list. The bloc calls this
+/// twice per load — first for the selected window, then for the prior week —
+/// so [rangeCalls] holds both in order.
+class _FakeGetTrackedDayUsecase implements GetTrackedDayUsecase {
+  final List<({DateTime start, DateTime end})> rangeCalls = [];
+  List<TrackedDayEntity> result = [];
+  bool throws = false;
+
+  @override
+  Future<List<TrackedDayEntity>> getTrackedDaysByRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    rangeCalls.add((start: start, end: end));
+    if (throws) throw Exception('boom');
+    return result;
+  }
+
+  @override
+  Future<TrackedDayEntity?> getTrackedDay(DateTime day) async => null;
+}
+
+class _FakeGetWeightLogUsecase implements GetWeightLogUsecase {
+  final List<({DateTime start, DateTime end})> rangeCalls = [];
+  List<WeightLogEntity> result = [];
+
+  @override
+  Future<List<WeightLogEntity>> getEntriesInRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    rangeCalls.add((start: start, end: end));
+    return result;
+  }
+
+  @override
+  Future<List<WeightLogEntity>> getAllEntries() async => result;
+}
+
+WeightLogEntity _wl(DateTime date, double kg) =>
+    WeightLogEntity(date: date, weightKg: kg);
+
+void main() {
+  // The bloc anchors every window on midnight-today; mirror that here so the
+  // expected ranges line up with what the bloc computes.
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+
+  group('TrendsBloc', () {
+    late _FakeGetTrackedDayUsecase trackedDay;
+    late _FakeGetWeightLogUsecase weightLog;
+    late TrendsBloc bloc;
+
+    setUp(() {
+      trackedDay = _FakeGetTrackedDayUsecase();
+      weightLog = _FakeGetWeightLogUsecase();
+      bloc = TrendsBloc(trackedDay, weightLog);
+    });
+
+    tearDown(() async {
+      await bloc.close();
+    });
+
+    Future<List<TrendsState>> load(LoadTrendsEvent event) async {
+      final emitted = <TrendsState>[];
+      final sub = bloc.stream.listen(emitted.add);
+      bloc.add(event);
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await sub.cancel();
+      return emitted;
+    }
+
+    test('initial state is TrendsInitial', () {
+      expect(bloc.state, isA<TrendsInitial>());
+    });
+
+    test('default load emits Loading then Loaded with rangeDays 7', () async {
+      final emitted = await load(const LoadTrendsEvent());
+      expect(emitted.map((s) => s.runtimeType),
+          [TrendsLoading, TrendsLoaded]);
+      expect((emitted.last as TrendsLoaded).rangeDays, 7);
+    });
+
+    test('7-day window spans today-6..today, prior week today-13..today-7',
+        () async {
+      await load(const LoadTrendsEvent());
+      // First call is the selected window, second is the prior week.
+      expect(trackedDay.rangeCalls.first.start,
+          today.subtract(const Duration(days: 6)));
+      expect(trackedDay.rangeCalls.first.end, today);
+      expect(trackedDay.rangeCalls[1].start,
+          today.subtract(const Duration(days: 13)));
+      expect(trackedDay.rangeCalls[1].end,
+          today.subtract(const Duration(days: 7)));
+    });
+
+    test('a short calorie window still pulls a 30-day weight window', () async {
+      await load(const LoadTrendsEvent());
+      expect(weightLog.rangeCalls.single.start,
+          today.subtract(const Duration(days: 29)));
+      expect(weightLog.rangeCalls.single.end, today);
+    });
+
+    test('a 90-day window pulls 90 days of both calories and weight', () async {
+      final emitted = await load(const LoadTrendsEvent(rangeDays: 90));
+      expect((emitted.last as TrendsLoaded).rangeDays, 90);
+      expect(trackedDay.rangeCalls.first.start,
+          today.subtract(const Duration(days: 89)));
+      expect(weightLog.rangeCalls.single.start,
+          today.subtract(const Duration(days: 89)));
+    });
+
+    test('weight entries are sorted ascending by date', () async {
+      weightLog.result = [
+        _wl(today.subtract(const Duration(days: 1)), 70),
+        _wl(today.subtract(const Duration(days: 3)), 72),
+        _wl(today.subtract(const Duration(days: 2)), 71),
+      ];
+      final emitted = await load(const LoadTrendsEvent());
+      final dates = (emitted.last as TrendsLoaded).weight.map((e) => e.date);
+      expect(
+        dates.toList(),
+        [
+          today.subtract(const Duration(days: 3)),
+          today.subtract(const Duration(days: 2)),
+          today.subtract(const Duration(days: 1)),
+        ],
+      );
+    });
+
+    test('a failing data source surfaces TrendsFailed', () async {
+      trackedDay.throws = true;
+      final emitted = await load(const LoadTrendsEvent());
+      expect(emitted.map((s) => s.runtimeType),
+          [TrendsLoading, TrendsFailed]);
+    });
+  });
+}
