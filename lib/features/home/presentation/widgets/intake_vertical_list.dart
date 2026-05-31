@@ -166,23 +166,31 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                 child: Icon(widget.listIcon, size: 20, color: accent),
               ),
               const SizedBox(width: Dimens.spacing12),
-              Text(
-                widget.title,
-                style: textTheme.titleLarge?.copyWith(
-                  color: palette.textStrong,
-                  fontWeight: FontWeight.w700,
+              Flexible(
+                child: Text(
+                  widget.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: palette.textStrong,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const Spacer(),
               if (_shouldShowHeaderSummary)
-                Text(
-                  _buildHeaderSummary(context),
-                  style: textTheme.labelMedium?.copyWith(
-                    color: palette.textMuted,
-                    fontWeight: FontWeight.w700,
-                    height: 1.3,
+                Flexible(
+                  child: Text(
+                    _buildHeaderSummary(context),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.labelMedium?.copyWith(
+                      color: palette.textMuted,
+                      fontWeight: FontWeight.w700,
+                      height: 1.3,
+                    ),
+                    textAlign: TextAlign.end,
                   ),
-                  textAlign: TextAlign.end,
                 ),
               if (widget.onSortTypeChanged != null && totalKcal > 0)
                 _buildSortMenu(context),

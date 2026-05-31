@@ -230,7 +230,10 @@ class _KcalAdjustmentDialogState extends State<KcalAdjustmentDialog> {
                               ),
                             ),
                             SizedBox(
-                              width: 104,
+                              // Scale with the user's text setting so the value
+                              // and unit suffix stay readable at large fonts.
+                              width:
+                                  MediaQuery.textScalerOf(context).scale(128),
                               child: Semantics(
                                 identifier: 'kcal-adjustment-input',
                                 child: TextField(

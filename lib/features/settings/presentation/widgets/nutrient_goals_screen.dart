@@ -512,7 +512,9 @@ class _NutrientRow extends StatelessWidget {
             children: [
               Expanded(child: Text(label)),
               SizedBox(
-                width: 100,
+                // Scale with the user's text setting so the value and unit
+                // suffix stay readable at large font scales.
+                width: MediaQuery.textScalerOf(context).scale(124),
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.numberWithOptions(
