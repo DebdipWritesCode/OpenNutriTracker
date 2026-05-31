@@ -64,6 +64,12 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    quantityTextController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadMicronutrientSetting() async {
     final config = await locator<GetConfigUsecase>().getConfig();
     if (mounted) {

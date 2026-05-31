@@ -204,6 +204,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           servingsCount: draft.servingsCount,
+          tags: draft.tags,
         );
         await Navigator.of(context).pushNamed(
           NavigationOptions.recipeBuilderRoute,
