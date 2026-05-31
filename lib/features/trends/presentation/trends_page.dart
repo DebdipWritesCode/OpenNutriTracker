@@ -332,6 +332,9 @@ class _WeightCard extends StatelessWidget {
               ),
               Semantics(
                 identifier: 'trends-log-weight',
+                // Tight bounds: without this the node inherits the whole
+                // card's box (the container gotcha) and coordinate taps miss.
+                container: true,
                 child: IconButton(
                   tooltip: S.of(context).weightHistoryAddEntry,
                   icon: const Icon(Icons.add_rounded),
@@ -364,19 +367,20 @@ class _WeightCard extends StatelessWidget {
     final usesImperial = config.usesImperialUnits;
     final current = usesImperial ? user.weightKG * 2.20462 : user.weightKG;
     if (!context.mounted) return;
-    final entered = await showDialog<double>(
+    final entered = await showDialog<({double weight, DateTime date})>(
       context: context,
       builder: (_) => SetWeightDialog(
         userWeight: current,
         usesImperialUnits: usesImperial,
+        allowDateSelection: true,
       ),
     );
     if (entered == null) return;
-    final kg = usesImperial ? entered / 2.20462 : entered;
-    final now = DateTime.now();
+    final kg = usesImperial ? entered.weight / 2.20462 : entered.weight;
+    final d = entered.date;
     await locator<AddWeightLogUsecase>().addEntry(
       WeightLogEntity(
-        date: DateTime(now.year, now.month, now.day),
+        date: DateTime(d.year, d.month, d.day),
         weightKg: kg,
       ),
     );
