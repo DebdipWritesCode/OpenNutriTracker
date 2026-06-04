@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/profile_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_profile_usecase.dart';
@@ -192,7 +193,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             initialHeightCm: selection.height,
             initialWeightKg: selection.weight,
             initialTargetWeightKg: selection.targetWeight,
-            initialUsesImperial: selection.usesImperialUnits,
+            initialHeightImperial: selection.heightUsesImperial,
+            initialBodyWeightUnit: selection.bodyWeightUnit,
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
@@ -298,13 +300,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     double? selectedHeight,
     double? selectedWeight,
     double? selectedTargetWeight,
-    bool usesImperial,
+    bool heightImperial,
+    BodyWeightUnit bodyWeightUnit,
   ) {
     setState(() {
       _onboardingBloc.userSelection.height = selectedHeight;
       _onboardingBloc.userSelection.weight = selectedWeight;
       _onboardingBloc.userSelection.targetWeight = selectedTargetWeight;
-      _onboardingBloc.userSelection.usesImperialUnits = usesImperial;
+      _onboardingBloc.userSelection.heightUsesImperial = heightImperial;
+      _onboardingBloc.userSelection.bodyWeightUnit = bodyWeightUnit;
 
       _secondPageButtonActive = active;
     });
@@ -352,12 +356,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final userEntity = _onboardingBloc.userSelection.toUserEntity();
     final hasAcceptedDataCollection =
         _onboardingBloc.userSelection.acceptDataCollection;
-    final usesImperialUnits = _onboardingBloc.userSelection.usesImperialUnits;
+    final heightImperial = _onboardingBloc.userSelection.heightUsesImperial;
+    final bodyWeightUnit = _onboardingBloc.userSelection.bodyWeightUnit;
     if (userEntity != null) {
       await _onboardingBloc.saveOnboardingData(
         userEntity,
         hasAcceptedDataCollection,
-        usesImperialUnits,
+        heightImperial,
+        bodyWeightUnit,
       );
       if (!context.mounted) return;
       // Onboarding can run for a profile added after the app has been in

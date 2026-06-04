@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_bmi_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dart';
@@ -13,7 +14,6 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
-import 'package:opennutritracker/features/profile/presentation/utils/profile_display_format.dart';
 
 part 'profile_event.dart';
 
@@ -48,7 +48,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ProfileLoadedState(
           userBMI: userBMIEntity,
           userEntity: user,
-          usesImperialUnits: userConfig.usesImperialUnits,
+          bodyWeightUnit: userConfig.bodyWeightUnit,
+          usesImperialHeightUnits: userConfig.usesImperialHeightUnits,
           effectiveWaterGoalMl: userConfig.effectiveDailyWaterGoalMl(
             user.gender,
             caloriesProfile: user.caloriesProfile,
@@ -99,22 +100,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  /// Returns the user's height in cm or ft/in based on the user's config
-  String getDisplayHeight(UserEntity user, bool usesImperialUnits) {
-    if (usesImperialUnits) {
-      // Convert cm to feet and inches
+  /// Returns the user's height in cm or ft based on the user's height unit config.
+  String getDisplayHeight(UserEntity user, bool usesImperialHeightUnits) {
+    if (usesImperialHeightUnits) {
       return UnitCalc.cmToFeet(user.heightCM).toStringAsFixed(1);
     } else {
       return user.heightCM.roundToDouble().toStringAsFixed(0);
     }
-  }
-
-  /// Returns the user's weight in kg or lbs based on the user's config
-  String getDisplayWeight(UserEntity user, bool usesImperialUnits) {
-    final displayWeight = usesImperialUnits
-        ? UnitCalc.kgToLbs(user.weightKG)
-        : user.weightKG;
-
-    return formatProfileWeight(displayWeight);
   }
 }

@@ -468,6 +468,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("günlük kJ"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "ör. pizza, salata, pirinç ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Öğle Yemeği"),
@@ -1260,6 +1261,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Sistem varsayılanı"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Birimler"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Besin birimleri"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Boy birimi"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Vücut ağırlığı birimi"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Hacim"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Antrenmanı paylaş"),

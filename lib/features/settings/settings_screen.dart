@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/presentation/sources_screen.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_banner_version.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
@@ -104,11 +105,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   palette: palette,
                   tiles: [
                     _SettingsTile(
+                      identifier: 'settings-food-units',
                       palette: palette,
-                      icon: Icons.ac_unit_rounded,
-                      title: S.of(context).settingsUnitsLabel,
+                      icon: Icons.kitchen_rounded,
+                      title: S.of(context).settingsFoodUnitsLabel,
+                      subtitle: state.usesImperialFoodUnits
+                          ? S.of(context).settingsImperialLabel
+                          : S.of(context).settingsMetricLabel,
+                      onTap: () => _showFoodUnitsDialog(
+                          context, state.usesImperialFoodUnits),
+                    ),
+                    _SettingsTile(
+                      identifier: 'settings-height-units',
+                      palette: palette,
+                      icon: Icons.height_rounded,
+                      title: S.of(context).settingsHeightUnitsLabel,
+                      subtitle: state.usesImperialHeightUnits
+                          ? S.of(context).settingsImperialLabel
+                          : S.of(context).settingsMetricLabel,
+                      onTap: () => _showHeightUnitsDialog(
+                          context, state.usesImperialHeightUnits),
+                    ),
+                    _SettingsTile(
+                      identifier: 'settings-body-weight-unit',
+                      palette: palette,
+                      icon: Icons.monitor_weight_rounded,
+                      title: S.of(context).settingsBodyWeightUnitLabel,
+                      subtitle: state.bodyWeightUnit.getLabel(context),
                       onTap: () =>
-                          _showUnitsDialog(context, state.usesImperialUnits),
+                          _showBodyWeightUnitDialog(context, state.bodyWeightUnit),
                     ),
                     _SettingsTile(
                       identifier: 'settings-energy-unit',
@@ -489,51 +514,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _settingsBloc.add(LoadSettingsEvent());
   }
 
-  void _showUnitsDialog(BuildContext context, bool usesImperialUnits) async {
-    SystemDropDownType selectedUnit = usesImperialUnits
-        ? SystemDropDownType.imperial
-        : SystemDropDownType.metric;
+  void _showFoodUnitsDialog(BuildContext context, bool currentUsesImperial) async {
+    bool selectedUsesImperial = currentUsesImperial;
     final shouldUpdate = await showDialog<bool?>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(S.of(context).settingsUnitsLabel),
-          content: Wrap(
-            children: [
-              Column(
-                children: [
-                  DropdownButtonFormField(
-                    initialValue: selectedUnit,
-                    key: ValueKey(selectedUnit),
-                    itemHeight: null,
-                    decoration: InputDecoration(
-                      enabled: true,
-                      filled: false,
-                      labelText: S.of(context).settingsSystemLabel,
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsFoodUnitsLabel),
+          content: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return RadioGroup<bool>(
+                groupValue: selectedUsesImperial,
+                onChanged: (value) {
+                  setState(() {
+                    selectedUsesImperial = value ?? false;
+                  });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).settingsMetricLabel),
+                      value: false,
                     ),
-                    onChanged: (value) {
-                      selectedUnit = value ?? SystemDropDownType.metric;
-                    },
-                    items: [
-                      DropdownMenuItem(
-                        value: SystemDropDownType.metric,
-                        child: Text(S.of(context).settingsMetricLabel),
-                      ),
-                      DropdownMenuItem(
-                        value: SystemDropDownType.imperial,
-                        child: Text(S.of(context).settingsImperialLabel),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).settingsImperialLabel),
+                      value: true,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
               child: Text(S.of(context).dialogOKLabel),
             ),
           ],
@@ -541,15 +561,120 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
     if (shouldUpdate == true) {
-      _settingsBloc.setUsesImperialUnits(
-        selectedUnit == SystemDropDownType.imperial,
-      );
+      _settingsBloc.setUsesImperialFoodUnits(selectedUsesImperial);
       _settingsBloc.add(LoadSettingsEvent());
-
-      // Update blocs
-      _profileBloc.add(LoadProfileEvent());
       _homeBloc.add(LoadItemsEvent());
       _diaryBloc.add(const LoadDiaryYearEvent());
+    }
+  }
+
+  void _showHeightUnitsDialog(BuildContext context, bool currentUsesImperial) async {
+    bool selectedUsesImperial = currentUsesImperial;
+    final shouldUpdate = await showDialog<bool?>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsHeightUnitsLabel),
+          content: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return RadioGroup<bool>(
+                groupValue: selectedUsesImperial,
+                onChanged: (value) {
+                  setState(() {
+                    selectedUsesImperial = value ?? false;
+                  });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).settingsMetricLabel),
+                      value: false,
+                    ),
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).settingsImperialLabel),
+                      value: true,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
+    if (shouldUpdate == true) {
+      _settingsBloc.setUsesImperialHeightUnits(selectedUsesImperial);
+      _settingsBloc.add(LoadSettingsEvent());
+      _profileBloc.add(LoadProfileEvent());
+    }
+  }
+
+  void _showBodyWeightUnitDialog(BuildContext context, BodyWeightUnit currentUnit) async {
+    BodyWeightUnit selectedUnit = currentUnit;
+    final shouldUpdate = await showDialog<bool?>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsBodyWeightUnitLabel),
+          content: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return RadioGroup<BodyWeightUnit>(
+                groupValue: selectedUnit,
+                onChanged: (value) {
+                  setState(() {
+                    selectedUnit = value ?? BodyWeightUnit.kg;
+                  });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<BodyWeightUnit>(
+                      title: Text(S.of(context).kgLabel),
+                      value: BodyWeightUnit.kg,
+                    ),
+                    RadioListTile<BodyWeightUnit>(
+                      title: Text(S.of(context).lbsLabel),
+                      value: BodyWeightUnit.lb,
+                    ),
+                    RadioListTile<BodyWeightUnit>(
+                      title: Text(S.of(context).stLabel),
+                      value: BodyWeightUnit.st,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
+    if (shouldUpdate == true) {
+      _settingsBloc.setBodyWeightUnit(selectedUnit);
+      _settingsBloc.add(LoadSettingsEvent());
+      _profileBloc.add(LoadProfileEvent());
     }
   }
 

@@ -470,6 +470,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("kJ al giorno"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "es. pizza, insalata, riso ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Pranzo"),
@@ -1285,6 +1286,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Predefinito del sistema"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Unità"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Unità alimenti"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Unità altezza"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Unità peso corporeo"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Volume"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Condividi allenamento"),

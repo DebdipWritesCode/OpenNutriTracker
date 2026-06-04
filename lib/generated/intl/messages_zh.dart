@@ -433,6 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingKjPerDayLabel": MessageLookupByLibrary.simpleMessage("每日千焦"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("千克"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("磅"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage("例如：披萨、沙拉、米饭..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("午餐"),
         "macroDistributionLabel":
@@ -1128,6 +1129,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("系统默认"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("单位"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("食物单位"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("身高单位"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("体重单位"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("体积"),
         "shareActivityLabel": MessageLookupByLibrary.simpleMessage("分享运动"),
         "shareCodeLabel": MessageLookupByLibrary.simpleMessage("分享代码"),

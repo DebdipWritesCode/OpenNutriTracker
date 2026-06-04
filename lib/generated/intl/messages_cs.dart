@@ -465,6 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("kJ denně"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample":
             MessageLookupByLibrary.simpleMessage("např. pizza, salát, rýže..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Oběd"),
@@ -1274,6 +1275,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Dle systémového nastavení"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky potravin"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky výšky"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka tělesné hmotnosti"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Objem"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Sdílet trénink"),

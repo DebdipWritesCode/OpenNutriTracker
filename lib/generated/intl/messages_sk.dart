@@ -453,6 +453,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("kcal navyše"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample":
             MessageLookupByLibrary.simpleMessage("napr. pizza, šalát, ryža ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Obed"),
@@ -1188,6 +1189,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Podľa systému"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky potravín"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky výšky"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka telesnej hmotnosti"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Objem"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Zdieľať tréning"),

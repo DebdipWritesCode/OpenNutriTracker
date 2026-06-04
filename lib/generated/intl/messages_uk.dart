@@ -469,6 +469,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("кДж на день"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, піца, салат, рис ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Обід"),
@@ -1286,6 +1287,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Системна за замовчуванням"),
         "settingsUnitsLabel":
             MessageLookupByLibrary.simpleMessage("Одиниці вимірювання"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці їжі"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці зросту"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця ваги тіла"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Об\'єм"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Поділитися тренуванням"),

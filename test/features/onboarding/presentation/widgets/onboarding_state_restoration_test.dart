@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_activity_selection_entity.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_gender_selection_entity.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_goal_selection_entity.dart';
@@ -83,7 +84,7 @@ void main() {
     testWidgets('metric: shows the stored cm/kg values in the text fields',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _) {},
         initialHeightCm: 178,
         initialWeightKg: 72.5,
       )));
@@ -96,10 +97,11 @@ void main() {
     testWidgets('imperial: stored cm/kg are converted to ft/lbs for display',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _) {},
         initialHeightCm: 180,
         initialWeightKg: 80,
-        initialUsesImperial: true,
+        initialHeightImperial: true,
+        initialBodyWeightUnit: BodyWeightUnit.lb,
       )));
       await tester.pumpAndSettle();
 
@@ -180,7 +182,7 @@ void main() {
     testWidgets('second page: text fields empty when no initial values given',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _) {},
       )));
       await tester.pumpAndSettle();
 
