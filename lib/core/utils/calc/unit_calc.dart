@@ -48,6 +48,27 @@ class UnitCalc {
     return double.parse((lbs / 2.20462).toStringAsFixed(2));
   }
 
+  /// Splits a kilogram weight into whole stones and the remaining pounds for
+  /// the UK-style "11 st 5.2 lb" display and input. Pounds keep two decimals,
+  /// mirroring [lbsToKg], and a value that rounds up to a full 14 lb rolls
+  /// into the next stone so we never show "10 st 14.0 lb".
+  static (int stones, double pounds) kgToStLb(double kg) {
+    final totalLbs = kg * 2.20462;
+    var stones = totalLbs ~/ 14;
+    var pounds = double.parse((totalLbs - stones * 14).toStringAsFixed(2));
+    if (pounds >= 14.0) {
+      stones += 1;
+      pounds = 0.0;
+    }
+    return (stones, pounds);
+  }
+
+  /// Combines stones and pounds back into kilograms, preserving two decimals
+  /// so a st+lb → kg → st+lb round-trip stays tight (matches [lbsToKg]).
+  static double stLbToKg(int stones, double pounds) {
+    return double.parse(((stones * 14 + pounds) / 2.20462).toStringAsFixed(2));
+  }
+
   static double gToOz(double g) {
     return g / 28.3495;
   }

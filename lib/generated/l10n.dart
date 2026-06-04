@@ -1588,6 +1588,36 @@ class S {
     );
   }
 
+  /// `Food units`
+  String get settingsFoodUnitsLabel {
+    return Intl.message(
+      'Food units',
+      name: 'settingsFoodUnitsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Height units`
+  String get settingsHeightUnitsLabel {
+    return Intl.message(
+      'Height units',
+      name: 'settingsHeightUnitsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Body weight unit`
+  String get settingsBodyWeightUnitLabel {
+    return Intl.message(
+      'Body weight unit',
+      name: 'settingsBodyWeightUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Daily kcal adjustment`
   String get settingsKcalAdjustmentLabel {
     return Intl.message(
@@ -5114,6 +5144,16 @@ class S {
     return Intl.message(
       'lbs',
       name: 'lbsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `st`
+  String get stLabel {
+    return Intl.message(
+      'st',
+      name: 'stLabel',
       desc: '',
       args: [],
     );
