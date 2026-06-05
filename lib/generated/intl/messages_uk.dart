@@ -469,7 +469,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("кДж на день"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
-        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("стоун"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, піца, салат, рис ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Обід"),

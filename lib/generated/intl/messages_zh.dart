@@ -433,7 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingKjPerDayLabel": MessageLookupByLibrary.simpleMessage("每日千焦"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("千克"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("磅"),
-        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("英石"),
         "lunchExample": MessageLookupByLibrary.simpleMessage("例如：披萨、沙拉、米饭..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("午餐"),
         "macroDistributionLabel":
