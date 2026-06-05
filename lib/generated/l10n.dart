@@ -1618,20 +1618,20 @@ class S {
     );
   }
 
-  /// `Metric (g, kg)`
+  /// `Metric (g, kg, ml, l)`
   String get settingsFoodUnitsMetric {
     return Intl.message(
-      'Metric (g, kg)',
+      'Metric (g, kg, ml, l)',
       name: 'settingsFoodUnitsMetric',
       desc: '',
       args: [],
     );
   }
 
-  /// `Imperial (lbs, oz)`
+  /// `Imperial (lbs, oz, fl oz)`
   String get settingsFoodUnitsImperial {
     return Intl.message(
-      'Imperial (lbs, oz)',
+      'Imperial (lbs, oz, fl oz)',
       name: 'settingsFoodUnitsImperial',
       desc: '',
       args: [],
