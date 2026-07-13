@@ -6,6 +6,7 @@ import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/serving_label_localizer.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -377,8 +378,10 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
     // description should fall through to the constructed label so the option
     // doesn't render blank — otherwise '' wins over the ?? fallback (#495).
     final servingSize = widget.product.servingSize;
+    // Serving labels are stored in English (see MealEntity._spServingLabel);
+    // translate the common household units at display time.
     final servingText = (servingSize != null && servingSize.trim().isNotEmpty)
-        ? servingSize
+        ? localizeServingLabel(S.of(context), servingSize)
         : '${S.of(context).servingLabel} (${widget.product.servingQuantity} ${widget.product.servingUnit})';
     return DropdownMenuItem(
       value: UnitDropdownItem.serving.toString(),

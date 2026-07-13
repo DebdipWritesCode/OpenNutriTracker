@@ -155,6 +155,150 @@ class S {
     );
   }
 
+  /// `{count, plural, one{bar} other{bars}}`
+  String measureUnitBar(num count) {
+    return Intl.plural(
+      count,
+      one: 'bar',
+      other: 'bars',
+      name: 'measureUnitBar',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{bottle} other{bottles}}`
+  String measureUnitBottle(num count) {
+    return Intl.plural(
+      count,
+      one: 'bottle',
+      other: 'bottles',
+      name: 'measureUnitBottle',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{can} other{cans}}`
+  String measureUnitCan(num count) {
+    return Intl.plural(
+      count,
+      one: 'can',
+      other: 'cans',
+      name: 'measureUnitCan',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{cup} other{cups}}`
+  String measureUnitCup(num count) {
+    return Intl.plural(
+      count,
+      one: 'cup',
+      other: 'cups',
+      name: 'measureUnitCup',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{egg} other{eggs}}`
+  String measureUnitEgg(num count) {
+    return Intl.plural(
+      count,
+      one: 'egg',
+      other: 'eggs',
+      name: 'measureUnitEgg',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{package} other{packages}}`
+  String measureUnitPackage(num count) {
+    return Intl.plural(
+      count,
+      one: 'package',
+      other: 'packages',
+      name: 'measureUnitPackage',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{piece} other{pieces}}`
+  String measureUnitPiece(num count) {
+    return Intl.plural(
+      count,
+      one: 'piece',
+      other: 'pieces',
+      name: 'measureUnitPiece',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{portion} other{portions}}`
+  String measureUnitPortion(num count) {
+    return Intl.plural(
+      count,
+      one: 'portion',
+      other: 'portions',
+      name: 'measureUnitPortion',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{serving} other{servings}}`
+  String measureUnitServing(num count) {
+    return Intl.plural(
+      count,
+      one: 'serving',
+      other: 'servings',
+      name: 'measureUnitServing',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{slice} other{slices}}`
+  String measureUnitSlice(num count) {
+    return Intl.plural(
+      count,
+      one: 'slice',
+      other: 'slices',
+      name: 'measureUnitSlice',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{tablespoon} other{tablespoons}}`
+  String measureUnitTablespoon(num count) {
+    return Intl.plural(
+      count,
+      one: 'tablespoon',
+      other: 'tablespoons',
+      name: 'measureUnitTablespoon',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{teaspoon} other{teaspoons}}`
+  String measureUnitTeaspoon(num count) {
+    return Intl.plural(
+      count,
+      one: 'teaspoon',
+      other: 'teaspoons',
+      name: 'measureUnitTeaspoon',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Food databases`
   String get settingsFoodSourcesLabel {
     return Intl.message(

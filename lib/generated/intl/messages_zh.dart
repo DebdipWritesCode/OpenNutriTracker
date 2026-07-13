@@ -76,29 +76,53 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(qty, unit) => "每 ${qty} ${unit}";
 
-  static String m26(riskValue) => "并发症风险：${riskValue}";
+  static String m26(count) => "${Intl.plural(count, other: '条')}";
 
-  static String m27(value) => "距离目标还差 ${value}";
+  static String m27(count) => "${Intl.plural(count, other: '瓶')}";
 
-  static String m28(mealType) => "已添加到${mealType}";
+  static String m28(count) => "${Intl.plural(count, other: '罐')}";
 
-  static String m29(count) => "${count} 种食材";
+  static String m29(count) => "${Intl.plural(count, other: '杯')}";
 
-  static String m30(count) => "已选 ${count} 项";
+  static String m30(count) => "${Intl.plural(count, other: '个')}";
 
-  static String m31(hour) => "${hour}:00";
+  static String m31(count) => "${Intl.plural(count, other: '包')}";
 
-  static String m32(hour, minute) => "${hour}:${minute}";
+  static String m32(count) => "${Intl.plural(count, other: '块')}";
 
-  static String m33(time) => "提醒时间：${time}";
+  static String m33(count) => "${Intl.plural(count, other: '份')}";
 
-  static String m34(current, goal) => "${current} / ${goal} 毫升";
+  static String m34(count) => "${Intl.plural(count, other: '份')}";
 
-  static String m35(rate) => "${rate} 千克/周";
+  static String m35(count) => "${Intl.plural(count, other: '片')}";
 
-  static String m36(rate) => "${rate} 磅/周";
+  static String m36(count) => "${Intl.plural(count, other: '汤匙')}";
 
-  static String m37(age) => "${age} 岁";
+  static String m37(count) => "${Intl.plural(count, other: '茶匙')}";
+
+  static String m38(riskValue) => "并发症风险：${riskValue}";
+
+  static String m39(value) => "距离目标还差 ${value}";
+
+  static String m40(mealType) => "已添加到${mealType}";
+
+  static String m41(count) => "${count} 种食材";
+
+  static String m42(count) => "已选 ${count} 项";
+
+  static String m43(hour) => "${hour}:00";
+
+  static String m44(hour, minute) => "${hour}:${minute}";
+
+  static String m45(time) => "提醒时间：${time}";
+
+  static String m46(current, goal) => "${current} / ${goal} 毫升";
+
+  static String m47(rate) => "${rate} 千克/周";
+
+  static String m48(rate) => "${rate} 磅/周";
+
+  static String m49(age) => "${age} 岁";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -573,6 +597,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "包装大小 (盎司/液量盎司)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("餐食单位"),
+    "measureUnitBar": m26,
+    "measureUnitBottle": m27,
+    "measureUnitCan": m28,
+    "measureUnitCup": m29,
+    "measureUnitEgg": m30,
+    "measureUnitPackage": m31,
+    "measureUnitPiece": m32,
+    "measureUnitPortion": m33,
+    "measureUnitServing": m34,
+    "measureUnitSlice": m35,
+    "measureUnitTablespoon": m36,
+    "measureUnitTeaspoon": m37,
     "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("微量营养素"),
     "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
     "missingProductInfo": MessageLookupByLibrary.simpleMessage(
@@ -628,7 +664,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "增加",
     ),
-    "nutritionalStatusRiskLabel": m26,
+    "nutritionalStatusRiskLabel": m38,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "低 \n(但其他 \n临床问题风险增加)",
     ),
@@ -1036,7 +1072,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
       "你已达到目标",
     ),
-    "profileTargetWeightToGo": m27,
+    "profileTargetWeightToGo": m39,
     "profileWeightHistoryTitle": MessageLookupByLibrary.simpleMessage("体重历史"),
     "proteinLabel": MessageLookupByLibrary.simpleMessage("蛋白质"),
     "proteinLabelShort": MessageLookupByLibrary.simpleMessage("蛋"),
@@ -1055,7 +1091,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage(
       "快速添加活动",
     ),
-    "quickAddAddedSnack": m28,
+    "quickAddAddedSnack": m40,
     "quickAddBottomSheetTitle": MessageLookupByLibrary.simpleMessage("快速添加"),
     "quickAddCarbsHint": MessageLookupByLibrary.simpleMessage("碳水化合物（克，可选）"),
     "quickAddCardLabel": MessageLookupByLibrary.simpleMessage("快速添加"),
@@ -1080,7 +1116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeImageReplace": MessageLookupByLibrary.simpleMessage("更换照片"),
     "recipeImageTakePhoto": MessageLookupByLibrary.simpleMessage("拍照"),
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage("数量"),
-    "recipeIngredientCountLabel": m29,
+    "recipeIngredientCountLabel": m41,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage("单位"),
     "recipeIngredientsLabel": MessageLookupByLibrary.simpleMessage("食材"),
     "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
@@ -1159,7 +1195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectHeightDialogLabel": MessageLookupByLibrary.simpleMessage("选择身高"),
     "selectPalCategoryLabel": MessageLookupByLibrary.simpleMessage("选择活动水平"),
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage("选择体重"),
-    "selectionCountLabel": m30,
+    "selectionCountLabel": m42,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage("发送匿名使用数据"),
     "servingLabel": MessageLookupByLibrary.simpleMessage("份量"),
     "servingSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
@@ -1211,7 +1247,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "选择一天开始的时刻。在这个时刻之前记录的餐食和活动将计入前一天 —— 适合上夜班或晚餐较晚的用户。",
     ),
-    "settingsDayStartHourLabel": m31,
+    "settingsDayStartHourLabel": m43,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "小时",
     ),
@@ -1219,7 +1255,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "分钟",
     ),
-    "settingsDayStartTimeLabel": m32,
+    "settingsDayStartTimeLabel": m44,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "全部删除",
     ),
@@ -1285,7 +1321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage("使用系统颜色"),
     "settingsMetricLabel": MessageLookupByLibrary.simpleMessage("公制（千克、厘米、毫升）"),
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage("每日提醒"),
-    "settingsNotificationsTimeLabel": m33,
+    "settingsNotificationsTimeLabel": m45,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "每日面板中每种营养素的个人目标。一旦设置，日记将使用这些值代替默认的每日参考值。",
     ),
@@ -1430,10 +1466,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "vitaminCLabel": MessageLookupByLibrary.simpleMessage("维生素 C"),
     "vitaminDLabel": MessageLookupByLibrary.simpleMessage("维生素 D"),
     "warningLabel": MessageLookupByLibrary.simpleMessage("警告"),
-    "waterChipLabel": m34,
-    "weeklyWeightGoalKgPerWeek": m35,
+    "waterChipLabel": m46,
+    "weeklyWeightGoalKgPerWeek": m47,
     "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage("每周速率"),
-    "weeklyWeightGoalLbsPerWeek": m36,
+    "weeklyWeightGoalLbsPerWeek": m48,
     "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage("未设置"),
     "weightHistoryAddEntry": MessageLookupByLibrary.simpleMessage("添加记录"),
     "weightHistoryChartEmptyState": MessageLookupByLibrary.simpleMessage(
@@ -1446,7 +1482,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "weightHistoryNoteLabel": MessageLookupByLibrary.simpleMessage("备注（可选）"),
     "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("体重"),
     "weightLabel": MessageLookupByLibrary.simpleMessage("体重"),
-    "yearsLabel": m37,
+    "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("我的"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("锌"),
   };

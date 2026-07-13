@@ -79,29 +79,53 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(qty, unit) => "${qty} ${unit} başına";
 
-  static String m26(riskValue) => "Eşlik eden hastalık riski: ${riskValue}";
+  static String m26(count) => "${Intl.plural(count, other: 'bar')}";
 
-  static String m27(value) => "Hedefine ${value} kaldı";
+  static String m27(count) => "${Intl.plural(count, other: 'şişe')}";
 
-  static String m28(mealType) => "${mealType} öğününe eklendi";
+  static String m28(count) => "${Intl.plural(count, other: 'kutu')}";
 
-  static String m29(count) => "${count} malzeme";
+  static String m29(count) => "${Intl.plural(count, other: 'fincan')}";
 
-  static String m30(count) => "${count} seçildi";
+  static String m30(count) => "${Intl.plural(count, other: 'yumurta')}";
 
-  static String m31(hour) => "${hour}:00";
+  static String m31(count) => "${Intl.plural(count, other: 'paket')}";
 
-  static String m32(hour, minute) => "${hour}:${minute}";
+  static String m32(count) => "${Intl.plural(count, other: 'parça')}";
 
-  static String m33(time) => "Hatırlatma zamanı: ${time}";
+  static String m33(count) => "${Intl.plural(count, other: 'porsiyon')}";
 
-  static String m34(current, goal) => "${current} / ${goal} ml";
+  static String m34(count) => "${Intl.plural(count, other: 'porsiyon')}";
 
-  static String m35(rate) => "${rate} kg/hafta";
+  static String m35(count) => "${Intl.plural(count, other: 'dilim')}";
 
-  static String m36(rate) => "${rate} lbs/hafta";
+  static String m36(count) => "${Intl.plural(count, other: 'yemek kaşığı')}";
 
-  static String m37(age) => "${age} yıl";
+  static String m37(count) => "${Intl.plural(count, other: 'çay kaşığı')}";
+
+  static String m38(riskValue) => "Eşlik eden hastalık riski: ${riskValue}";
+
+  static String m39(value) => "Hedefine ${value} kaldı";
+
+  static String m40(mealType) => "${mealType} öğününe eklendi";
+
+  static String m41(count) => "${count} malzeme";
+
+  static String m42(count) => "${count} seçildi";
+
+  static String m43(hour) => "${hour}:00";
+
+  static String m44(hour, minute) => "${hour}:${minute}";
+
+  static String m45(time) => "Hatırlatma zamanı: ${time}";
+
+  static String m46(current, goal) => "${current} / ${goal} ml";
+
+  static String m47(rate) => "${rate} kg/hafta";
+
+  static String m48(rate) => "${rate} lbs/hafta";
+
+  static String m49(age) => "${age} yıl";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -702,6 +726,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Paket boyutu (oz/fl oz)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Yemek birimi"),
+    "measureUnitBar": m26,
+    "measureUnitBottle": m27,
+    "measureUnitCan": m28,
+    "measureUnitCup": m29,
+    "measureUnitEgg": m30,
+    "measureUnitPackage": m31,
+    "measureUnitPiece": m32,
+    "measureUnitPortion": m33,
+    "measureUnitServing": m34,
+    "measureUnitSlice": m35,
+    "measureUnitTablespoon": m36,
+    "measureUnitTeaspoon": m37,
     "micronutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Mikro besinler",
     ),
@@ -773,7 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "Artmış",
     ),
-    "nutritionalStatusRiskLabel": m26,
+    "nutritionalStatusRiskLabel": m38,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "Düşük \n(ancak diğer \nklinik sorunların riski artmış)",
     ),
@@ -1313,7 +1349,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
       "Hedefine ulaştın",
     ),
-    "profileTargetWeightToGo": m27,
+    "profileTargetWeightToGo": m39,
     "profileWeightHistoryTitle": MessageLookupByLibrary.simpleMessage(
       "Kilo geçmişi",
     ),
@@ -1338,7 +1374,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage(
       "Hızlı aktivite ekle",
     ),
-    "quickAddAddedSnack": m28,
+    "quickAddAddedSnack": m40,
     "quickAddBottomSheetTitle": MessageLookupByLibrary.simpleMessage(
       "Hızlı ekle",
     ),
@@ -1395,7 +1431,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Miktar",
     ),
-    "recipeIngredientCountLabel": m29,
+    "recipeIngredientCountLabel": m41,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage("Birim"),
     "recipeIngredientsLabel": MessageLookupByLibrary.simpleMessage(
       "Malzemeler",
@@ -1506,7 +1542,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Kilo Seçin",
     ),
-    "selectionCountLabel": m30,
+    "selectionCountLabel": m42,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
       "Anonim kullanım verileri gönder",
     ),
@@ -1588,7 +1624,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "Gününün başladığı saati seç. Bu saatten önce kaydedilen öğünler ve aktiviteler önceki güne sayılır — gece çalışanlar veya geç yemek yiyenler için kullanışlıdır.",
     ),
-    "settingsDayStartHourLabel": m31,
+    "settingsDayStartHourLabel": m43,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Saat",
     ),
@@ -1598,7 +1634,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Dakika",
     ),
-    "settingsDayStartTimeLabel": m32,
+    "settingsDayStartTimeLabel": m44,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Hepsini sil",
     ),
@@ -1688,7 +1724,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage(
       "Günlük Hatırlatıcı",
     ),
-    "settingsNotificationsTimeLabel": m33,
+    "settingsNotificationsTimeLabel": m45,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "Günlük paneldeki her besin için kişisel hedefler. Bir hedef belirlediğinde günlük, varsayılan günlük referanslar yerine bu değerleri kullanır.",
     ),
@@ -1879,12 +1915,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "vitaminCLabel": MessageLookupByLibrary.simpleMessage("C vitamini"),
     "vitaminDLabel": MessageLookupByLibrary.simpleMessage("D vitamini"),
     "warningLabel": MessageLookupByLibrary.simpleMessage("Uyarı"),
-    "waterChipLabel": m34,
-    "weeklyWeightGoalKgPerWeek": m35,
+    "waterChipLabel": m46,
+    "weeklyWeightGoalKgPerWeek": m47,
     "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Haftalık oran",
     ),
-    "weeklyWeightGoalLbsPerWeek": m36,
+    "weeklyWeightGoalLbsPerWeek": m48,
     "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
       "Ayarlanmadı",
     ),
@@ -1901,7 +1937,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
     "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
-    "yearsLabel": m37,
+    "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("Siz"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("çinko"),
   };

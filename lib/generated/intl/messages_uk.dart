@@ -80,29 +80,65 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(qty, unit) => "На ${qty} ${unit}";
 
-  static String m26(riskValue) => "Ризик супутніх захворювань: ${riskValue}";
+  static String m26(count) =>
+      "${Intl.plural(count, one: 'батончик', few: 'батончики', many: 'батончиків', other: 'батончика')}";
 
-  static String m27(value) => "Залишилось ${value} до цілі";
+  static String m27(count) =>
+      "${Intl.plural(count, one: 'пляшка', few: 'пляшки', many: 'пляшок', other: 'пляшки')}";
 
-  static String m28(mealType) => "Додано до ${mealType}";
+  static String m28(count) =>
+      "${Intl.plural(count, one: 'банка', few: 'банки', many: 'банок', other: 'банки')}";
 
-  static String m29(count) => "${count} інгредієнт(ів)";
+  static String m29(count) =>
+      "${Intl.plural(count, one: 'чашка', few: 'чашки', many: 'чашок', other: 'чашки')}";
 
-  static String m30(count) => "Вибрано: ${count}";
+  static String m30(count) =>
+      "${Intl.plural(count, one: 'яйце', few: 'яйця', many: 'яєць', other: 'яйця')}";
 
-  static String m31(hour) => "${hour}:00";
+  static String m31(count) =>
+      "${Intl.plural(count, one: 'упаковка', few: 'упаковки', many: 'упаковок', other: 'упаковки')}";
 
-  static String m32(hour, minute) => "${hour}:${minute}";
+  static String m32(count) =>
+      "${Intl.plural(count, one: 'шматок', few: 'шматки', many: 'шматків', other: 'шматка')}";
 
-  static String m33(time) => "Час нагадування: ${time}";
+  static String m33(count) =>
+      "${Intl.plural(count, one: 'порція', few: 'порції', many: 'порцій', other: 'порції')}";
 
-  static String m34(current, goal) => "${current} / ${goal} мл";
+  static String m34(count) =>
+      "${Intl.plural(count, one: 'порція', few: 'порції', many: 'порцій', other: 'порції')}";
 
-  static String m35(rate) => "${rate} кг/тиждень";
+  static String m35(count) =>
+      "${Intl.plural(count, one: 'скибка', few: 'скибки', many: 'скибок', other: 'скибки')}";
 
-  static String m36(rate) => "${rate} фунт/тиждень";
+  static String m36(count) =>
+      "${Intl.plural(count, one: 'столова ложка', few: 'столові ложки', many: 'столових ложок', other: 'столової ложки')}";
 
-  static String m37(age) => "${age} років";
+  static String m37(count) =>
+      "${Intl.plural(count, one: 'чайна ложка', few: 'чайні ложки', many: 'чайних ложок', other: 'чайної ложки')}";
+
+  static String m38(riskValue) => "Ризик супутніх захворювань: ${riskValue}";
+
+  static String m39(value) => "Залишилось ${value} до цілі";
+
+  static String m40(mealType) => "Додано до ${mealType}";
+
+  static String m41(count) => "${count} інгредієнт(ів)";
+
+  static String m42(count) => "Вибрано: ${count}";
+
+  static String m43(hour) => "${hour}:00";
+
+  static String m44(hour, minute) => "${hour}:${minute}";
+
+  static String m45(time) => "Час нагадування: ${time}";
+
+  static String m46(current, goal) => "${current} / ${goal} мл";
+
+  static String m47(rate) => "${rate} кг/тиждень";
+
+  static String m48(rate) => "${rate} фунт/тиждень";
+
+  static String m49(age) => "${age} років";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -721,6 +757,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Розмір упаковки (унція/рідка унція)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця страви"),
+    "measureUnitBar": m26,
+    "measureUnitBottle": m27,
+    "measureUnitCan": m28,
+    "measureUnitCup": m29,
+    "measureUnitEgg": m30,
+    "measureUnitPackage": m31,
+    "measureUnitPiece": m32,
+    "measureUnitPortion": m33,
+    "measureUnitServing": m34,
+    "measureUnitSlice": m35,
+    "measureUnitTablespoon": m36,
+    "measureUnitTeaspoon": m37,
     "micronutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Мікроелементи",
     ),
@@ -794,7 +842,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "Підвищений",
     ),
-    "nutritionalStatusRiskLabel": m26,
+    "nutritionalStatusRiskLabel": m38,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "Низький (але ризик інших клінічних проблем підвищений)",
     ),
@@ -1382,7 +1430,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
       "Ви досягли своєї цілі",
     ),
-    "profileTargetWeightToGo": m27,
+    "profileTargetWeightToGo": m39,
     "profileWeightHistoryTitle": MessageLookupByLibrary.simpleMessage(
       "Історія ваги",
     ),
@@ -1407,7 +1455,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage(
       "Швидке додавання активності",
     ),
-    "quickAddAddedSnack": m28,
+    "quickAddAddedSnack": m40,
     "quickAddBottomSheetTitle": MessageLookupByLibrary.simpleMessage(
       "Швидке додавання",
     ),
@@ -1462,7 +1510,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Кількість",
     ),
-    "recipeIngredientCountLabel": m29,
+    "recipeIngredientCountLabel": m41,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage(
       "Одиниця",
     ),
@@ -1579,7 +1627,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Виберіть вагу",
     ),
-    "selectionCountLabel": m30,
+    "selectionCountLabel": m42,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
       "Надсилати анонімні дані про використання",
     ),
@@ -1661,7 +1709,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "Обери годину, з якої починається твій день. Прийоми їжі та активності, записані до цієї години, зараховуються до попереднього дня — зручно, якщо ти працюєш у нічну зміну або пізно вечеряєш.",
     ),
-    "settingsDayStartHourLabel": m31,
+    "settingsDayStartHourLabel": m43,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Години",
     ),
@@ -1671,7 +1719,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Хвилини",
     ),
-    "settingsDayStartTimeLabel": m32,
+    "settingsDayStartTimeLabel": m44,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Видалити все",
     ),
@@ -1761,7 +1809,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage(
       "Щоденне нагадування",
     ),
-    "settingsNotificationsTimeLabel": m33,
+    "settingsNotificationsTimeLabel": m45,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "Особисті цілі для кожної поживної речовини в щоденній панелі. Щоденник використовує їх замість стандартних добових норм щоразу, коли ти задаєш будь-яку з них.",
     ),
@@ -1958,12 +2006,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "vitaminCLabel": MessageLookupByLibrary.simpleMessage("вітамін C"),
     "vitaminDLabel": MessageLookupByLibrary.simpleMessage("вітамін D"),
     "warningLabel": MessageLookupByLibrary.simpleMessage("Попередження"),
-    "waterChipLabel": m34,
-    "weeklyWeightGoalKgPerWeek": m35,
+    "waterChipLabel": m46,
+    "weeklyWeightGoalKgPerWeek": m47,
     "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Тижневий темп",
     ),
-    "weeklyWeightGoalLbsPerWeek": m36,
+    "weeklyWeightGoalLbsPerWeek": m48,
     "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
       "Не встановлено",
     ),
@@ -1982,7 +2030,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
     "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
-    "yearsLabel": m37,
+    "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("Ви"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
   };

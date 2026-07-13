@@ -79,29 +79,65 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(qty, unit) => "Na ${qty} ${unit}";
 
-  static String m26(riskValue) => "Riziko komorbidit: ${riskValue}";
+  static String m26(count) =>
+      "${Intl.plural(count, one: 'tyčinka', few: 'tyčinky', other: 'tyčinek')}";
 
-  static String m27(value) => "Zbývá ${value} do cíle";
+  static String m27(count) =>
+      "${Intl.plural(count, one: 'láhev', few: 'láhve', other: 'lahví')}";
 
-  static String m28(mealType) => "Přidáno do ${mealType}";
+  static String m28(count) =>
+      "${Intl.plural(count, one: 'plechovka', few: 'plechovky', other: 'plechovek')}";
 
-  static String m29(count) => "${count} ingredience(í)";
+  static String m29(count) =>
+      "${Intl.plural(count, one: 'šálek', few: 'šálky', other: 'šálků')}";
 
-  static String m30(count) => "Vybráno: ${count}";
+  static String m30(count) =>
+      "${Intl.plural(count, one: 'vejce', few: 'vejce', other: 'vajec')}";
 
-  static String m31(hour) => "${hour}:00";
+  static String m31(count) =>
+      "${Intl.plural(count, one: 'balení', few: 'balení', other: 'balení')}";
 
-  static String m32(hour, minute) => "${hour}:${minute}";
+  static String m32(count) =>
+      "${Intl.plural(count, one: 'kus', few: 'kusy', other: 'kusů')}";
 
-  static String m33(time) => "Čas připomínky: ${time}";
+  static String m33(count) =>
+      "${Intl.plural(count, one: 'porce', few: 'porce', other: 'porcí')}";
 
-  static String m34(current, goal) => "${current} / ${goal} ml";
+  static String m34(count) =>
+      "${Intl.plural(count, one: 'porce', few: 'porce', other: 'porcí')}";
 
-  static String m35(rate) => "${rate} kg/týden";
+  static String m35(count) =>
+      "${Intl.plural(count, one: 'plátek', few: 'plátky', other: 'plátků')}";
 
-  static String m36(rate) => "${rate} lbs/týden";
+  static String m36(count) =>
+      "${Intl.plural(count, one: 'lžíce', few: 'lžíce', other: 'lžic')}";
 
-  static String m37(age) => "${age} let";
+  static String m37(count) =>
+      "${Intl.plural(count, one: 'lžička', few: 'lžičky', other: 'lžiček')}";
+
+  static String m38(riskValue) => "Riziko komorbidit: ${riskValue}";
+
+  static String m39(value) => "Zbývá ${value} do cíle";
+
+  static String m40(mealType) => "Přidáno do ${mealType}";
+
+  static String m41(count) => "${count} ingredience(í)";
+
+  static String m42(count) => "Vybráno: ${count}";
+
+  static String m43(hour) => "${hour}:00";
+
+  static String m44(hour, minute) => "${hour}:${minute}";
+
+  static String m45(time) => "Čas připomínky: ${time}";
+
+  static String m46(current, goal) => "${current} / ${goal} ml";
+
+  static String m47(rate) => "${rate} kg/týden";
+
+  static String m48(rate) => "${rate} lbs/týden";
+
+  static String m49(age) => "${age} let";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -710,6 +746,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Velikost balení (oz/fl oz)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka jídla"),
+    "measureUnitBar": m26,
+    "measureUnitBottle": m27,
+    "measureUnitCan": m28,
+    "measureUnitCup": m29,
+    "measureUnitEgg": m30,
+    "measureUnitPackage": m31,
+    "measureUnitPiece": m32,
+    "measureUnitPortion": m33,
+    "measureUnitServing": m34,
+    "measureUnitSlice": m35,
+    "measureUnitTablespoon": m36,
+    "measureUnitTeaspoon": m37,
     "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikroživiny"),
     "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
     "missingProductInfo": MessageLookupByLibrary.simpleMessage(
@@ -779,7 +827,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "Zvýšené",
     ),
-    "nutritionalStatusRiskLabel": m26,
+    "nutritionalStatusRiskLabel": m38,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "Nízké \n(ale zvýšené pro jiné \nklinické problémy)",
     ),
@@ -1339,7 +1387,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
       "Dosáhli jste svého cíle",
     ),
-    "profileTargetWeightToGo": m27,
+    "profileTargetWeightToGo": m39,
     "profileWeightHistoryTitle": MessageLookupByLibrary.simpleMessage(
       "Historie hmotnosti",
     ),
@@ -1364,7 +1412,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage(
       "Rychlé přidání aktivity",
     ),
-    "quickAddAddedSnack": m28,
+    "quickAddAddedSnack": m40,
     "quickAddBottomSheetTitle": MessageLookupByLibrary.simpleMessage(
       "Rychlé přidání",
     ),
@@ -1419,7 +1467,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Množství",
     ),
-    "recipeIngredientCountLabel": m29,
+    "recipeIngredientCountLabel": m41,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage(
       "Jednotka",
     ),
@@ -1538,7 +1586,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Zadejte hmotnost",
     ),
-    "selectionCountLabel": m30,
+    "selectionCountLabel": m42,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
       "Odesílat anonymní data o používání aplikace",
     ),
@@ -1620,7 +1668,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "Zvol hodinu, ve které začíná tvůj den. Jídla a aktivity zaznamenané před touto hodinou se počítají k předchozímu dni — hodí se při nočních směnách nebo pozdním jídle.",
     ),
-    "settingsDayStartHourLabel": m31,
+    "settingsDayStartHourLabel": m43,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Hodiny",
     ),
@@ -1630,7 +1678,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Minuty",
     ),
-    "settingsDayStartTimeLabel": m32,
+    "settingsDayStartTimeLabel": m44,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Smazat vše",
     ),
@@ -1718,7 +1766,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage(
       "Denní připomínka",
     ),
-    "settingsNotificationsTimeLabel": m33,
+    "settingsNotificationsTimeLabel": m45,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "Osobní cíle pro každou živinu v denním panelu. Deník je použije místo výchozích denních referencí, kdykoli některý nastavíš.",
     ),
@@ -1907,12 +1955,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamin C"),
     "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamin D"),
     "warningLabel": MessageLookupByLibrary.simpleMessage("Varování"),
-    "waterChipLabel": m34,
-    "weeklyWeightGoalKgPerWeek": m35,
+    "waterChipLabel": m46,
+    "weeklyWeightGoalKgPerWeek": m47,
     "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Týdenní tempo",
     ),
-    "weeklyWeightGoalLbsPerWeek": m36,
+    "weeklyWeightGoalLbsPerWeek": m48,
     "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
       "Nenastaveno",
     ),
@@ -1933,7 +1981,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hmotnost",
     ),
     "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnost"),
-    "yearsLabel": m37,
+    "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("Vy"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("zinek"),
   };

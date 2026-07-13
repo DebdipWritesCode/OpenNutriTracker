@@ -198,17 +198,46 @@ class MealEntity extends Equatable {
     );
   }
 
-  /// Human-readable default-serving label ("1 cup", "2 slices"), falling
-  /// back to the serving weight in grams when the portion has no
-  /// description.
+  /// Matches an explicit weight/volume figure ("38 g", "240ml") so labels
+  /// that already state one don't get a second appended.
+  static final _containsWeightFigure =
+      RegExp(r'\d\s*(g|kg|ml|l|oz)\b', caseSensitive: false);
+
+  /// Human-readable default-serving label in the style of the FDC website
+  /// ("1 slice (38 g)", "1 cup, sliced (240 g)"), falling back to the
+  /// serving weight in grams when the portion has no description at all.
   static String? _spServingLabel(SpFoodDTO foodItem) {
-    if (foodItem.servingSize != null) return foodItem.servingSize;
-    final quantity = foodItem.servingQuantity;
-    final unit = foodItem.servingUnit;
-    if (quantity != null && unit != null) {
-      return '${_formatAmount(quantity)} $unit';
-    }
     final gramWeight = foodItem.servingGramWeight;
+
+    final description = foodItem.servingSize;
+    if (description != null) {
+      // Backend-provided household measure ("1 slice", "1 cup, sliced").
+      // Append the portion's weight unless the text already states one.
+      if (gramWeight != null && !_containsWeightFigure.hasMatch(description)) {
+        return '$description (${_formatAmount(gramWeight)} g)';
+      }
+      return description;
+    }
+
+    final quantity = foodItem.servingQuantity;
+    // FDC's measure_unit 9999 is literally named 'undetermined'. The
+    // food_summary view maps it to 'portion' since schema v2.1; keep the
+    // same mapping here for backends that haven't refreshed the view yet.
+    final unit = foodItem.servingUnit == 'undetermined'
+        ? 'portion'
+        : foodItem.servingUnit;
+    if (quantity != null && unit != null) {
+      final label = '${_formatAmount(quantity)} $unit';
+      // A count-based unit ("1 portion", "2 slices") says nothing about
+      // how much food that actually is — append the portion's weight so
+      // the user can judge it. Weight/volume units already do.
+      final isWeightOrVolume =
+          solidUnits.contains(unit) || liquidUnits.contains(unit);
+      if (!isWeightOrVolume && gramWeight != null) {
+        return '$label (${_formatAmount(gramWeight)} g)';
+      }
+      return label;
+    }
     if (gramWeight != null) return '${_formatAmount(gramWeight)} g';
     return null;
   }

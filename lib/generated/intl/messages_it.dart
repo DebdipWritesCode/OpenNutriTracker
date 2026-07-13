@@ -81,29 +81,65 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(qty, unit) => "Per ${qty} ${unit}";
 
-  static String m26(riskValue) => "Rischio di comorbilità: ${riskValue}";
+  static String m26(count) =>
+      "${Intl.plural(count, one: 'barretta', other: 'barrette')}";
 
-  static String m27(value) => "${value} al tuo obiettivo";
+  static String m27(count) =>
+      "${Intl.plural(count, one: 'bottiglia', other: 'bottiglie')}";
 
-  static String m28(mealType) => "Aggiunto a ${mealType}";
+  static String m28(count) =>
+      "${Intl.plural(count, one: 'lattina', other: 'lattine')}";
 
-  static String m29(count) => "${count} ingrediente/i";
+  static String m29(count) =>
+      "${Intl.plural(count, one: 'tazza', other: 'tazze')}";
 
-  static String m30(count) => "${count} selezionati";
+  static String m30(count) =>
+      "${Intl.plural(count, one: 'uovo', other: 'uova')}";
 
-  static String m31(hour) => "${hour}:00";
+  static String m31(count) =>
+      "${Intl.plural(count, one: 'confezione', other: 'confezioni')}";
 
-  static String m32(hour, minute) => "${hour}:${minute}";
+  static String m32(count) =>
+      "${Intl.plural(count, one: 'pezzo', other: 'pezzi')}";
 
-  static String m33(time) => "Orario promemoria: ${time}";
+  static String m33(count) =>
+      "${Intl.plural(count, one: 'porzione', other: 'porzioni')}";
 
-  static String m34(current, goal) => "${current} / ${goal} ml";
+  static String m34(count) =>
+      "${Intl.plural(count, one: 'porzione', other: 'porzioni')}";
 
-  static String m35(rate) => "${rate} kg/settimana";
+  static String m35(count) =>
+      "${Intl.plural(count, one: 'fetta', other: 'fette')}";
 
-  static String m36(rate) => "${rate} lbs/settimana";
+  static String m36(count) =>
+      "${Intl.plural(count, one: 'cucchiaio', other: 'cucchiai')}";
 
-  static String m37(age) => "${age} anni";
+  static String m37(count) =>
+      "${Intl.plural(count, one: 'cucchiaino', other: 'cucchiaini')}";
+
+  static String m38(riskValue) => "Rischio di comorbilità: ${riskValue}";
+
+  static String m39(value) => "${value} al tuo obiettivo";
+
+  static String m40(mealType) => "Aggiunto a ${mealType}";
+
+  static String m41(count) => "${count} ingrediente/i";
+
+  static String m42(count) => "${count} selezionati";
+
+  static String m43(hour) => "${hour}:00";
+
+  static String m44(hour, minute) => "${hour}:${minute}";
+
+  static String m45(time) => "Orario promemoria: ${time}";
+
+  static String m46(current, goal) => "${current} / ${goal} ml";
+
+  static String m47(rate) => "${rate} kg/settimana";
+
+  static String m48(rate) => "${rate} lbs/settimana";
+
+  static String m49(age) => "${age} anni";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -728,6 +764,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dimensione confezione (oz/fl oz)",
     ),
     "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Unità pasto"),
+    "measureUnitBar": m26,
+    "measureUnitBottle": m27,
+    "measureUnitCan": m28,
+    "measureUnitCup": m29,
+    "measureUnitEgg": m30,
+    "measureUnitPackage": m31,
+    "measureUnitPiece": m32,
+    "measureUnitPortion": m33,
+    "measureUnitServing": m34,
+    "measureUnitSlice": m35,
+    "measureUnitTablespoon": m36,
+    "measureUnitTeaspoon": m37,
     "micronutrientsLabel": MessageLookupByLibrary.simpleMessage(
       "Micronutrienti",
     ),
@@ -801,7 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage(
       "Aumentato",
     ),
-    "nutritionalStatusRiskLabel": m26,
+    "nutritionalStatusRiskLabel": m38,
     "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
       "Basso\n(ma rischio di altri\nproblemi clinici aumentato)",
     ),
@@ -1379,7 +1427,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
       "Hai raggiunto il tuo obiettivo",
     ),
-    "profileTargetWeightToGo": m27,
+    "profileTargetWeightToGo": m39,
     "profileWeightHistoryTitle": MessageLookupByLibrary.simpleMessage(
       "Cronologia del peso",
     ),
@@ -1404,7 +1452,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage(
       "Aggiunta rapida attività",
     ),
-    "quickAddAddedSnack": m28,
+    "quickAddAddedSnack": m40,
     "quickAddBottomSheetTitle": MessageLookupByLibrary.simpleMessage(
       "Aggiunta rapida",
     ),
@@ -1463,7 +1511,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Quantità",
     ),
-    "recipeIngredientCountLabel": m29,
+    "recipeIngredientCountLabel": m41,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage("Unità"),
     "recipeIngredientsLabel": MessageLookupByLibrary.simpleMessage(
       "Ingredienti",
@@ -1578,7 +1626,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Seleziona peso",
     ),
-    "selectionCountLabel": m30,
+    "selectionCountLabel": m42,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
       "Invia dati di utilizzo anonimi",
     ),
@@ -1662,7 +1710,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "Scegli l\'ora in cui inizia la tua giornata. I pasti e le attività registrati prima di questa ora verranno conteggiati nel giorno precedente — utile per chi lavora di notte o mangia tardi.",
     ),
-    "settingsDayStartHourLabel": m31,
+    "settingsDayStartHourLabel": m43,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Ore",
     ),
@@ -1672,7 +1720,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Minuti",
     ),
-    "settingsDayStartTimeLabel": m32,
+    "settingsDayStartTimeLabel": m44,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Elimina tutto",
     ),
@@ -1762,7 +1810,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage(
       "Promemoria giornaliero",
     ),
-    "settingsNotificationsTimeLabel": m33,
+    "settingsNotificationsTimeLabel": m45,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "Obiettivi personali per ogni nutriente del pannello giornaliero. Il diario li utilizza al posto dei valori di riferimento predefiniti ogni volta che ne imposti uno.",
     ),
@@ -1953,12 +2001,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamina C"),
     "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamina D"),
     "warningLabel": MessageLookupByLibrary.simpleMessage("Avviso"),
-    "waterChipLabel": m34,
-    "weeklyWeightGoalKgPerWeek": m35,
+    "waterChipLabel": m46,
+    "weeklyWeightGoalKgPerWeek": m47,
     "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Ritmo settimanale",
     ),
-    "weeklyWeightGoalLbsPerWeek": m36,
+    "weeklyWeightGoalLbsPerWeek": m48,
     "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
       "Non impostato",
     ),
@@ -1977,7 +2025,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
     "weightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
-    "yearsLabel": m37,
+    "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("Tu"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
   };
