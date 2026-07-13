@@ -96,38 +96,37 @@ class MealEntity extends Equatable {
   });
 
   factory MealEntity.empty() => MealEntity(
-        code: IdGenerator.getUniqueID(),
-        name: null,
-        url: null,
-        mealQuantity: null,
-        mealUnit: 'gml',
-        servingQuantity: null,
-        servingUnit: 'gml',
-        servingSize: '',
-        nutriments: MealNutrimentsEntity.empty(),
-        source: MealSourceEntity.custom,
-      );
+    code: IdGenerator.getUniqueID(),
+    name: null,
+    url: null,
+    mealQuantity: null,
+    mealUnit: 'gml',
+    servingQuantity: null,
+    servingUnit: 'gml',
+    servingSize: '',
+    nutriments: MealNutrimentsEntity.empty(),
+    source: MealSourceEntity.custom,
+  );
 
   factory MealEntity.fromMealDBO(MealDBO mealDBO) => MealEntity(
-        code: mealDBO.code,
-        name: mealDBO.name,
-        brands: mealDBO.brands,
-        thumbnailImageUrl: mealDBO.thumbnailImageUrl,
-        mainImageUrl: mealDBO.mainImageUrl,
-        url: mealDBO.url,
-        mealQuantity: mealDBO.mealQuantity,
-        mealUnit: mealDBO.mealUnit,
-        servingQuantity: mealDBO.servingQuantity,
-        servingUnit: mealDBO.servingUnit,
-        servingSize: mealDBO.servingSize,
-        nutriments:
-            MealNutrimentsEntity.fromMealNutrimentsDBO(mealDBO.nutriments),
-        source: MealSourceEntity.fromMealSourceDBO(mealDBO.source),
-        backendSource: mealDBO.backendSource,
-        machineTranslatedName: mealDBO.machineTranslatedName ?? false,
-        localImagePath: mealDBO.localImagePath,
-        detailed: mealDBO.detailed ?? false,
-      );
+    code: mealDBO.code,
+    name: mealDBO.name,
+    brands: mealDBO.brands,
+    thumbnailImageUrl: mealDBO.thumbnailImageUrl,
+    mainImageUrl: mealDBO.mainImageUrl,
+    url: mealDBO.url,
+    mealQuantity: mealDBO.mealQuantity,
+    mealUnit: mealDBO.mealUnit,
+    servingQuantity: mealDBO.servingQuantity,
+    servingUnit: mealDBO.servingUnit,
+    servingSize: mealDBO.servingSize,
+    nutriments: MealNutrimentsEntity.fromMealNutrimentsDBO(mealDBO.nutriments),
+    source: MealSourceEntity.fromMealSourceDBO(mealDBO.source),
+    backendSource: mealDBO.backendSource,
+    machineTranslatedName: mealDBO.machineTranslatedName ?? false,
+    localImagePath: mealDBO.localImagePath,
+    detailed: mealDBO.detailed ?? false,
+  );
 
   /// [detailed] is true for full-product responses (the v2 barcode endpoint),
   /// false for the thin Search-a-licious text-search projection.
@@ -141,7 +140,8 @@ class MealEntity extends Equatable {
     // is actually consumed — and package quantity is missing often enough
     // that deriving from it alone left the unit null ("N/A" in the meal
     // detail's unit dropdown).
-    final unit = _normalizeOffUnit(offProduct.serving_quantity_unit) ??
+    final unit =
+        _normalizeOffUnit(offProduct.serving_quantity_unit) ??
         _tryGetUnit(offProduct.serving_size) ??
         _tryGetUnit(offProduct.quantity);
     return MealEntity(
@@ -246,8 +246,10 @@ class MealEntity extends Equatable {
 
   /// Matches an explicit weight/volume figure ("38 g", "240ml") so labels
   /// that already state one don't get a second appended.
-  static final _containsWeightFigure =
-      RegExp(r'\d\s*(g|kg|ml|l|oz)\b', caseSensitive: false);
+  static final _containsWeightFigure = RegExp(
+    r'\d\s*(g|kg|ml|l|oz)\b',
+    caseSensitive: false,
+  );
 
   /// Human-readable default-serving label in the style of the FDC website
   /// ("1 slice (38 g)", "1 cup, sliced (240 g)"), falling back to the
@@ -312,17 +314,35 @@ class MealEntity extends Equatable {
     return parsedValue;
   }
 
-  /// TODO extract correct unit
-  /// Unit can either be 100g or 100ml
+  /// Unit can either be 100g or 100ml. Looks for a number immediately
+  /// followed by a recognised weight/volume unit token (e.g. "38 g" in
+  /// "1 slice (38 g)") rather than scanning the whole string for the letter
+  /// "l" — free-text serving descriptions like "1 slice", "1 roll", "1 bowl"
+  /// or "1 fillet" all contain an "l" and would otherwise be misclassified
+  /// as liquid. When several tokens are present (e.g. a household measure
+  /// followed by its gram equivalent in parentheses) the last one wins, as
+  /// it's usually the precise weight/volume. Falls back to "g" when no unit
+  /// token is found, matching the previous default.
   static String? _tryGetUnit(String? quantityString) {
     if (quantityString == null) return null;
 
-    final isLiter = quantityString.toUpperCase().contains("L");
+    final matches = RegExp(
+      r'\b(?:mg|kg|ml|cl|dl|l|g)\b',
+      caseSensitive: false,
+    ).allMatches(quantityString.replaceAll(RegExp(r'\d'), '')).toList();
 
-    if (isLiter) {
-      return "ml";
-    } else {
-      return "g";
+    final unitToken = matches.isEmpty
+        ? null
+        : matches.last.group(0)?.toLowerCase();
+
+    switch (unitToken) {
+      case 'ml':
+      case 'cl':
+      case 'dl':
+      case 'l':
+        return 'ml';
+      default:
+        return 'g';
     }
   }
 

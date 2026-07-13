@@ -163,10 +163,7 @@ class HiveDBProvider extends ChangeNotifier {
     // swallowed silently. Result: profile reset to null on app relaunch.
     Hive.registerAdapters();
 
-    profileBox = await Hive.openBox(
-      profileBoxName,
-      encryptionCipher: _cipher,
-    );
+    profileBox = await Hive.openBox(profileBoxName, encryptionCipher: _cipher);
     cachedOffMealBox = await Hive.openBox(
       cachedOffMealBoxName,
       encryptionCipher: _cipher,
@@ -183,10 +180,7 @@ class HiveDBProvider extends ChangeNotifier {
       customMealBoxName,
       encryptionCipher: _cipher,
     );
-    recipeBox = await Hive.openBox(
-      recipeBoxName,
-      encryptionCipher: _cipher,
-    );
+    recipeBox = await Hive.openBox(recipeBoxName, encryptionCipher: _cipher);
     customActivityTemplateBox = await Hive.openBox(
       customActivityTemplateBoxName,
       encryptionCipher: _cipher,
@@ -284,6 +278,18 @@ class HiveDBProvider extends ChangeNotifier {
       boxNameFor(baseName, boxSuffix),
       encryptionCipher: _cipher,
     );
+  }
+
+  /// Closes a box previously opened via [openScopedBox]. Callers that open a
+  /// scoped box-set for a one-off operation (e.g. copying an intake into a
+  /// profile that isn't active) should close it afterwards so it doesn't
+  /// stay resident — mirroring how switching profiles closes the outgoing
+  /// box-set. A no-op if the box isn't open.
+  Future<void> closeScopedBox<E>(String baseName, String boxSuffix) async {
+    final name = boxNameFor(baseName, boxSuffix);
+    if (Hive.isBoxOpen(name)) {
+      await Hive.box<E>(name).close();
+    }
   }
 
   /// Permanently removes the box-set belonging to [boxSuffix] from disk.

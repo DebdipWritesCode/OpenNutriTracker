@@ -16,7 +16,8 @@ class OnboardingSecondPageBody extends StatefulWidget {
     bool heightImperial,
     BodyWeightUnit bodyWeightUnit,
     bool foodImperial,
-  ) setButtonContent;
+  )
+  setButtonContent;
 
   /// Already-stored height in centimetres (always metric in the parent's
   /// userSelection model). The widget converts to feet for display when
@@ -129,6 +130,32 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
     return value.toStringAsFixed(1);
   }
 
+  /// Called right after [_bodyWeightUnit] changes. The single kg/lb text
+  /// field is shared between both units (only its label/validator differ),
+  /// so switching between them needs to rewrite the displayed text to the
+  /// converted value in the new unit — otherwise the field keeps showing
+  /// the old number under a new label without recomputing [_parsedWeight]
+  /// (form validation alone doesn't trigger onChanged). Re-seeding from the
+  /// live parsed kg value (rather than the stale widget.initial*Kg prop)
+  /// also makes sure a value the user just typed survives a round trip
+  /// through the stones unit, whose own [BodyWeightInput] widget is
+  /// unmounted/remounted on every toggle rather than updated in place.
+  void _reseedWeightControllersForUnitChange() {
+    if (_isWeightSt) return;
+    if (_parsedWeight != null) {
+      final displayWeight = _isWeightLb
+          ? UnitCalc.kgToLbs(_parsedWeight!)
+          : _parsedWeight!;
+      _weightController.text = _formatRestoredNumber(displayWeight);
+    }
+    if (_parsedTargetWeight != null) {
+      final displayTarget = _isWeightLb
+          ? UnitCalc.kgToLbs(_parsedTargetWeight!)
+          : _parsedTargetWeight!;
+      _targetWeightController.text = _formatRestoredNumber(displayTarget);
+    }
+  }
+
   @override
   void dispose() {
     _heightFocusNode.dispose();
@@ -196,14 +223,12 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                           }
                         },
                         onFieldSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_weightFocusNode);
+                          FocusScope.of(context).requestFocus(_weightFocusNode);
                         },
                         validator: validateHeight,
                         decoration: InputDecoration(
                           labelText: S.of(context).cmLabel,
-                          hintText:
-                              S.of(context).onboardingHeightExampleHintCm,
+                          hintText: S.of(context).onboardingHeightExampleHintCm,
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -224,6 +249,15 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                 onPressed: (int index) {
                   setState(() {
                     _isHeightImperial = index == 1;
+                    // Metric is a single field; when returning to it from
+                    // ft/in, rewrite the displayed cm text from the live
+                    // parsed value rather than leaving whatever was typed
+                    // before the last switch to imperial.
+                    if (!_isHeightImperial && _parsedHeight != null) {
+                      _heightController.text = _formatRestoredNumber(
+                        _parsedHeight!,
+                      );
+                    }
                     _heightFormKey.currentState?.validate();
                     checkCorrectInput();
                   });
@@ -272,6 +306,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                 onSelectionChanged: (Set<BodyWeightUnit> selection) {
                   setState(() {
                     _bodyWeightUnit = selection.first;
+                    _reseedWeightControllersForUnitChange();
                     if (!_isWeightSt) {
                       _weightFormKey.currentState?.validate();
                       _targetWeightFormKey.currentState?.validate();
@@ -284,7 +319,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
             const SizedBox(height: 16.0),
             _isWeightSt
                 ? BodyWeightInput(
-                    initialKg: widget.initialWeightKg,
+                    initialKg: _parsedWeight ?? widget.initialWeightKg,
                     unit: BodyWeightUnit.st,
                     onChangedKg: (kg) {
                       _parsedWeight = kg;
@@ -312,8 +347,9 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                           }
                         },
                         onFieldSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_targetWeightFocusNode);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(_targetWeightFocusNode);
                         },
                         validator: validateWeight,
                         decoration: InputDecoration(
@@ -328,8 +364,9 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         textInputAction: TextInputAction.done,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
@@ -354,7 +391,8 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
             const SizedBox(height: 16.0),
             _isWeightSt
                 ? BodyWeightInput(
-                    initialKg: widget.initialTargetWeightKg,
+                    initialKg:
+                        _parsedTargetWeight ?? widget.initialTargetWeightKg,
                     unit: BodyWeightUnit.st,
                     onChangedKg: (kg) {
                       // null is a valid result for the target field (user left
@@ -379,10 +417,11 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                             return;
                           }
                           if (_targetWeightFormKey.currentState!.validate()) {
-                            _parsedTargetWeight = ValueValidator.parseWeightInKg(
-                              double.tryParse(text.replaceAll(',', '.')),
-                              isImperial: _isWeightLb,
-                            );
+                            _parsedTargetWeight =
+                                ValueValidator.parseWeightInKg(
+                                  double.tryParse(text.replaceAll(',', '.')),
+                                  isImperial: _isWeightLb,
+                                );
                           } else {
                             _parsedTargetWeight = null;
                           }
@@ -396,15 +435,17 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                           labelText: _isWeightLb
                               ? S.of(context).lbsLabel
                               : S.of(context).kgLabel,
-                          hintText:
-                              S.of(context).onboardingTargetWeightHintOptional,
+                          hintText: S
+                              .of(context)
+                              .onboardingTargetWeightHintOptional,
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         textInputAction: TextInputAction.done,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
@@ -477,8 +518,11 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
 
   String? validateHeight(String? value) {
     final label = S.of(context).onboardingWrongHeightLabel;
-    if (ValueValidator.heightStringValidator(value, label,
-            isImperial: _isHeightImperial) !=
+    if (ValueValidator.heightStringValidator(
+          value,
+          label,
+          isImperial: _isHeightImperial,
+        ) !=
         null) {
       return label;
     }
@@ -492,8 +536,11 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
 
   String? validateWeight(String? value) {
     final label = S.of(context).onboardingWrongWeightLabel;
-    if (ValueValidator.weightStringValidator(value, label,
-            isImperial: _isWeightLb) !=
+    if (ValueValidator.weightStringValidator(
+          value,
+          label,
+          isImperial: _isWeightLb,
+        ) !=
         null) {
       return label;
     }
@@ -544,7 +591,8 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
       isTargetValid = true;
     } else {
       final targetText = _targetWeightController.text.trim();
-      isTargetValid = targetText.isEmpty ||
+      isTargetValid =
+          targetText.isEmpty ||
           (_targetWeightFormKey.currentState?.validate() ?? false);
     }
 
