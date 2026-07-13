@@ -165,6 +165,26 @@ class S {
     );
   }
 
+  /// `Other options`
+  String get onboardingOtherOptionsLabel {
+    return Intl.message(
+      'Other options',
+      name: 'onboardingOtherOptionsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personalize the app — you can change everything later in Settings`
+  String get onboardingOtherOptionsSubtitle {
+    return Intl.message(
+      'Personalize the app — you can change everything later in Settings',
+      name: 'onboardingOtherOptionsSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `More Information at\nOpenFoodFacts`
   String get additionalInfoLabelOFF {
     return Intl.message(

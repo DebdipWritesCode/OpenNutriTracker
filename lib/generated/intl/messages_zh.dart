@@ -677,6 +677,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "目前没有公开的非二元性别热量基准，所以我们默认使用男性和女性公式的平均值——这是一个起点，并非精确估算。你可以随时在 设置 → 计算 中进行调整。",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage("其他选项"),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "个性化应用——所有设置以后都可以在设置中更改",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("概览"),
     "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage("输入错误，请重试"),
     "onboardingTargetWeightHintOptional": MessageLookupByLibrary.simpleMessage(

@@ -118,6 +118,8 @@
   "foodSourcesHelpText": "Wyniki wyszukiwania pochodzą z tych baz danych żywności. Open Food Facts obsługuje wyszukiwanie produktów i kodów kreskowych i jest zawsze włączona.",
   "settingsFoodSourcesLabel": "Bazy danych żywności",
   "settingsFoodSourcesSubtitle": "Wybierz, skąd pochodzą wyniki wyszukiwania",
+  "onboardingOtherOptionsLabel": "Inne opcje",
+  "onboardingOtherOptionsSubtitle": "Spersonalizuj aplikację — wszystko możesz później zmienić w ustawieniach",
   "additionalInfoLabelOFF": "Więcej informacji na\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Własny przepis",
   "additionalInfoLabelUnknown": "Nieznany posiłek",

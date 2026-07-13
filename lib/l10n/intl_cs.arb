@@ -118,6 +118,8 @@
   "foodSourcesHelpText": "Výsledky vyhledávání pocházejí z těchto databází potravin. Open Food Facts pohání vyhledávání produktů a čárových kódů a je vždy zapnutá.",
   "settingsFoodSourcesLabel": "Databáze potravin",
   "settingsFoodSourcesSubtitle": "Vyberte, odkud pocházejí výsledky vyhledávání",
+  "onboardingOtherOptionsLabel": "Další možnosti",
+  "onboardingOtherOptionsSubtitle": "Přizpůsobte si aplikaci — vše lze později změnit v nastavení",
   "additionalInfoLabelOFF": "Více informací najdete na\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Vlastní recept",
   "additionalInfoLabelUnknown": "Neznámá položka jídla",

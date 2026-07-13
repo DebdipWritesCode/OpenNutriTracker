@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_repository.dart';
+import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
@@ -49,6 +50,23 @@ class _FakeConfigRepository implements ConfigRepository {
   @override
   Future<void> setConfigBodyWeightUnit(BodyWeightUnit _) async {}
 
+  // "Other options" writes (theme, food sources, reminder flag) follow the
+  // same pattern — written after the race under test, resolve immediately.
+  @override
+  Future<void> setConfigAppTheme(AppThemeEntity _) async {}
+
+  @override
+  Future<void> setConfigFoodSourceToggles(Map<String, bool> _) async {}
+
+  @override
+  Future<void> setNotificationsEnabled(bool _) async {}
+
+  @override
+  Future<void> setConfigUseMaterialYou(bool _) async {}
+
+  @override
+  Future<void> setConfigAccentColor(int? _) async {}
+
   @override
   noSuchMethod(Invocation invocation) =>
       throw UnimplementedError(invocation.memberName.toString());
@@ -90,9 +108,18 @@ void main() {
       // navigated away before the user had been written to Hive, and the
       // home screen recomputed kcal against the dummy default user.
 
-      final saveFuture =
-          bloc.saveOnboardingData(
-              makeUser(), false, false, BodyWeightUnit.kg, false);
+      final saveFuture = bloc.saveOnboardingData(
+        makeUser(),
+        false,
+        false,
+        BodyWeightUnit.kg,
+        false,
+        appTheme: AppThemeEntity.system,
+        foodSourceToggles: const {},
+        dailyReminderEnabled: false,
+        useMaterialYou: true,
+        accentColor: null,
+      );
 
       // Yield once so the bloc has a chance to start the inner write.
       await Future<void>.delayed(Duration.zero);

@@ -840,6 +840,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "Nie istnieje opublikowana kaloryczna wartość bazowa dla osób niebinarnych, więc domyślnie używamy średniej z formuł męskiej i żeńskiej — to punkt wyjścia, a nie precyzyjne oszacowanie. Możesz to skorygować w każdej chwili w Ustawieniach → Obliczenia.",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "Inne opcje",
+    ),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Spersonalizuj aplikację — wszystko możesz później zmienić w ustawieniach",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("Przegląd"),
     "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(
       "Nieprawidłowe dane, spróbuj ponownie",

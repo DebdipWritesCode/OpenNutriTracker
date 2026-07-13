@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_config_usecase.dart';
@@ -32,8 +33,13 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     bool hasAcceptedDataCollection,
     bool heightImperial,
     BodyWeightUnit bodyWeightUnit,
-    bool foodImperial,
-  ) async {
+    bool foodImperial, {
+    required AppThemeEntity appTheme,
+    required Map<String, bool> foodSourceToggles,
+    required bool dailyReminderEnabled,
+    required bool useMaterialYou,
+    required int? accentColor,
+  }) async {
     await _addUserUsecase.addUser(userEntity);
     await _addConfigUsecase.setConfigHasAcceptedAnonymousData(
       hasAcceptedDataCollection,
@@ -43,6 +49,17 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     // Food units are chosen explicitly during onboarding, so someone on feet
     // and stones can still log food in grams.
     await _addConfigUsecase.setConfigUsesImperialFoodUnits(foodImperial);
+    // "Other options" page: theme, food databases and the daily reminder
+    // flag. The reminder's permission request and scheduling are handled by
+    // the screen before this is called — dailyReminderEnabled arrives here
+    // already downgraded to false when the permission was denied.
+    await _addConfigUsecase.setConfigAppTheme(appTheme);
+    if (foodSourceToggles.isNotEmpty) {
+      await _addConfigUsecase.setConfigFoodSourceToggles(foodSourceToggles);
+    }
+    await _addConfigUsecase.setNotificationsEnabled(dailyReminderEnabled);
+    await _addConfigUsecase.setConfigUseMaterialYou(useMaterialYou);
+    await _addConfigUsecase.setConfigAccentColor(accentColor);
   }
 
   double? getOverviewCalorieGoal() {

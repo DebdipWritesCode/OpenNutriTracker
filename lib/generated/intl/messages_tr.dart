@@ -834,6 +834,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "Non-binary bireyler için yayımlanmış bir kalori temeli bulunmuyor, bu nedenle varsayılan olarak erkek ve kadın formüllerinin ortalamasını kullanıyoruz — bir başlangıç noktası, kesin bir tahmin değil. Ayarlar → Hesaplamalar bölümünden istediğin zaman ince ayar yapabilirsin.",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "Diğer seçenekler",
+    ),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Uygulamayı kişiselleştirin — her şeyi daha sonra ayarlardan değiştirebilirsiniz",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage(
       "Genel Bakış",
     ),

@@ -119,6 +119,8 @@
   "foodSourcesHelpText": "搜索结果来自这些食品数据库。Open Food Facts 提供产品和条形码搜索，始终处于启用状态。",
   "settingsFoodSourcesLabel": "食品数据库",
   "settingsFoodSourcesSubtitle": "选择食品搜索结果的来源",
+  "onboardingOtherOptionsLabel": "其他选项",
+  "onboardingOtherOptionsSubtitle": "个性化应用——所有设置以后都可以在设置中更改",
   "additionalInfoLabelOFF": "更多信息请查看\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "自定义食谱",
   "additionalInfoLabelUnknown": "未知餐食项目",

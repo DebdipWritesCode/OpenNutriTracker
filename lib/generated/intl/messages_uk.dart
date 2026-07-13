@@ -855,6 +855,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "Опублікованої калорійної основи для небінарних людей не існує, тож за замовчуванням ми використовуємо середнє чоловічої та жіночої формул — це відправна точка, а не точна оцінка. Ти можеш скоригувати це у Налаштування → Розрахунки в будь-який час.",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "Інші параметри",
+    ),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Налаштуйте застосунок — усе можна змінити пізніше в налаштуваннях",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("Огляд"),
     "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(
       "Неправильне введення, спробуйте ще раз",

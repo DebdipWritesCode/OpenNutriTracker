@@ -149,6 +149,8 @@
   "foodSourcesHelpText": "Arama sonuçları bu gıda veritabanlarından gelir. Open Food Facts, ürün ve barkod aramasını sağlar ve her zaman etkindir.",
   "settingsFoodSourcesLabel": "Gıda veritabanları",
   "settingsFoodSourcesSubtitle": "Arama sonuçlarının kaynağını seçin",
+  "onboardingOtherOptionsLabel": "Diğer seçenekler",
+  "onboardingOtherOptionsSubtitle": "Uygulamayı kişiselleştirin — her şeyi daha sonra ayarlardan değiştirebilirsiniz",
   "additionalInfoLabelOFF": "Daha Fazla Bilgi\nOpenFoodFacts'te",
   "additionalInfoLabelRecipe": "Özel Tarif",
   "additionalInfoLabelUnknown": "Bilinmeyen Yemek Öğesi",

@@ -118,6 +118,8 @@
   "foodSourcesHelpText": "I risultati di ricerca provengono da questi database alimentari. Open Food Facts alimenta la ricerca di prodotti e codici a barre ed è sempre attivo.",
   "settingsFoodSourcesLabel": "Database alimentari",
   "settingsFoodSourcesSubtitle": "Scegli da dove provengono i risultati di ricerca",
+  "onboardingOtherOptionsLabel": "Altre opzioni",
+  "onboardingOtherOptionsSubtitle": "Personalizza l'app — potrai cambiare tutto in seguito nelle impostazioni",
   "additionalInfoLabelOFF": "Maggiori informazioni su\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Ricetta personalizzata",
   "additionalInfoLabelUnknown": "Alimento sconosciuto",

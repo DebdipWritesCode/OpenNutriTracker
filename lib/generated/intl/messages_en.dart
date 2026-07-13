@@ -822,6 +822,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "There\'s no published non-binary calorie baseline, so by default we use an average of the male and female formulas — a starting point, not a precise estimate. You can fine-tune anytime in Settings → Calculations.",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "Other options",
+    ),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Personalize the app — you can change everything later in Settings",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("Overview"),
     "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(
       "Wrong input, please try again",

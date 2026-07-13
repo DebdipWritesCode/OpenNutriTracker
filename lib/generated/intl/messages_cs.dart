@@ -838,6 +838,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
       "Pro nebinární osoby neexistuje publikovaná kalorická základní hodnota, proto standardně používáme průměr mužských a ženských vzorců — výchozí bod, nikoli přesný odhad. Kdykoli to můžeš upravit v Nastavení → Výpočty.",
     ),
+    "onboardingOtherOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "Další možnosti",
+    ),
+    "onboardingOtherOptionsSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Přizpůsobte si aplikaci — vše lze později změnit v nastavení",
+    ),
     "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("Přehled"),
     "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(
       "Nesprávné zadání, vložte prosím hodnotu znovu",
