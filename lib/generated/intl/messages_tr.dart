@@ -528,6 +528,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("y"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("lif"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Her zaman etkin",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "Arama sonuçları bu gıda veritabanlarından gelir. Open Food Facts, ürün ve barkod aramasını sağlar ve her zaman etkindir.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("kadın"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Cinsiyet"),
@@ -1611,6 +1617,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Lif hedefi",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Gıda veritabanları",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Arama sonuçlarının kaynağını seçin",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "İmperial (lbs, oz, fl oz)",

@@ -25,6 +25,7 @@ import 'package:opennutritracker/features/settings/presentation/bloc/settings_bl
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/food_sources_screen.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/nutrient_visibility_screen.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -346,6 +347,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _SettingsGroup(
                   palette: palette,
                   tiles: [
+                    _SettingsTile(
+                      identifier: 'settings-food-sources',
+                      palette: palette,
+                      icon: Icons.travel_explore_rounded,
+                      title: S.of(context).settingsFoodSourcesLabel,
+                      subtitle: S.of(context).settingsFoodSourcesSubtitle,
+                      onTap: () => _openFoodSourcesScreen(context),
+                    ),
                     _SettingsTile(
                       identifier: 'settings-import-custom-food',
                       palette: palette,
@@ -828,6 +837,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _openNutrientVisibilityScreen(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const NutrientVisibilityScreen()),
+    );
+  }
+
+  void _openFoodSourcesScreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const FoodSourcesScreen()),
     );
   }
 

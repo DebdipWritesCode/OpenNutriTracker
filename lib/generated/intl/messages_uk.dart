@@ -543,6 +543,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("ж"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("клітковина"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("рідка унція"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Завжди ввімкнено",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "Результати пошуку надходять із цих баз даних продуктів. Open Food Facts забезпечує пошук продуктів і штрих-кодів і завжди ввімкнена.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("фут"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("жінка"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Стать"),
@@ -1684,6 +1690,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Ціль клітковини",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Бази даних продуктів",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Виберіть, звідки надходять результати пошуку",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "Імперська (фунти, унції, рідкі унції)",

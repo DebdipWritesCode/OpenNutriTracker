@@ -543,6 +543,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("f"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("Ballaststoffe"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Immer aktiviert",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "Suchergebnisse stammen aus diesen Lebensmitteldatenbanken. Open Food Facts liefert die Produkt- und Barcode-Suche und ist immer aktiviert.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("weiblich"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Geschlecht"),
@@ -1652,6 +1658,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Ballaststoffziel",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Lebensmitteldatenbanken",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Wähle, woher die Suchergebnisse stammen",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "Imperial (lbs, oz, fl oz)",

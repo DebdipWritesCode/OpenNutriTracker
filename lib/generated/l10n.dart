@@ -125,6 +125,46 @@ class S {
     );
   }
 
+  /// `Always enabled`
+  String get foodSourcesAlwaysEnabledLabel {
+    return Intl.message(
+      'Always enabled',
+      name: 'foodSourcesAlwaysEnabledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search results come from these food databases. Open Food Facts powers the product and barcode search and is always enabled.`
+  String get foodSourcesHelpText {
+    return Intl.message(
+      'Search results come from these food databases. Open Food Facts powers the product and barcode search and is always enabled.',
+      name: 'foodSourcesHelpText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food databases`
+  String get settingsFoodSourcesLabel {
+    return Intl.message(
+      'Food databases',
+      name: 'settingsFoodSourcesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose where food search results come from`
+  String get settingsFoodSourcesSubtitle {
+    return Intl.message(
+      'Choose where food search results come from',
+      name: 'settingsFoodSourcesSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `More Information at\nOpenFoodFacts`
   String get additionalInfoLabelOFF {
     return Intl.message(

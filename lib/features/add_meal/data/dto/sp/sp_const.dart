@@ -74,9 +74,25 @@ class SPConst {
     'tbca': 'TBCA',
   };
 
-  /// Public website per backend source, used as the info link for foods
-  /// without a per-item detail page (only FDC foods have one).
+  /// Sources offered in Settings → Food databases. INDB and TBCA exist in
+  /// the schema but carry no data yet, so they are not selectable until
+  /// their imports land — add them here once they do.
+  static const settingsSelectableFoodSources = [
+    'fdc_foundation',
+    'fdc_sr_legacy',
+    'fdc_survey',
+    'fdc_branded',
+    'bls',
+  ];
+
+  /// Public website per backend source: the "learn more" link in Settings →
+  /// Food databases and the info-button fallback for foods without a
+  /// per-item detail page (only FDC foods have one).
   static const foodSourceWebsites = <String, String>{
+    'fdc_foundation': 'https://fdc.nal.usda.gov',
+    'fdc_sr_legacy': 'https://fdc.nal.usda.gov',
+    'fdc_survey': 'https://fdc.nal.usda.gov',
+    'fdc_branded': 'https://fdc.nal.usda.gov',
     'bls': 'https://www.blsdb.de',
     'indb': 'https://www.anuvaad.org.in',
     'tbca': 'https://www.tbca.net.br',

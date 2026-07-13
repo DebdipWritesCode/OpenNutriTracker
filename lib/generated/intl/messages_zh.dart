@@ -445,6 +445,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("脂"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("膳食纤维"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "始终启用",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "搜索结果来自这些食品数据库。Open Food Facts 提供产品和条形码搜索，始终处于启用状态。",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("英尺"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("女性"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("性别"),
@@ -1229,6 +1235,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "每日纤维目标（克）。默认参考值为 30 克。",
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage("纤维目标"),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage("食品数据库"),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "选择食品搜索结果的来源",
+    ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "英制（磅、盎司、液量盎司）",
     ),

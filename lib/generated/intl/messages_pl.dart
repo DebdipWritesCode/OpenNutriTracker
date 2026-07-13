@@ -536,6 +536,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("t"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("błonnik"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Zawsze włączone",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "Wyniki wyszukiwania pochodzą z tych baz danych żywności. Open Food Facts obsługuje wyszukiwanie produktów i kodów kreskowych i jest zawsze włączona.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("kobieta"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Płeć"),
@@ -1637,6 +1643,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Cel błonnika",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Bazy danych żywności",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Wybierz, skąd pochodzą wyniki wyszukiwania",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "Imperialny (lbs, oz, fl oz)",

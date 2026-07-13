@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:opennutritracker/core/data/data_source/config_data_source.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/retry_util.dart';
 import 'package:opennutritracker/core/utils/supported_language.dart';
@@ -18,6 +19,12 @@ class SpFoodDataSource {
     try {
       return await withRetry(() async {
         log.fine('Fetching Supabase food results');
+        final enabledSources = await _enabledSources();
+        if (enabledSources != null && enabledSources.isEmpty) {
+          log.fine('All Supabase food sources disabled; skipping search');
+          return const <SpFoodDTO>[];
+        }
+
         final supaBaseClient = locator<SupabaseClient>();
         final locale = SPConst.translationLocaleOf(
           SupportedLanguage.fromCode(Platform.localeName),
@@ -28,6 +35,7 @@ class SpFoodDataSource {
             supaBaseClient,
             locale,
             searchString,
+            enabledSources,
           );
           // Foods without a translation for this locale are only findable
           // by their English name, so an empty localized result set falls
@@ -38,7 +46,11 @@ class SpFoodDataSource {
           }
         }
 
-        final results = await _searchEnglish(supaBaseClient, searchString);
+        final results = await _searchEnglish(
+          supaBaseClient,
+          searchString,
+          enabledSources,
+        );
         log.fine('Successful response from Supabase');
         return results;
       });
@@ -49,20 +61,34 @@ class SpFoodDataSource {
     }
   }
 
+  /// Source codes the user allows in search results (Settings → Food
+  /// databases), or null when everything is enabled and no filter is
+  /// needed. An empty list means every backend source is disabled.
+  Future<List<String>?> _enabledSources() async {
+    final toggles = await locator<ConfigDataSource>().getFoodSourceToggles();
+    if (toggles == null) return null;
+    final enabled = SPConst.foodSourceDisplayNames.keys
+        .where((code) => toggles[code] ?? true)
+        .toList();
+    if (enabled.length == SPConst.foodSourceDisplayNames.length) return null;
+    return enabled;
+  }
+
   Future<List<SpFoodDTO>> _searchEnglish(
     SupabaseClient client,
     String searchString,
+    List<String>? enabledSources,
   ) async {
-    final response = await client
-        .from(SPConst.foodSummaryTable)
-        .select()
-        .textSearch(
+    var query = client.from(SPConst.foodSummaryTable).select().textSearch(
           SPConst.foodName,
           searchString,
           config: SPConst.foodNameFtsConfig,
           type: TextSearchType.websearch,
-        )
-        .limit(SPConst.maxNumberOfItems);
+        );
+    if (enabledSources != null) {
+      query = query.inFilter(SPConst.foodSource, enabledSources);
+    }
+    final response = await query.limit(SPConst.maxNumberOfItems);
 
     return response.map((food) => SpFoodDTO.fromJson(food)).toList();
   }
@@ -75,6 +101,7 @@ class SpFoodDataSource {
     SupabaseClient client,
     String locale,
     String searchString,
+    List<String>? enabledSources,
   ) async {
     final translationRows = await client
         .from(SPConst.foodTranslationTable)
@@ -98,10 +125,16 @@ class SpFoodDataSource {
             row[SPConst.translationDescription] as String?,
     };
 
-    final response = await client
+    // The source filter is applied on the summary fetch rather than the
+    // translation match: food_translation has no source column.
+    var query = client
         .from(SPConst.foodSummaryTable)
         .select()
         .inFilter(SPConst.foodId, nameByFoodId.keys.toList());
+    if (enabledSources != null) {
+      query = query.inFilter(SPConst.foodSource, enabledSources);
+    }
+    final response = await query;
 
     return response.map((food) {
       final dto = SpFoodDTO.fromJson(food);

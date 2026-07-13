@@ -121,4 +121,8 @@ class AddConfigUsecase {
   Future<void> setConfigAccentColor(int? value) async {
     await _configRepository.setConfigAccentColor(value);
   }
+
+  Future<void> setConfigFoodSourceToggles(Map<String, bool> toggles) async {
+    await _configRepository.setConfigFoodSourceToggles(toggles);
+  }
 }

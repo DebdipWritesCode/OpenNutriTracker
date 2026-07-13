@@ -534,6 +534,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("t"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("vláknina"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Vždy zapnuto",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "Výsledky vyhledávání pocházejí z těchto databází potravin. Open Food Facts pohání vyhledávání produktů a čárových kódů a je vždy zapnutá.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("žena"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Pohlaví"),
@@ -1643,6 +1649,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Cíl vlákniny",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Databáze potravin",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Vyberte, odkud pocházejí výsledky vyhledávání",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "Imperiální (lbs, oz, fl oz)",

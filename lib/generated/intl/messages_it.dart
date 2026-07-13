@@ -546,6 +546,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "fatLabelShort": MessageLookupByLibrary.simpleMessage("g"),
     "fiberLabel": MessageLookupByLibrary.simpleMessage("fibre"),
     "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
+    "foodSourcesAlwaysEnabledLabel": MessageLookupByLibrary.simpleMessage(
+      "Sempre attivo",
+    ),
+    "foodSourcesHelpText": MessageLookupByLibrary.simpleMessage(
+      "I risultati di ricerca provengono da questi database alimentari. Open Food Facts alimenta la ricerca di prodotti e codici a barre ed è sempre attivo.",
+    ),
     "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
     "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("femmina"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Sesso"),
@@ -1685,6 +1691,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsFibreGoalLabel": MessageLookupByLibrary.simpleMessage(
       "Obiettivo fibre",
+    ),
+    "settingsFoodSourcesLabel": MessageLookupByLibrary.simpleMessage(
+      "Database alimentari",
+    ),
+    "settingsFoodSourcesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Scegli da dove provengono i risultati di ricerca",
     ),
     "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage(
       "Imperiale (lbs, oz, fl oz)",

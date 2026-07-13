@@ -81,6 +81,11 @@ class ConfigEntity extends Equatable {
   // phone-sized screens and leaving rotation free on tablets. Once the user
   // taps the in-scanner toggle, their choice is stored here and sticks.
   final bool? scannerPortraitLock;
+  // Per-source enable flags for the food search, keyed by backend
+  // food_source code (see SPConst.foodSourceDisplayNames). A source not in
+  // the map is enabled — see [isFoodSourceEnabled]. Open Food Facts is
+  // always enabled and never appears here.
+  final Map<String, bool> foodSourceToggles;
 
   /// Default daily water goal in millilitres for the home chip when the
   /// user has not picked one yet.
@@ -152,6 +157,7 @@ class ConfigEntity extends Equatable {
     this.useMaterialYou = true,
     this.accentColor,
     this.scannerPortraitLock,
+    this.foodSourceToggles = const <String, bool>{},
   });
 
   /// Resolves the daily water goal for the home chip. Returns the user's
@@ -197,6 +203,13 @@ class ConfigEntity extends Equatable {
   /// All nutrients default to visible; the user can hide individual ones
   /// from Settings → Nutrients.
   bool isNutrientVisible(String key) => nutrientPanelVisibility[key] ?? true;
+
+  /// Whether a backend food source should contribute to search results.
+  /// Sources default to enabled; the user can disable individual ones from
+  /// Settings → Food databases. Open Food Facts is not covered by this map
+  /// and is always enabled.
+  bool isFoodSourceEnabled(String sourceCode) =>
+      foodSourceToggles[sourceCode] ?? true;
 
   /// The combined day-start offset in minutes — what callers actually need
   /// when comparing two `DateTime`s under the configured boundary. Hours and
@@ -244,6 +257,9 @@ class ConfigEntity extends Equatable {
     useMaterialYou: dbo.useMaterialYou ?? true,
     accentColor: _normaliseAccentColor(dbo.accentColor),
     scannerPortraitLock: dbo.scannerPortraitLock,
+    foodSourceToggles: dbo.foodSourceToggles != null
+        ? Map<String, bool>.from(dbo.foodSourceToggles!)
+        : const <String, bool>{},
   );
 
   /// Returns the recommended kcal target for [mealKey] given a daily goal.
@@ -326,5 +342,6 @@ class ConfigEntity extends Equatable {
     useMaterialYou,
     accentColor,
     scannerPortraitLock,
+    foodSourceToggles,
   ];
 }
