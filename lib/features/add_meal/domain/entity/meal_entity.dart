@@ -6,6 +6,7 @@ import 'package:opennutritracker/core/utils/id_generator.dart';
 import 'package:opennutritracker/core/utils/supported_language.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/fdc/fdc_const.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/fdc/fdc_food_dto.dart';
+import 'package:opennutritracker/features/add_meal/data/dto/sp/sp_const.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/sp/sp_food_dto.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
@@ -173,6 +174,7 @@ class MealEntity extends Equatable {
   }
 
   factory MealEntity.fromSpFood(SpFoodDTO foodItem) {
+    final defaultUnit = _spDefaultUnit(foodItem);
     return MealEntity(
       code: foodItem.foodId?.toString(),
       name: foodItem.displayName,
@@ -183,9 +185,9 @@ class MealEntity extends Equatable {
           ? FDCConst.getFoodDetailUrlString(foodItem.sourceCode)
           : null,
       mealQuantity: null,
-      mealUnit: FDCConst.fdcDefaultUnit,
+      mealUnit: defaultUnit,
       servingQuantity: foodItem.servingGramWeight,
-      servingUnit: FDCConst.fdcDefaultUnit,
+      servingUnit: defaultUnit,
       servingSize: _spServingLabel(foodItem),
       nutriments: MealNutrimentsEntity.fromSpFoodSummary(foodItem),
       // All Supabase backend foods keep the fdc source tag: MealSourceDBO
@@ -196,6 +198,24 @@ class MealEntity extends Equatable {
       backendSource: foodItem.source,
       machineTranslatedName: foodItem.displayNameIsMachineTranslated,
     );
+  }
+
+  /// Default entry unit for a backend food. The nutrient basis is per
+  /// 100 g everywhere, but beverages are naturally measured in
+  /// millilitres: BLS encodes its food group in the first letter of the
+  /// source code, and groups N (alkoholfreie Getränke) and P (alkoholische
+  /// Getränke) are drinks. Everything else — and every non-BLS source,
+  /// which carries no such classification — defaults to grams rather than
+  /// the old 'g/ml' placeholder, which the meal detail rendered as "N/A".
+  static String _spDefaultUnit(SpFoodDTO foodItem) {
+    final sourceCode = foodItem.sourceCode;
+    if (foodItem.source == SPConst.blsSourceCode &&
+        sourceCode != null &&
+        sourceCode.isNotEmpty &&
+        SPConst.blsBeverageGroups.contains(sourceCode[0].toUpperCase())) {
+      return 'ml';
+    }
+    return 'g';
   }
 
   /// Matches an explicit weight/volume figure ("38 g", "240ml") so labels

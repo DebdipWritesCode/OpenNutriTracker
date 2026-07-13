@@ -56,6 +56,14 @@ class SPConst {
   /// public detail page to link to.
   static const fdcSourcePrefix = 'fdc';
 
+  /// food_source.code of the Bundeslebensmittelschlüssel.
+  static const blsSourceCode = 'bls';
+
+  /// BLS food-group letters (first character of the BLS code) that denote
+  /// beverages: N = alkoholfreie Getränke, P = alkoholische Getränke.
+  /// Used to default drinks to millilitre entry in the app.
+  static const blsBeverageGroups = {'N', 'P'};
+
   /// Human-readable names of the backend food sources, keyed by
   /// food_source.code. Proper nouns — shown as-is in every app language.
   static const foodSourceDisplayNames = <String, String>{
