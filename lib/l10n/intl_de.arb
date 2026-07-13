@@ -147,6 +147,7 @@
   "additionalInfoLabelSource": "Weitere Informationen unter\n{sourceName}",
   "foodSourcesAlwaysEnabledLabel": "Immer aktiviert",
   "foodSourcesHelpText": "Suchergebnisse stammen aus diesen Lebensmitteldatenbanken. Open Food Facts liefert die Produkt- und Barcode-Suche und ist immer aktiviert.",
+  "machineTranslatedNameHint": "Name automatisch übersetzt",
   "settingsFoodSourcesLabel": "Lebensmitteldatenbanken",
   "settingsFoodSourcesSubtitle": "Wähle, woher die Suchergebnisse stammen",
   "onboardingOtherOptionsLabel": "Weitere Optionen",

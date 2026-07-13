@@ -654,6 +654,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "ör. pizza, salata, pirinç ...",
     ),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("Öğle Yemeği"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "Ad otomatik olarak çevrildi",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
       "Makro besin Dağılımı:",
     ),

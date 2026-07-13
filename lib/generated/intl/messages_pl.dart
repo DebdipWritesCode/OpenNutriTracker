@@ -660,6 +660,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "np. pizza, sałatka, ryż ...",
     ),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("Obiad"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "Nazwa przetłumaczona automatycznie",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
       "Rozkład makroskładników:",
     ),

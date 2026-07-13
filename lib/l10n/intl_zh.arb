@@ -117,6 +117,7 @@
   "additionalInfoLabelSource": "更多信息请查看\n{sourceName}",
   "foodSourcesAlwaysEnabledLabel": "始终启用",
   "foodSourcesHelpText": "搜索结果来自这些食品数据库。Open Food Facts 提供产品和条形码搜索，始终处于启用状态。",
+  "machineTranslatedNameHint": "名称为自动翻译",
   "settingsFoodSourcesLabel": "食品数据库",
   "settingsFoodSourcesSubtitle": "选择食品搜索结果的来源",
   "onboardingOtherOptionsLabel": "其他选项",

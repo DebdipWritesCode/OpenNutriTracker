@@ -662,6 +662,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "např. pizza, salát, rýže...",
     ),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("Oběd"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "Název byl přeložen automaticky",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
       "Poměr nutričních složek:",
     ),

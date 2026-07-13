@@ -206,6 +206,7 @@
   "additionalInfoLabelSource": "More Information at\n{sourceName}",
   "foodSourcesAlwaysEnabledLabel": "Always enabled",
   "foodSourcesHelpText": "Search results come from these food databases. Open Food Facts powers the product and barcode search and is always enabled.",
+  "machineTranslatedNameHint": "Name translated automatically",
   "settingsFoodSourcesLabel": "Food databases",
   "settingsFoodSourcesSubtitle": "Choose where food search results come from",
   "onboardingOtherOptionsLabel": "Other options",

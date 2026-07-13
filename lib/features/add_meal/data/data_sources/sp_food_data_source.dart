@@ -106,7 +106,8 @@ class SpFoodDataSource {
     final translationRows = await client
         .from(SPConst.foodTranslationTable)
         .select(
-          '${SPConst.translationFoodId}, ${SPConst.translationDescription}',
+          '${SPConst.translationFoodId}, ${SPConst.translationDescription}, '
+          '${SPConst.translationSource}',
         )
         .eq(SPConst.translationLocale, locale)
         .textSearch(
@@ -124,6 +125,12 @@ class SpFoodDataSource {
         row[SPConst.translationFoodId] as int:
             row[SPConst.translationDescription] as String?,
     };
+    final machineTranslatedFoodIds = {
+      for (final row in translationRows)
+        if (row[SPConst.translationSource] ==
+            SPConst.translationSourceMachine)
+          row[SPConst.translationFoodId] as int,
+    };
 
     // The source filter is applied on the summary fetch rather than the
     // translation match: food_translation has no source column.
@@ -139,6 +146,8 @@ class SpFoodDataSource {
     return response.map((food) {
       final dto = SpFoodDTO.fromJson(food);
       dto.localizedName = nameByFoodId[dto.foodId];
+      dto.localizedNameIsMachineTranslated =
+          machineTranslatedFoodIds.contains(dto.foodId);
       return dto;
     }).toList();
   }

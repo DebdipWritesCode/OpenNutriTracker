@@ -672,6 +672,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "es. pizza, insalata, riso ...",
     ),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("Pranzo"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "Nome tradotto automaticamente",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
       "Distribuzione dei macronutrienti:",
     ),

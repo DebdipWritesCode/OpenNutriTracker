@@ -673,6 +673,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "наприклад, піца, салат, рис ...",
     ),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("Обід"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "Назву перекладено автоматично",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage(
       "Розподіл макроелементів:",
     ),

@@ -145,6 +145,16 @@ class S {
     );
   }
 
+  /// `Name translated automatically`
+  String get machineTranslatedNameHint {
+    return Intl.message(
+      'Name translated automatically',
+      name: 'machineTranslatedNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Food databases`
   String get settingsFoodSourcesLabel {
     return Intl.message(

@@ -116,6 +116,7 @@
   "additionalInfoLabelSource": "Více informací na\n{sourceName}",
   "foodSourcesAlwaysEnabledLabel": "Vždy zapnuto",
   "foodSourcesHelpText": "Výsledky vyhledávání pocházejí z těchto databází potravin. Open Food Facts pohání vyhledávání produktů a čárových kódů a je vždy zapnutá.",
+  "machineTranslatedNameHint": "Název byl přeložen automaticky",
   "settingsFoodSourcesLabel": "Databáze potravin",
   "settingsFoodSourcesSubtitle": "Vyberte, odkud pocházejí výsledky vyhledávání",
   "onboardingOtherOptionsLabel": "Další možnosti",

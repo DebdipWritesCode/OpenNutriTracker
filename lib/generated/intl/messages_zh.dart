@@ -537,6 +537,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "lunchExample": MessageLookupByLibrary.simpleMessage("例如：披萨、沙拉、米饭..."),
     "lunchLabel": MessageLookupByLibrary.simpleMessage("午餐"),
+    "machineTranslatedNameHint": MessageLookupByLibrary.simpleMessage(
+      "名称为自动翻译",
+    ),
     "macroDistributionLabel": MessageLookupByLibrary.simpleMessage("宏量营养素分布："),
     "magnesiumLabel": MessageLookupByLibrary.simpleMessage("镁"),
     "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("管理档案"),

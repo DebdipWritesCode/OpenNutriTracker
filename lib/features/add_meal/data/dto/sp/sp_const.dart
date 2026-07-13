@@ -38,6 +38,12 @@ class SPConst {
   static const translationFoodId = 'food_id';
   static const translationLocale = 'locale';
   static const translationDescription = 'description';
+  static const translationSource = 'source';
+
+  /// food_translation.source value for unreviewed machine translations
+  /// (DeepL/LLM). The app shows a small disclosure hint for these; the
+  /// other values (native, community, verified) involve a human and don't.
+  static const translationSourceMachine = 'machine';
 
   // Text-search configs matching the indexes in schema.sql:
   // food.description uses to_tsvector('english', ...), food_translation

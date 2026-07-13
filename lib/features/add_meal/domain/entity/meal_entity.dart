@@ -47,6 +47,11 @@ class MealEntity extends Equatable {
   /// though [source] groups them all under [MealSourceEntity.fdc].
   final String? backendSource;
 
+  /// True when [name] is an unreviewed machine translation from the
+  /// backend's food_translation table. The meal detail page shows a small
+  /// disclosure hint under the title for these.
+  final bool machineTranslatedName;
+
   /// Relative path (`meal_images/<code>.webp`) to a user-attached photo
   /// for a custom meal, or null if none is set. Resolved to an absolute
   /// path at render time via `MealImageStorage.absolutePath`. Always
@@ -84,6 +89,7 @@ class MealEntity extends Equatable {
     required this.nutriments,
     required this.source,
     this.backendSource,
+    this.machineTranslatedName = false,
     this.localImagePath,
     this.detailed = false,
   });
@@ -117,6 +123,7 @@ class MealEntity extends Equatable {
             MealNutrimentsEntity.fromMealNutrimentsDBO(mealDBO.nutriments),
         source: MealSourceEntity.fromMealSourceDBO(mealDBO.source),
         backendSource: mealDBO.backendSource,
+        machineTranslatedName: mealDBO.machineTranslatedName ?? false,
         localImagePath: mealDBO.localImagePath,
         detailed: mealDBO.detailed ?? false,
       );
@@ -187,6 +194,7 @@ class MealEntity extends Equatable {
       // to OFF/custom; the true origin is carried in [backendSource].
       source: MealSourceEntity.fdc,
       backendSource: foodItem.source,
+      machineTranslatedName: foodItem.displayNameIsMachineTranslated,
     );
   }
 

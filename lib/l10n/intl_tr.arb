@@ -147,6 +147,7 @@
   "additionalInfoLabelSource": "Daha fazla bilgi:\n{sourceName}",
   "foodSourcesAlwaysEnabledLabel": "Her zaman etkin",
   "foodSourcesHelpText": "Arama sonuçları bu gıda veritabanlarından gelir. Open Food Facts, ürün ve barkod aramasını sağlar ve her zaman etkindir.",
+  "machineTranslatedNameHint": "Ad otomatik olarak çevrildi",
   "settingsFoodSourcesLabel": "Gıda veritabanları",
   "settingsFoodSourcesSubtitle": "Arama sonuçlarının kaynağını seçin",
   "onboardingOtherOptionsLabel": "Diğer seçenekler",
