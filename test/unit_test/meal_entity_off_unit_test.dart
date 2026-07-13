@@ -48,17 +48,13 @@ void main() {
     });
 
     test('falls back to the unit parsed from serving_size', () {
-      final meal = MealEntity.fromOFFProduct(
-        _product(servingSize: '30 g'),
-      );
+      final meal = MealEntity.fromOFFProduct(_product(servingSize: '30 g'));
       expect(meal.mealUnit, 'g');
       expect(meal.isSolid, isTrue);
     });
 
     test('falls back to the package quantity string last', () {
-      final meal = MealEntity.fromOFFProduct(
-        _product(quantity: '1 L'),
-      );
+      final meal = MealEntity.fromOFFProduct(_product(quantity: '1 L'));
       expect(meal.mealUnit, 'ml');
     });
 
@@ -67,6 +63,21 @@ void main() {
       expect(meal.mealUnit, isNull);
       expect(meal.isSolid, isFalse);
       expect(meal.isLiquid, isFalse);
+    });
+
+    test('household serving descriptions containing "l" stay solid', () {
+      for (final servingSize in [
+        '1 slice (38 g)',
+        '1 roll (60g)',
+        '1 bowl (250 g)',
+        '1 fillet',
+      ]) {
+        final meal = MealEntity.fromOFFProduct(
+          _product(servingSize: servingSize),
+        );
+        expect(meal.mealUnit, 'g', reason: 'for "$servingSize"');
+        expect(meal.isSolid, isTrue, reason: 'for "$servingSize"');
+      }
     });
   });
 }
