@@ -114,6 +114,7 @@
   "additionalInfoLabelCompendium2011": "信息由\n'2024年体力活动指南'\n提供",
   "additionalInfoLabelCustom": "自定义餐食项目",
   "additionalInfoLabelFDC": "更多信息请查看\nFoodData Central",
+  "additionalInfoLabelSource": "更多信息请查看\n{sourceName}",
   "additionalInfoLabelOFF": "更多信息请查看\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "自定义食谱",
   "additionalInfoLabelUnknown": "未知餐食项目",

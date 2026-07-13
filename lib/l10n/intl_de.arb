@@ -144,6 +144,7 @@
   "additionalInfoLabelCompendium2011": "Informationen bereitgestellt von\n'2024 Compendium\n of Physical Activities'",
   "additionalInfoLabelCustom": "Benutzerdefinierte Mahlzeit",
   "additionalInfoLabelFDC": "Weitere Informationen unter\nFoodData Central",
+  "additionalInfoLabelSource": "Weitere Informationen unter\n{sourceName}",
   "additionalInfoLabelOFF": "Weitere Informationen unter\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Benutzerdefiniertes Rezept",
   "additionalInfoLabelUnknown": "Unbekannte Mahlzeit",

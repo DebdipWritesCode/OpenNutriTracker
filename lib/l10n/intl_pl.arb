@@ -113,6 +113,7 @@
   "additionalInfoLabelCompendium2011": "Informacje dostarczone\n przez\n'Kompendium Aktywności\n Fizycznych z 2024'",
   "additionalInfoLabelCustom": "Niestandardowy posiłek",
   "additionalInfoLabelFDC": "Więcej informacji na\nFoodData Central",
+  "additionalInfoLabelSource": "Więcej informacji na\n{sourceName}",
   "additionalInfoLabelOFF": "Więcej informacji na\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Własny przepis",
   "additionalInfoLabelUnknown": "Nieznany posiłek",

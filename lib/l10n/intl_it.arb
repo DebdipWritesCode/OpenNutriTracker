@@ -113,6 +113,7 @@
   "additionalInfoLabelCompendium2011": "Informazioni fornite\ndal\n'2024 Compendium\ndelle Attività Fisiche'",
   "additionalInfoLabelCustom": "Alimento personalizzato",
   "additionalInfoLabelFDC": "Maggiori informazioni su\nFoodData Central",
+  "additionalInfoLabelSource": "Maggiori informazioni su\n{sourceName}",
   "additionalInfoLabelOFF": "Maggiori informazioni su\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Ricetta personalizzata",
   "additionalInfoLabelUnknown": "Alimento sconosciuto",

@@ -113,6 +113,7 @@
   "additionalInfoLabelCompendium2011": "Інформація надана\n \"2024 Compendium\n of Physical Activities\"",
   "additionalInfoLabelCustom": "Власний елемент їжі",
   "additionalInfoLabelFDC": "Більше інформації на\nFoodData Central",
+  "additionalInfoLabelSource": "Більше інформації на\n{sourceName}",
   "additionalInfoLabelOFF": "Більше інформації на\nOpenFoodFacts",
   "additionalInfoLabelRecipe": "Власний рецепт",
   "additionalInfoLabelUnknown": "Невідомий елемент їжі",

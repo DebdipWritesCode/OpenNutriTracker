@@ -144,6 +144,7 @@
   "additionalInfoLabelCompendium2011": "Bilgi\n'2024 Compendium\n of Physical Activities'\nden sağlanmıştır",
   "additionalInfoLabelCustom": "Özel Yemek Öğesi",
   "additionalInfoLabelFDC": "Daha Fazla Bilgi\nFoodData Central'da",
+  "additionalInfoLabelSource": "Daha fazla bilgi:\n{sourceName}",
   "additionalInfoLabelOFF": "Daha Fazla Bilgi\nOpenFoodFacts'te",
   "additionalInfoLabelRecipe": "Özel Tarif",
   "additionalInfoLabelUnknown": "Bilinmeyen Yemek Öğesi",

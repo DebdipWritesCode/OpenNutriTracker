@@ -76,7 +76,7 @@ class SearchProductsUseCase {
     }
     final remote = await _safeRemoteCall(
       'FDC',
-      () => _productsRepository.getSupabaseFDCFoodsByString(searchString),
+      () => _productsRepository.getSupabaseFoodsByString(searchString),
     );
     await _cacheRemoteResults(remote);
     return _buildResult(searchString, remote,
