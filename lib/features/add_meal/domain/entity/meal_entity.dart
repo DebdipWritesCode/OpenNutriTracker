@@ -135,6 +135,15 @@ class MealEntity extends Equatable {
     OFFProductDTO offProduct, {
     bool detailed = false,
   }) {
+    // Unit precedence: OFF's normalised serving unit, then the unit parsed
+    // from the serving_size text ("30 g"), then the package quantity string.
+    // Serving data beats the package because it describes how the product
+    // is actually consumed — and package quantity is missing often enough
+    // that deriving from it alone left the unit null ("N/A" in the meal
+    // detail's unit dropdown).
+    final unit = _normalizeOffUnit(offProduct.serving_quantity_unit) ??
+        _tryGetUnit(offProduct.serving_size) ??
+        _tryGetUnit(offProduct.quantity);
     return MealEntity(
       code: offProduct.code,
       name: offProduct.getLocaleName(
@@ -145,14 +154,31 @@ class MealEntity extends Equatable {
       mainImageUrl: offProduct.image_front_url,
       url: offProduct.url,
       mealQuantity: offProduct.product_quantity?.toString(),
-      mealUnit: _tryGetUnit(offProduct.quantity),
+      mealUnit: unit,
       servingQuantity: _tryQuantityCast(offProduct.serving_quantity),
-      servingUnit: _tryGetUnit(offProduct.quantity),
+      servingUnit: unit,
       servingSize: offProduct.serving_size,
       nutriments: MealNutrimentsEntity.fromOffNutriments(offProduct.nutriments),
       source: MealSourceEntity.off,
       detailed: detailed,
     );
+  }
+
+  /// Maps OFF's serving_quantity_unit to the app's g/ml entry units.
+  /// Usually already 'g' or 'ml'; the volume variants collapse to ml and
+  /// anything unrecognised returns null so the next fallback can try.
+  static String? _normalizeOffUnit(String? rawUnit) {
+    switch (rawUnit?.trim().toLowerCase()) {
+      case 'g':
+        return 'g';
+      case 'ml':
+      case 'cl':
+      case 'dl':
+      case 'l':
+        return 'ml';
+      default:
+        return null;
+    }
   }
 
   factory MealEntity.fromFDCFood(FDCFoodDTO fdcFood) {

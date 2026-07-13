@@ -56,6 +56,7 @@ class OFFConst {
   static const _offProductQuantityTag = "product_quantity";
   static const _offQuantityTag = "quantity";
   static const _offServingQuantityTag = "serving_quantity";
+  static const _offServingQuantityUnitTag = "serving_quantity_unit";
   static const _offServingSizeTag = "serving_size";
   static const _offNutrimentsTag = "nutriments";
   static const _offPopularityKeyTag = "popularity_key";
@@ -97,6 +98,7 @@ class OFFConst {
     _offProductQuantityTag,
     _offQuantityTag,
     _offServingQuantityTag,
+    _offServingQuantityUnitTag,
     _offServingSizeTag,
     _offNutrimentsTag,
   ];
