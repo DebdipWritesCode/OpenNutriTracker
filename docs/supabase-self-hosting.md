@@ -1,6 +1,6 @@
 # Self-hosting the Supabase food database
 
-OpenNutriTracker's backend food search runs against a Supabase project that the maintainer (Simon) hosts on behalf of everyone who runs the published app. Since version 2.0 that project is no longer an FDC-only mirror: it is a **multi-source food reference database** built and maintained from its own repository:
+OpenNutriTracker's backend food search runs against a Supabase project that the maintainer (Simon) manages on Supabase's managed cloud platform on behalf of everyone who runs the published app — it is not self-hosted infrastructure. Since version 2.0 that project is no longer an FDC-only mirror: it is a **multi-source food reference database** built and maintained from its own repository:
 
 **[github.com/simonoppowa/OpenNutriTracker-Backend](https://github.com/simonoppowa/OpenNutriTracker-Backend)**
 
