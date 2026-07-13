@@ -141,6 +141,11 @@ Future<void> initLocator() async {
   await Supabase.initialize(
     url: Env.supabaseProjectUrl,
     anonKey: Env.supabaseProjectAnonKey,
+    // In debug builds supabase_flutter attaches its own printer to the
+    // shared root log stream (hierarchical logging is off), duplicating
+    // every app log line in a second format. LoggerConfig already prints
+    // everything — including supabase records — once.
+    debug: false,
   );
   locator.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 

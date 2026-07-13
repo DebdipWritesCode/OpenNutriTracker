@@ -14,6 +14,13 @@ class OFFConst {
   static const _salBaseUrl = "search.openfoodfacts.org";
   static const _salSearchTag = "/search";
 
+  // Classic search API on the main OFF host. Search-a-licious runs on its
+  // own infrastructure and goes down independently (502s that can last a
+  // while); this endpoint is the fallback for those outages. Deprecated
+  // upstream but still maintained, and it returns the same product shape
+  // under `products` instead of `hits`.
+  static const _offLegacySearchPath = "/cgi/search.pl";
+
   // We fetch a larger relevance-ordered candidate pool than we display so the
   // repository can re-rank it (fusing relevance position with popularity_key)
   // before trimming to the shown results. A bare relevance page buries popular,
@@ -106,6 +113,24 @@ class OFFConst {
     };
 
     return Uri.https(_salBaseUrl, _salSearchTag, queryParameters);
+  }
+
+  /// Fallback word search against the classic API for when Search-a-licious
+  /// is down. Same fields and pool size as [getOffWordSearchUrl] so the
+  /// repository's re-ranking works unchanged; relevance ordering is weaker
+  /// than Search-a-licious, which is acceptable for a degraded mode.
+  static Uri getOffLegacyWordSearchUrl(String searchString) {
+    final queryParameters = {
+      'search_terms': searchString,
+      'search_simple': '1',
+      'action': 'process',
+      _offJsonTag: _offJsonValue,
+      _offFieldsTag: _joinFields(_searchReturnFields),
+      _salPageSizeTag: '$searchCandidatePoolSize',
+      _salPageTag: '1',
+    };
+
+    return Uri.https(_offBaseUrl, _offLegacySearchPath, queryParameters);
   }
 
   static Uri getOffBarcodeSearchUri(String barcode) {
