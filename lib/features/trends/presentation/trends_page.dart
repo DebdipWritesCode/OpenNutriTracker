@@ -73,7 +73,8 @@ class _TrendsView extends StatelessWidget {
             _CaloriesTrendCard(
                 days: state.days, rangeDays: state.windowDays, palette: palette),
             const SizedBox(height: Dimens.spacing16),
-            _MacrosTrendCard(days: state.days, palette: palette),
+            _MacrosTrendCard(
+                days: state.days, rangeDays: state.windowDays, palette: palette),
             const SizedBox(height: Dimens.spacing16),
             _WaterTrendCard(
               waterByDay: state.waterByDay,
@@ -158,9 +159,12 @@ class _StreakCard extends StatelessWidget {
     final stats = streakStats(onTrackDays, windowStart, today);
 
     // Week-over-week on-track delta (this week vs the prior week).
-    final thisWeek =
-        days.where((d) => !d.day.isBefore(weekStart) && onTrack(d)).length;
-    final delta = thisWeek - priorWeek.where(onTrack).length;
+    // Suppress the chip when the prior week is empty — a new user with
+    // no baseline would otherwise see a large green delta against 0.
+    final priorOnTrack = priorWeek.where(onTrack).toList();
+    final delta = priorOnTrack.isNotEmpty
+        ? thisWeek - priorOnTrack.length
+        : 0;
 
     return AppCard(
       padding: const EdgeInsets.all(Dimens.spacing20),
@@ -354,7 +358,7 @@ class _WaterTrendCard extends StatelessWidget {
         loggedDays++;
       }
     }
-    final avg = loggedDays == 0 ? 0 : (sum / loggedDays).round();
+    final avg = loggedDays == 0 ? 0 : (sum / rangeDays).round();
     final maxWater = spots.fold<double>(0, (m, s) => s.y > m ? s.y : m);
     final maxY =
         [maxWater, goalMl.toDouble()].reduce((a, b) => a > b ? a : b) * 1.15 + 1;
@@ -437,12 +441,17 @@ class _WaterTrendCard extends StatelessWidget {
 class _MacrosTrendCard extends StatelessWidget {
   final List<TrackedDayEntity> days;
   final AppPalette palette;
-  const _MacrosTrendCard({required this.days, required this.palette});
+  final int rangeDays;
+  const _MacrosTrendCard({
+    required this.days,
+    required this.palette,
+    required this.rangeDays,
+  });
 
   double _avg(Iterable<double?> values) {
     final present = values.whereType<double>().toList();
     if (present.isEmpty) return 0;
-    return present.reduce((a, b) => a + b) / present.length;
+    return present.reduce((a, b) => a + b) / rangeDays;
   }
 
   @override
@@ -546,7 +555,7 @@ class _WeightCard extends StatelessWidget {
             entries: entries,
             bodyWeightUnit: bodyWeightUnit,
             targetWeightKg: targetWeightKg,
-            windowDays: rangeDays < 30 ? 30 : rangeDays,
+            windowDays: rangeDays,
           ),
         ],
       ),

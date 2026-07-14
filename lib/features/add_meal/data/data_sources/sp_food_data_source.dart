@@ -85,6 +85,14 @@ class SpFoodDataSource {
           config: SPConst.foodNameFtsConfig,
           type: TextSearchType.websearch,
         );
+    // Order by text-search relevance so the best matches land in the
+    // top 20 rather than an arbitrary physical order.
+    query = query.order(
+      "ts_rank(to_tsvector('english', \"$SPConst.foodName\"), "
+      "plainto_tsquery('english', :search))",
+      ascending: false,
+      params: {':search': searchString},
+    );
     if (enabledSources != null) {
       query = query.inFilter(SPConst.foodSource, enabledSources);
     }

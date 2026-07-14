@@ -47,6 +47,13 @@ class SendIntakeToProfilesUsecase {
     ProfileEntity target,
   ) async {
     final suffix = target.boxSuffix;
+
+    // Guard against copying into the active profile — its boxes are live
+    // and open. Closing them in the finally-block would tear down the
+    // app's working set. The sheet already filters the active profile out
+    // today, but this keeps the usecase safe regardless of caller.
+    if (target.id == _hiveDBProvider.activeProfileId) return;
+
     final scoped = ScopedHiveDBProvider(
       intakeBox: await _hiveDBProvider.openScopedBox<IntakeDBO>(
         HiveDBProvider.intakeBoxName,

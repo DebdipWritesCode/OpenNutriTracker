@@ -34,6 +34,10 @@ class ConfigDataSource {
   /// Builds a detached config from the shared app box with the personal
   /// fields overlaid from the active profile's box. Detached (via JSON) so
   /// callers can't accidentally mutate a stored instance.
+  ///
+  /// Personal fields come exclusively from the active profile's box — if
+  /// that box is absent (fresh profile or after a reset) they are cleared
+  /// so stale values don't leak from the app box.
   ConfigDBO _readMerged() {
     final app = _appBox.get(_configKey);
     final profile = _profileBox.get(_configKey);
@@ -46,6 +50,15 @@ class ConfigDataSource {
       merged.userFatGoalPct = profile.userFatGoalPct;
       merged.mealKcalSharesPct = profile.mealKcalSharesPct;
       merged.dailyWaterGoalMl = profile.dailyWaterGoalMl;
+    } else {
+      // Explicitly clear personal fields so they don't leak from the
+      // app box after a profile reset.
+      merged.userKcalAdjustment = null;
+      merged.userCarbGoalPct = null;
+      merged.userProteinGoalPct = null;
+      merged.userFatGoalPct = null;
+      merged.mealKcalSharesPct = null;
+      merged.dailyWaterGoalMl = null;
     }
     return merged;
   }

@@ -197,9 +197,12 @@ class HiveDBProvider extends ChangeNotifier {
 
   /// Closes the current profile's box-set and opens [profileId]'s. The
   /// `_switching` guard makes any racing read fail loudly rather than
-  /// hitting a half-open box.
+  /// hitting a half-open box. A second call while the first is still
+  /// in-flight is silently ignored to avoid interleaving close/open
+  /// cycles.
   Future<void> switchProfile(String profileId, String boxSuffix) async {
     if (profileId == _activeProfileId) return;
+    if (_switching) return;
     _switching = true;
     try {
       await _closeActiveProfileBoxes();
