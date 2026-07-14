@@ -147,7 +147,8 @@ class _StreakCard extends StatelessWidget {
     final today = DateTime(now.year, now.month, now.day);
     final windowStart =
         DateTime(today.year, today.month, today.day - (rangeDays - 1));
-    final weekStart = DateTime(today.year, today.month, today.day - 6);
+    final weekEnd = today;
+    final weekStart = weekEnd.subtract(const Duration(days: 6));
 
     bool onTrack(TrackedDayEntity d) =>
         d.getCalendarDayRatingColor(context) != errorColor;
@@ -162,6 +163,11 @@ class _StreakCard extends StatelessWidget {
     // Suppress the chip when the prior week is empty — a new user with
     // no baseline would otherwise see a large green delta against 0.
     final priorOnTrack = priorWeek.where(onTrack).toList();
+    final thisWeek = onTrackDays
+        .where((day) =>
+            day.isAfter(weekStart.subtract(const Duration(days: 1))) &&
+            day.isBefore(weekEnd.add(const Duration(days: 1))))
+        .length;
     final delta = priorOnTrack.isNotEmpty
         ? thisWeek - priorOnTrack.length
         : 0;

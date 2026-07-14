@@ -87,16 +87,16 @@ class SpFoodDataSource {
         );
     // Order by text-search relevance so the best matches land in the
     // top 20 rather than an arbitrary physical order.
-    query = query.order(
-      "ts_rank(to_tsvector('english', \"$SPConst.foodName\"), "
-      "plainto_tsquery('english', :search))",
-      ascending: false,
-      params: {':search': searchString},
-    );
     if (enabledSources != null) {
       query = query.inFilter(SPConst.foodSource, enabledSources);
     }
-    final response = await query.limit(SPConst.maxNumberOfItems);
+    final response = await query
+        .order(
+          "ts_rank(to_tsvector('english', \"$SPConst.foodName\"), "
+          "plainto_tsquery('english', '${searchString.replaceAll("'", "''")}'))",
+          ascending: false,
+        )
+        .limit(SPConst.maxNumberOfItems);
 
     return response.map((food) => SpFoodDTO.fromJson(food)).toList();
   }
