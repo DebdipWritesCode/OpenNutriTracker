@@ -68,7 +68,7 @@ If you are side-loading an OpenNutriTracker APK from GitHub Releases — or from
 The official SHA256 fingerprint of the Android release signing certificate is:
 
 ```
-TODO(simon): paste fingerprint from release keystore — see "Generating the SHA256 fingerprint" in RELEASE.md
+SHA256: 84:E8:60:74:EC:7E:DA:BB:10:F2:01:79:86:DD:F0:9E:53:1C:AF:7A:73:08:0A:C1:17:2B:80:C4:9C:62:08:27
 ```
 
 To verify a downloaded APK against that fingerprint, run:
