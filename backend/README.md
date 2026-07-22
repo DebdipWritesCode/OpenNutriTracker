@@ -60,3 +60,20 @@ docker compose up --build
 ```
 
 The SQLite file lives in the named `ai-data` volume.
+
+## Serverless deployment
+
+Serverless runtimes such as Vercel mount the application under a read-only directory (commonly `/var/task`).
+The backend automatically places its transient SQLite readiness database in the runtime's writable temporary
+directory when it detects Vercel or AWS Lambda. The service does not currently persist meal descriptions or AI
+responses, so losing this temporary file between cold starts does not lose user data.
+
+If the deployment explicitly defines `ONT_AI_DATABASE_URL`, it overrides that automatic default. Use this value
+for a serverless deployment without a persistent database volume:
+
+```text
+sqlite+aiosqlite:////tmp/opennutritracker_ai.db
+```
+
+For a container host with a persistent disk mounted at `/data`, use
+`sqlite+aiosqlite:////data/opennutritracker_ai.db` instead.
