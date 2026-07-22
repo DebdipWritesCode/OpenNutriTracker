@@ -29,6 +29,19 @@ test:
 ci: install (format "--set-exit-if-changed") check_intl build && test
   flutter analyze
 
+# AI backend
+backend-install:
+  cd backend && python3 -m venv .venv && .venv/bin/python -m pip install -e '.[dev]'
+
+backend-dev:
+  cd backend && .venv/bin/uvicorn app.main:app --reload
+
+backend-check:
+  cd backend && .venv/bin/ruff check . && .venv/bin/pytest
+
+backend-docker:
+  cd backend && docker compose up --build
+
 create_emulator:
   fvm flutter emulators --create --name flutter_emulator
 

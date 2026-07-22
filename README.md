@@ -22,6 +22,13 @@ OpenNutriTracker is an open-source mobile application designed to simplify nutri
 
 [Website](https://simonoppowa.github.io/OpenNutriTracker/)
 
+### AI layer development
+
+This clone is adding a privacy-first, self-hosted AI meal logging layer. The implementation plan is in
+[`docs/ai_plan.md`](docs/ai_plan.md), current progress and architecture findings are in
+[`docs/ai_implementation_status.md`](docs/ai_implementation_status.md), and the FastAPI service is in
+[`backend/`](backend/).
+
 ## Screenshots
 <p align="center">
   <img alt="Logo" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="20%" />
