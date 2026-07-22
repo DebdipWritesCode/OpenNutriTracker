@@ -29,6 +29,9 @@ This clone is adding a privacy-first, self-hosted AI meal logging layer. The imp
 [`docs/ai_implementation_status.md`](docs/ai_implementation_status.md), and the FastAPI service is in
 [`backend/`](backend/).
 
+The text-meal flow is available from **Add meal → AI**. Production deployments must set the same randomly
+generated `ONT_AI_ACCESS_TOKEN` on the backend; the app asks for it once and stores it in platform secure storage.
+
 ## Screenshots
 <p align="center">
   <img alt="Logo" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="20%" />

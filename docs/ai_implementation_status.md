@@ -55,8 +55,8 @@ Implemented in [`../backend`](../backend):
 - User data is stored in AES-encrypted `hive_ce` boxes. Logs and nutrition goals are per profile, while reusable
   custom meals and recipes are shared across profiles.
 - The Hive encryption key comes from `flutter_secure_storage`.
-- The OpenAI key should also remain in platform secure storage and only be sent in the BYOK request header. It
-  must never be placed in Hive, application logs, crash metadata, query parameters, or request bodies.
+- The mobile app stores only the separate backend access token in platform secure storage. The server-side
+  OpenAI key remains exclusively in deployment secrets and is never shipped in the APK.
 - Meal descriptions and images should not be persisted by the AI backend before the user confirms a meal.
 
 ### Existing food logging flow
@@ -67,9 +67,9 @@ Implemented in [`../backend`](../backend):
 4. `AddIntakeUsecase` and `IntakeRepository` persist an `IntakeDBO` in the active profile's encrypted Hive box.
 5. Home, diary, and tracked-day totals refresh from the saved intake.
 
-The AI preview should join this flow before step 3: each extracted food must be resolved against nutrition data,
-shown as an editable candidate, then converted into the same domain entities and use cases already used by manual
-logging. The AI layer should not create a second meal persistence path.
+The AI preview now joins this flow before step 3: each extracted food is resolved against nutrition data, shown
+as an editable candidate, then converted into the same domain entities and use cases used by manual logging. The
+AI layer does not create a second meal persistence path.
 
 ### Nutrition and recipe calculations
 
@@ -84,7 +84,7 @@ logging. The AI layer should not create a second meal persistence path.
 ## Validation performed
 
 - Backend Ruff lint: passing.
-- Backend Pytest suite: 10 passing tests.
+- Backend Pytest suite: 16 passing tests.
 - Docker image build and containerized health check: passing.
 - OpenAPI/Swagger UI browser smoke check with Playwright: passing; `/docs` exposes the health and text-analysis
   operations, and `GET /health` returned database readiness.
@@ -95,15 +95,45 @@ logging. The AI layer should not create a second meal persistence path.
 - Flutter dependency resolution and Envied/build-runner generation: passing.
 - Dart static analysis: no issues. It was run in an isolated container because the shared host had exhausted its
   inotify instance limit.
-- Flutter test suite: 730 passing tests.
+- Flutter test suite: 738 passing tests.
 - Android build: passing; the develop debug APK was generated at
   `build/app/outputs/flutter-apk/app-develop-debug.apk`.
 - Android device run: pending because this execution environment has no connected device or configured emulator.
 
+## Second implementation slice
+
+The text-meal flow is now implemented end to end:
+
+- The deployed HTTPS backend URL is part of the Flutter environment configuration.
+- The Flutter client uses typed response models, a 65-second timeout, bounded retries, server error mapping, and
+  `Retry-After` support.
+- A separate backend application token is stored in Android/iOS secure storage and sent with the Bearer scheme.
+- Production backend requests fail closed when `ONT_AI_ACCESS_TOKEN` is missing, compare credentials in constant
+  time, and apply a per-client fixed-window limit. Multi-instance deployments still need a Vercel Firewall or
+  shared Redis limit at the edge.
+- Add Meal now exposes an AI action that opens a description form with explicit loading, validation,
+  authentication, network-error, review, and saving states.
+- Every extracted food is resolved against the app's existing USDA/FoodData Central and Open Food Facts search
+  path. Calories and macros appear only after a trusted database record is selected.
+- The preview supports editing the lookup query, selecting another database candidate, correcting grams/ml, and
+  removing foods. Unresolved foods or missing amounts block saving.
+- Confirmed foods are written through `AddIntakeUsecase`, update the existing tracked-day totals, and refresh the
+  Home and Diary BLoCs.
+- New strings are available in every supported locale catalog, currently using reviewed English fallback copy
+  pending native translations.
+
+Additional validation performed:
+
+- Backend Ruff lint: passing.
+- Backend Pytest suite: 16 passing tests, including production fail-closed auth and rate limiting.
+- Dart static analysis: no issues.
+- Flutter test suite: 738 passing tests, including API-client, retry, BLoC, and editable-preview widget tests.
+- Android develop debug APK: built successfully at
+  `build/app/outputs/flutter-apk/app-develop-debug.apk`.
+
 ## Next slice
 
-1. Add a Flutter API client, typed DTOs, timeouts, retry policy, and secure BYOK key storage.
-2. Add the AI text-entry screen and an editable multi-food preview using the existing app design system.
-3. Implement nutrition candidate resolution and require a database match before any calories/macros are shown.
-4. Map confirmed candidates into the existing intake save path and refresh diary/home BLoCs.
-5. Add image upload only after the text flow and nutrition resolution are end-to-end tested.
+1. Configure the generated `ONT_AI_ACCESS_TOKEN` in Vercel and enter the same token once on the device.
+2. Add a shared edge/Redis rate limiter before horizontally scaling the backend.
+3. Add image upload only after the text flow has been exercised on a physical Android device.
+4. Add native translations for the new AI meal strings.

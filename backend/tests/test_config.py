@@ -15,6 +15,12 @@ def test_empty_openai_key_enables_byok_only_mode() -> None:
     assert settings.openai_api_key is None
 
 
+def test_empty_access_token_is_treated_as_unconfigured() -> None:
+    settings = Settings(access_token="")
+
+    assert settings.access_token is None
+
+
 def test_cors_origins_accept_comma_separated_environment_value(monkeypatch: Any) -> None:
     monkeypatch.setenv(
         "ONT_AI_CORS_ORIGINS",

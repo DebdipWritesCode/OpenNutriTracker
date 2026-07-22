@@ -168,6 +168,76 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nieznany posiłek",
     ),
     "ageLabel": MessageLookupByLibrary.simpleMessage("Wiek"),
+    "aiMealAccessTokenBody": MessageLookupByLibrary.simpleMessage(
+      "Enter the application access token configured on your backend. It is stored securely on this device.",
+    ),
+    "aiMealAccessTokenLabel": MessageLookupByLibrary.simpleMessage(
+      "Access token",
+    ),
+    "aiMealAccessTokenSave": MessageLookupByLibrary.simpleMessage("Save token"),
+    "aiMealAccessTokenTitle": MessageLookupByLibrary.simpleMessage(
+      "AI access token",
+    ),
+    "aiMealActionLabel": MessageLookupByLibrary.simpleMessage(
+      "Describe meal with AI",
+    ),
+    "aiMealAmountError": MessageLookupByLibrary.simpleMessage(
+      "Enter an amount greater than zero.",
+    ),
+    "aiMealAmountLabel": MessageLookupByLibrary.simpleMessage("Amount to log"),
+    "aiMealAnalyzeButton": MessageLookupByLibrary.simpleMessage("Analyze meal"),
+    "aiMealAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
+      "Identifying foods and finding trusted nutrition matches…",
+    ),
+    "aiMealDescriptionError": MessageLookupByLibrary.simpleMessage(
+      "Describe at least one food or drink.",
+    ),
+    "aiMealDescriptionHint": MessageLookupByLibrary.simpleMessage(
+      "For example: 2 chapati, one katori dal and 150 g curd",
+    ),
+    "aiMealDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Meal description",
+    ),
+    "aiMealEmptyItems": MessageLookupByLibrary.simpleMessage(
+      "No foods remain. Go back and describe the meal again.",
+    ),
+    "aiMealFoodSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "Food match search",
+    ),
+    "aiMealIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Describe the foods and amounts in your own words. You will review every nutrition match before anything is saved.",
+    ),
+    "aiMealIntroTitle": MessageLookupByLibrary.simpleMessage(
+      "What did you eat?",
+    ),
+    "aiMealMatchedLabel": MessageLookupByLibrary.simpleMessage("Ready to save"),
+    "aiMealNeedsReviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Needs review",
+    ),
+    "aiMealNoMatchLabel": MessageLookupByLibrary.simpleMessage(
+      "No nutrition match found. Change the search and try again.",
+    ),
+    "aiMealNotesTitle": MessageLookupByLibrary.simpleMessage("Items to review"),
+    "aiMealRemoveTooltip": MessageLookupByLibrary.simpleMessage("Remove food"),
+    "aiMealReviewBody": MessageLookupByLibrary.simpleMessage(
+      "Confirm the amount and database match for each food. Nutrition values come from trusted food databases, not from AI.",
+    ),
+    "aiMealReviewTitle": MessageLookupByLibrary.simpleMessage(
+      "Review your meal",
+    ),
+    "aiMealSaveButton": MessageLookupByLibrary.simpleMessage("Save meal"),
+    "aiMealSavedLabel": MessageLookupByLibrary.simpleMessage("Meal added"),
+    "aiMealSavingLabel": MessageLookupByLibrary.simpleMessage("Saving meal…"),
+    "aiMealSearchMatchTooltip": MessageLookupByLibrary.simpleMessage(
+      "Search trusted food databases",
+    ),
+    "aiMealSetAccessTokenButton": MessageLookupByLibrary.simpleMessage(
+      "Set access token",
+    ),
+    "aiMealTitle": MessageLookupByLibrary.simpleMessage("AI meal logging"),
+    "aiMealTrustedMatchLabel": MessageLookupByLibrary.simpleMessage(
+      "Trusted nutrition match",
+    ),
     "allItemsLabel": MessageLookupByLibrary.simpleMessage("Wszystkie"),
     "alphaVersionName": MessageLookupByLibrary.simpleMessage("[Alpha]"),
     "appDescription": MessageLookupByLibrary.simpleMessage(

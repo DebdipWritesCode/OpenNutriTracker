@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/meal_item_card.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/quick_add_bottom_sheet.dart';
+import 'package:opennutritracker/features/ai_meal/presentation/ai_meal_screen.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/products_bloc.dart';
 import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/scanner/scanner_screen.dart';
@@ -79,6 +80,20 @@ class _AddMealScreenState extends State<AddMealScreen> {
       appBar: AppBar(
         title: Text(_mealType.getTypeName(context)),
         actions: [
+          Semantics(
+            identifier: 'add-meal-ai',
+            child: IconButton(
+              tooltip: S.of(context).aiMealActionLabel,
+              onPressed: () => Navigator.of(context).pushNamed(
+                NavigationOptions.aiMealRoute,
+                arguments: AiMealScreenArguments(
+                  intakeType: _mealType.getIntakeType(),
+                  day: _day,
+                ),
+              ),
+              icon: const Icon(Icons.auto_awesome_rounded),
+            ),
+          ),
           Semantics(
             identifier: 'add-meal-quick-add',
             child: TextButton(

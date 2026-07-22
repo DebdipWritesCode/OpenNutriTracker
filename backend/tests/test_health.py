@@ -30,10 +30,11 @@ async def test_cors_preflight_allows_byok_header(client: AsyncClient) -> None:
         headers={
             "Origin": "http://localhost:3000",
             "Access-Control-Request-Method": "POST",
-            "Access-Control-Request-Headers": "x-openai-api-key,content-type",
+            "Access-Control-Request-Headers": "authorization,x-openai-api-key,content-type",
         },
     )
 
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
     assert "X-OpenAI-API-Key" in response.headers["access-control-allow-headers"]
+    assert "Authorization" in response.headers["access-control-allow-headers"]

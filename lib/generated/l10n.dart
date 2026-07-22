@@ -1128,50 +1128,50 @@ class S {
     );
   }
 
-  /// `Delete all my data`
+  /// `Reset profile data`
   String get settingsDeleteAllDataLabel {
     return Intl.message(
-      'Delete all my data',
+      'Reset profile data',
       name: 'settingsDeleteAllDataLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Profile, meals, activities and weight history`
+  /// `Profile, meals, activities, weight history and fasting sessions`
   String get settingsDeleteAllDataSubtitle {
     return Intl.message(
-      'Profile, meals, activities and weight history',
+      'Profile, meals, activities, weight history and fasting sessions',
       name: 'settingsDeleteAllDataSubtitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete all your data?`
+  /// `Reset profile data?`
   String get settingsDeleteAllDataConfirmTitle {
     return Intl.message(
-      'Delete all your data?',
+      'Reset profile data?',
       name: 'settingsDeleteAllDataConfirmTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `This permanently removes your profile, meals, activities, weight history and any custom recipes from this device. The Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.`
+  /// `This removes your profile, meals, activities, weight history and fasting sessions for the current profile only. Shared content (custom meals, recipes, activity templates) and the Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.`
   String get settingsDeleteAllDataConfirmContent {
     return Intl.message(
-      'This permanently removes your profile, meals, activities, weight history and any custom recipes from this device. The Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.',
+      'This removes your profile, meals, activities, weight history and fasting sessions for the current profile only. Shared content (custom meals, recipes, activity templates) and the Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.',
       name: 'settingsDeleteAllDataConfirmContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete everything`
+  /// `Reset profile`
   String get settingsDeleteAllDataConfirmAction {
     return Intl.message(
-      'Delete everything',
+      'Reset profile',
       name: 'settingsDeleteAllDataConfirmAction',
       desc: '',
       args: [],
@@ -7983,6 +7983,306 @@ class S {
     return Intl.message(
       'Allow rotation',
       name: 'scannerUnlockOrientationTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI meal logging`
+  String get aiMealTitle {
+    return Intl.message(
+      'AI meal logging',
+      name: 'aiMealTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe meal with AI`
+  String get aiMealActionLabel {
+    return Intl.message(
+      'Describe meal with AI',
+      name: 'aiMealActionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What did you eat?`
+  String get aiMealIntroTitle {
+    return Intl.message(
+      'What did you eat?',
+      name: 'aiMealIntroTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe the foods and amounts in your own words. You will review every nutrition match before anything is saved.`
+  String get aiMealIntroBody {
+    return Intl.message(
+      'Describe the foods and amounts in your own words. You will review every nutrition match before anything is saved.',
+      name: 'aiMealIntroBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal description`
+  String get aiMealDescriptionLabel {
+    return Intl.message(
+      'Meal description',
+      name: 'aiMealDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For example: 2 chapati, one katori dal and 150 g curd`
+  String get aiMealDescriptionHint {
+    return Intl.message(
+      'For example: 2 chapati, one katori dal and 150 g curd',
+      name: 'aiMealDescriptionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe at least one food or drink.`
+  String get aiMealDescriptionError {
+    return Intl.message(
+      'Describe at least one food or drink.',
+      name: 'aiMealDescriptionError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Analyze meal`
+  String get aiMealAnalyzeButton {
+    return Intl.message(
+      'Analyze meal',
+      name: 'aiMealAnalyzeButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identifying foods and finding trusted nutrition matches…`
+  String get aiMealAnalyzingLabel {
+    return Intl.message(
+      'Identifying foods and finding trusted nutrition matches…',
+      name: 'aiMealAnalyzingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review your meal`
+  String get aiMealReviewTitle {
+    return Intl.message(
+      'Review your meal',
+      name: 'aiMealReviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm the amount and database match for each food. Nutrition values come from trusted food databases, not from AI.`
+  String get aiMealReviewBody {
+    return Intl.message(
+      'Confirm the amount and database match for each food. Nutrition values come from trusted food databases, not from AI.',
+      name: 'aiMealReviewBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Items to review`
+  String get aiMealNotesTitle {
+    return Intl.message(
+      'Items to review',
+      name: 'aiMealNotesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food match search`
+  String get aiMealFoodSearchLabel {
+    return Intl.message(
+      'Food match search',
+      name: 'aiMealFoodSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search trusted food databases`
+  String get aiMealSearchMatchTooltip {
+    return Intl.message(
+      'Search trusted food databases',
+      name: 'aiMealSearchMatchTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trusted nutrition match`
+  String get aiMealTrustedMatchLabel {
+    return Intl.message(
+      'Trusted nutrition match',
+      name: 'aiMealTrustedMatchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No nutrition match found. Change the search and try again.`
+  String get aiMealNoMatchLabel {
+    return Intl.message(
+      'No nutrition match found. Change the search and try again.',
+      name: 'aiMealNoMatchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount to log`
+  String get aiMealAmountLabel {
+    return Intl.message(
+      'Amount to log',
+      name: 'aiMealAmountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter an amount greater than zero.`
+  String get aiMealAmountError {
+    return Intl.message(
+      'Enter an amount greater than zero.',
+      name: 'aiMealAmountError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Needs review`
+  String get aiMealNeedsReviewLabel {
+    return Intl.message(
+      'Needs review',
+      name: 'aiMealNeedsReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready to save`
+  String get aiMealMatchedLabel {
+    return Intl.message(
+      'Ready to save',
+      name: 'aiMealMatchedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove food`
+  String get aiMealRemoveTooltip {
+    return Intl.message(
+      'Remove food',
+      name: 'aiMealRemoveTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No foods remain. Go back and describe the meal again.`
+  String get aiMealEmptyItems {
+    return Intl.message(
+      'No foods remain. Go back and describe the meal again.',
+      name: 'aiMealEmptyItems',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save meal`
+  String get aiMealSaveButton {
+    return Intl.message(
+      'Save meal',
+      name: 'aiMealSaveButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving meal…`
+  String get aiMealSavingLabel {
+    return Intl.message(
+      'Saving meal…',
+      name: 'aiMealSavingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Meal added`
+  String get aiMealSavedLabel {
+    return Intl.message(
+      'Meal added',
+      name: 'aiMealSavedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI access token`
+  String get aiMealAccessTokenTitle {
+    return Intl.message(
+      'AI access token',
+      name: 'aiMealAccessTokenTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the application access token configured on your backend. It is stored securely on this device.`
+  String get aiMealAccessTokenBody {
+    return Intl.message(
+      'Enter the application access token configured on your backend. It is stored securely on this device.',
+      name: 'aiMealAccessTokenBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access token`
+  String get aiMealAccessTokenLabel {
+    return Intl.message(
+      'Access token',
+      name: 'aiMealAccessTokenLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save token`
+  String get aiMealAccessTokenSave {
+    return Intl.message(
+      'Save token',
+      name: 'aiMealAccessTokenSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set access token`
+  String get aiMealSetAccessTokenButton {
+    return Intl.message(
+      'Set access token',
+      name: 'aiMealSetAccessTokenButton',
       desc: '',
       args: [],
     );

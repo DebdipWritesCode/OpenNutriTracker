@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import Settings, get_settings
 from app.database import DatabaseManager
 from app.routers import analyze_router, health_router
+from app.security import InMemoryRateLimiter
 from app.services import MealAnalysisService
 from app.services.errors import ServiceError
 from app.utils.errors import service_error_handler
@@ -41,6 +42,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     application.state.settings = resolved_settings
     application.state.database = database
     application.state.meal_analysis_service = MealAnalysisService(resolved_settings)
+    application.state.rate_limiter = InMemoryRateLimiter(
+        requests=resolved_settings.rate_limit_requests,
+        window_seconds=resolved_settings.rate_limit_window_seconds,
+    )
 
     application.add_middleware(RequestIDMiddleware)
     application.add_middleware(
@@ -48,7 +53,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=resolved_settings.cors_origins,
         allow_credentials=False,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["Content-Type", "X-OpenAI-API-Key", "X-Request-ID"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-OpenAI-API-Key",
+            "X-Request-ID",
+        ],
         expose_headers=["X-Request-ID"],
     )
     application.add_exception_handler(ServiceError, service_error_handler)

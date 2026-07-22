@@ -52,6 +52,10 @@ class Settings(BaseSettings):
     openai_timeout_seconds: float = Field(default=45.0, gt=0, le=120)
     openai_max_output_tokens: int = Field(default=1200, ge=256, le=8000)
 
+    access_token: SecretStr | None = None
+    rate_limit_requests: int = Field(default=20, ge=1, le=1000)
+    rate_limit_window_seconds: int = Field(default=60, ge=1, le=3600)
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object) -> object:
@@ -59,7 +63,7 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in value.split(",") if origin.strip()]
         return value
 
-    @field_validator("openai_api_key", mode="before")
+    @field_validator("openai_api_key", "access_token", mode="before")
     @classmethod
     def empty_secret_is_none(cls, value: object) -> object:
         if isinstance(value, str) and not value.strip():

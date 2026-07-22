@@ -13,6 +13,7 @@ class SecureAppStorageProvider {
   // start of boot, before any per-profile box is open, to decide which
   // boxes to open in the first place.
   static const _activeProfileTag = "ActiveProfileTag";
+  static const _aiAccessTokenTag = "AiAccessTokenTag";
 
   static const _androidOptions = AndroidOptions(
     storageCipherAlgorithm: StorageCipherAlgorithm.AES_CBC_PKCS7Padding,
@@ -53,5 +54,22 @@ class SecureAppStorageProvider {
 
   Future<void> setActiveProfileId(String profileId) async {
     await _secureStorage.write(key: _activeProfileTag, value: profileId);
+  }
+
+  Future<String?> getAiAccessToken() async {
+    return _secureStorage.read(key: _aiAccessTokenTag);
+  }
+
+  Future<void> setAiAccessToken(String token) async {
+    final normalized = token.trim();
+    if (normalized.isEmpty) {
+      await _secureStorage.delete(key: _aiAccessTokenTag);
+      return;
+    }
+    await _secureStorage.write(key: _aiAccessTokenTag, value: normalized);
+  }
+
+  Future<void> clearAiAccessToken() async {
+    await _secureStorage.delete(key: _aiAccessTokenTag);
   }
 }

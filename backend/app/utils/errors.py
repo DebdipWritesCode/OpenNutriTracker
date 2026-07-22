@@ -5,9 +5,13 @@ from fastapi.responses import JSONResponse
 
 from app.schemas.error import ErrorDetail, ErrorResponse
 from app.services.errors import (
+    AccessTokenRequiredError,
+    InvalidAccessTokenError,
     InvalidAPIKeyError,
     MissingAPIKeyError,
     ModelResponseError,
+    RateLimitExceededError,
+    SecurityConfigurationError,
     ServiceError,
     UpstreamUnavailableError,
 )
@@ -16,8 +20,15 @@ logger = logging.getLogger(__name__)
 
 
 def _status_for(error: ServiceError) -> int:
-    if isinstance(error, (MissingAPIKeyError, InvalidAPIKeyError)):
+    if isinstance(
+        error,
+        (MissingAPIKeyError, InvalidAPIKeyError, AccessTokenRequiredError, InvalidAccessTokenError),
+    ):
         return status.HTTP_401_UNAUTHORIZED
+    if isinstance(error, RateLimitExceededError):
+        return status.HTTP_429_TOO_MANY_REQUESTS
+    if isinstance(error, SecurityConfigurationError):
+        return status.HTTP_503_SERVICE_UNAVAILABLE
     if isinstance(error, (ModelResponseError, UpstreamUnavailableError)):
         return status.HTTP_502_BAD_GATEWAY
     return status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -34,4 +45,11 @@ async def service_error_handler(request: Request, error: ServiceError) -> JSONRe
     body = ErrorResponse(
         error=ErrorDetail(code=error.code, message=str(error), request_id=request_id)
     )
-    return JSONResponse(status_code=status_code, content=body.model_dump(exclude_none=True))
+    headers = None
+    if isinstance(error, RateLimitExceededError):
+        headers = {"Retry-After": str(error.retry_after)}
+    return JSONResponse(
+        status_code=status_code,
+        content=body.model_dump(exclude_none=True),
+        headers=headers,
+    )

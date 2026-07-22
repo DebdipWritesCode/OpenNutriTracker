@@ -15,6 +15,7 @@ def settings(tmp_path: Path) -> Settings:
         database_url=f"sqlite+aiosqlite:///{tmp_path / 'test.db'}",
         cors_origins=["http://localhost:3000"],
         openai_api_key=None,
+        access_token=None,
     )
 
 

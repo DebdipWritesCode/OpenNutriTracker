@@ -1,5 +1,6 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 import 'package:opennutritracker/core/data/data_source/config_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/custom_activity_template_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
@@ -71,6 +72,11 @@ import 'package:opennutritracker/core/utils/profile_bootstrap.dart';
 import 'package:opennutritracker/core/utils/ont_image_cache_manager.dart';
 import 'package:opennutritracker/core/utils/secure_app_storage_provider.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
+import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
+import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
+import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
+import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 import 'package:opennutritracker/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:opennutritracker/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
@@ -131,6 +137,17 @@ Future<void> initLocator() async {
   await bootstrapActiveProfile(hiveDBProvider, secureAppStorageProvider);
   locator.registerLazySingleton<SecureAppStorageProvider>(
     () => secureAppStorageProvider,
+  );
+  locator.registerLazySingleton<http.Client>(() => http.Client());
+  locator.registerLazySingleton<AiAccessTokenStore>(
+    () => SecureAiAccessTokenStore(locator()),
+  );
+  locator.registerLazySingleton<AiMealGateway>(
+    () => AiMealApiClient(
+      client: locator(),
+      tokenStore: locator(),
+      baseUrl: Env.aiBackendUrl,
+    ),
   );
   locator.registerLazySingleton<HiveDBProvider>(() => hiveDBProvider);
   locator.registerLazySingleton<DeleteAllUserDataUsecase>(
@@ -273,6 +290,9 @@ Future<void> initLocator() async {
       locator(),
     ),
   );
+  locator.registerFactory<AiMealBloc>(
+    () => AiMealBloc(locator(), locator(), locator(), locator()),
+  );
   locator.registerFactory<ScannerBloc>(() => ScannerBloc(locator(), locator()));
   locator.registerFactory<EditMealBloc>(
     () => EditMealBloc(locator(), locator(), locator()),
@@ -387,6 +407,12 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<AddTrackedDayUsecase>(
     () => AddTrackedDayUsecase(locator()),
+  );
+  locator.registerLazySingleton<AiNutritionResolver>(
+    () => TrustedDatabaseNutritionResolver(locator()),
+  );
+  locator.registerLazySingleton<SaveAiMealUsecase>(
+    () => SaveAiMealUsecase(locator(), locator(), locator(), locator()),
   );
   locator.registerLazySingleton<GetWeightLogUsecase>(
     () => GetWeightLogUsecase(locator()),

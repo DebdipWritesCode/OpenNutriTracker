@@ -130,11 +130,11 @@ Running backend.
 
 Tasks
 
-- [ ] HTTP Client
-- [ ] API abstraction
-- [ ] Error handling
-- [ ] Loading UI
-- [ ] Retry logic
+- [x] HTTP Client
+- [x] API abstraction
+- [x] Error handling
+- [x] Loading UI
+- [x] Retry logic
 
 Deliverable
 
@@ -178,8 +178,8 @@ Tasks
 - [x] Prompt design
 - [x] Structured outputs
 - [x] Validation
-- [ ] Display preview
-- [ ] Edit before save
+- [x] Display preview
+- [x] Edit before save
 
 Deliverable
 
@@ -249,12 +249,12 @@ Calories
 
 Tasks
 
-- [ ] USDA integration
-- [ ] OpenFoodFacts integration
+- [x] USDA integration
+- [x] OpenFoodFacts integration
 - [ ] IFCT integration
 - [ ] Unit conversion
-- [ ] Portion conversion
-- [ ] Macro calculation
+- [x] Portion conversion
+- [x] Macro calculation
 
 Deliverable
 
