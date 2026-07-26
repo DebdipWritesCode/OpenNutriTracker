@@ -10,6 +10,7 @@ import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_photo_picker.dart';
+import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
@@ -38,7 +39,9 @@ class AiMealScreen extends StatefulWidget {
 
 class _AiMealScreenState extends State<AiMealScreen> {
   final _descriptionController = TextEditingController();
+  final _correctionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _correctionFormKey = GlobalKey<FormState>();
   late final AiMealBloc _bloc;
   late final AiMealPhotoPicker _photoPicker;
   late AiMealScreenArguments _arguments;
@@ -63,6 +66,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
   @override
   void dispose() {
     _descriptionController.dispose();
+    _correctionController.dispose();
     _bloc.close();
     super.dispose();
   }
@@ -93,6 +97,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
           ),
           bottomNavigationBar:
               state.status == AiMealStatus.review ||
+                  state.status == AiMealStatus.refining ||
                   state.status == AiMealStatus.saving
               ? _buildSaveBar(context, state)
               : null,
@@ -109,6 +114,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
       );
     }
     if (state.status == AiMealStatus.review ||
+        state.status == AiMealStatus.refining ||
         state.status == AiMealStatus.saving) {
       return _buildReview(context, state);
     }
@@ -365,6 +371,15 @@ class _AiMealScreenState extends State<AiMealScreen> {
         if (state.photo != null) ...[
           const SizedBox(height: Dimens.spacing16),
           _PhotoReviewBanner(photo: state.photo!),
+          const SizedBox(height: Dimens.spacing16),
+          _AiMealCorrectionCard(
+            formKey: _correctionFormKey,
+            controller: _correctionController,
+            history: state.correctionHistory,
+            pendingCorrection: state.pendingCorrection,
+            isLoading: state.status == AiMealStatus.refining,
+            onSend: _submitCorrection,
+          ),
         ],
         if (state.notes.isNotEmpty) ...[
           const SizedBox(height: Dimens.spacing16),
@@ -389,7 +404,11 @@ class _AiMealScreenState extends State<AiMealScreen> {
         ],
         if (state.errorMessage != null) ...[
           const SizedBox(height: Dimens.spacing16),
-          _ErrorPanel(message: state.errorMessage!),
+          _ErrorPanel(
+            message: state.errorMessage!,
+            showTokenAction: state.authenticationRequired,
+            onTokenPressed: () => _showAccessTokenDialog(state),
+          ),
         ],
         const SizedBox(height: Dimens.spacing8),
         for (var i = 0; i < state.items.length; i++) ...[
@@ -404,6 +423,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
             onMatchRequested: (query) =>
                 _bloc.add(AiMealMatchRequested(i, query)),
             onRemove: () => _bloc.add(AiMealItemRemoved(i)),
+            enabled: !state.isReviewBusy,
           ),
           const SizedBox(height: Dimens.spacing12),
         ],
@@ -434,17 +454,19 @@ class _AiMealScreenState extends State<AiMealScreen> {
                   ),
                 )
               : null,
-          icon: state.status == AiMealStatus.saving
+          icon:
+              state.status == AiMealStatus.saving ||
+                  state.status == AiMealStatus.refining
               ? const SizedBox.square(
                   dimension: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : const Icon(Icons.check_rounded),
-          label: Text(
-            state.status == AiMealStatus.saving
-                ? S.of(context).aiMealSavingLabel
-                : S.of(context).aiMealSaveButton,
-          ),
+          label: Text(switch (state.status) {
+            AiMealStatus.saving => S.of(context).aiMealSavingLabel,
+            AiMealStatus.refining => S.of(context).aiMealRefiningSaveLabel,
+            _ => S.of(context).aiMealSaveButton,
+          }),
         ),
       ),
     );
@@ -490,6 +512,17 @@ class _AiMealScreenState extends State<AiMealScreen> {
     _bloc.add(
       AnalyzeAiMealPhotoRequested(
         photo: photo,
+        locale: Localizations.localeOf(context).toLanguageTag(),
+      ),
+    );
+  }
+
+  void _submitCorrection() {
+    if (!(_correctionFormKey.currentState?.validate() ?? false)) return;
+    FocusManager.instance.primaryFocus?.unfocus();
+    _bloc.add(
+      RefineAiMealPhotoRequested(
+        correction: _correctionController.text,
         locale: Localizations.localeOf(context).toLanguageTag(),
       ),
     );
@@ -541,6 +574,12 @@ class _AiMealScreenState extends State<AiMealScreen> {
   }
 
   void _onStateChanged(BuildContext context, AiMealState state) {
+    if (state.status == AiMealStatus.review &&
+        state.correctionHistory.isNotEmpty &&
+        _correctionController.text.trim() ==
+            state.correctionHistory.last.instruction) {
+      _correctionController.clear();
+    }
     if (state.status != AiMealStatus.saved) return;
     locator<HomeBloc>().add(const LoadItemsEvent());
     locator<DiaryBloc>().add(const LoadDiaryYearEvent());
@@ -630,52 +669,270 @@ class _PhotoReviewBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       padding: EdgeInsets.zero,
-      child: SizedBox(
-        height: 144,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Semantics(
-              image: true,
-              label: S.of(context).aiMealPhotoPreviewLabel,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(Dimens.radiusL),
-                ),
-                child: SizedBox(
-                  width: 112,
-                  child: Image.file(
-                    File(photo.path),
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => ColoredBox(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
-                      child: const Icon(Icons.broken_image_outlined),
-                    ),
-                  ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          Widget photoPreview(BorderRadius borderRadius) => Semantics(
+            image: true,
+            label: S.of(context).aiMealPhotoPreviewLabel,
+            child: ClipRRect(
+              borderRadius: borderRadius,
+              child: Image.file(
+                File(photo.path),
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => ColoredBox(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  child: const Icon(Icons.broken_image_outlined),
                 ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(Dimens.spacing16),
+          );
+          final reviewCopy = Padding(
+            padding: const EdgeInsets.all(Dimens.spacing16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.fact_check_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: Dimens.spacing8),
+                Text(
+                  S.of(context).aiMealPhotoReviewNotice,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          );
+
+          if (constraints.maxWidth < 330) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 7,
+                  child: photoPreview(
+                    const BorderRadius.vertical(
+                      top: Radius.circular(Dimens.radiusL),
+                    ),
+                  ),
+                ),
+                reviewCopy,
+              ],
+            );
+          }
+
+          return ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 144),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    width: 112,
+                    child: photoPreview(
+                      const BorderRadius.horizontal(
+                        left: Radius.circular(Dimens.radiusL),
+                      ),
+                    ),
+                  ),
+                  Expanded(child: reviewCopy),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _AiMealCorrectionCard extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController controller;
+  final List<AiMealCorrectionTurn> history;
+  final String? pendingCorrection;
+  final bool isLoading;
+  final VoidCallback onSend;
+
+  const _AiMealCorrectionCard({
+    required this.formKey,
+    required this.controller,
+    required this.history,
+    required this.pendingCorrection,
+    required this.isLoading,
+    required this.onSend,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return AppCard(
+      padding: const EdgeInsets.all(Dimens.spacing16),
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: 0.14),
+                    borderRadius: Dimens.borderRadiusS,
+                  ),
+                  child: Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    color: colors.primary,
+                  ),
+                ),
+                const SizedBox(width: Dimens.spacing12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        S.of(context).aiMealRefineTitle,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: Dimens.spacing4),
+                      Text(
+                        S.of(context).aiMealRefineBody,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Dimens.spacing16),
+            if (history.isEmpty)
+              Text(
+                S.of(context).aiMealRefineExample,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: colors.onSurfaceVariant),
+              )
+            else
+              for (final turn in history) ...[
+                _AiCorrectionBubble(
+                  label: S.of(context).aiMealRefineUserLabel,
+                  message: turn.instruction,
+                  isUser: true,
+                ),
+                const SizedBox(height: Dimens.spacing8),
+                _AiCorrectionBubble(
+                  label: S.of(context).aiMealRefineAssistantLabel,
+                  message: turn.assistantMessage,
+                  isUser: false,
+                ),
+                const SizedBox(height: Dimens.spacing12),
+              ],
+            if (isLoading && pendingCorrection != null) ...[
+              _AiCorrectionBubble(
+                label: S.of(context).aiMealRefineUserLabel,
+                message: pendingCorrection!,
+                isUser: true,
+              ),
+              const SizedBox(height: Dimens.spacing12),
+            ],
+            const SizedBox(height: Dimens.spacing12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: controller,
+                    enabled: !isLoading,
+                    minLines: 1,
+                    maxLines: 4,
+                    maxLength: 1000,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      labelText: S.of(context).aiMealRefineInputLabel,
+                      hintText: S.of(context).aiMealRefineInputHint,
+                      counterText: '',
+                    ),
+                    validator: (value) => (value?.trim().length ?? 0) < 2
+                        ? S.of(context).aiMealRefineRequiredError
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: Dimens.spacing8),
+                IconButton.filled(
+                  tooltip: S.of(context).aiMealRefineSendTooltip,
+                  onPressed: isLoading ? null : onSend,
+                  icon: const Icon(Icons.send_rounded),
+                ),
+              ],
+            ),
+            if (isLoading) ...[
+              const SizedBox(height: Dimens.spacing12),
+              Semantics(
+                liveRegion: true,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.fact_check_outlined,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                    const LinearProgressIndicator(),
                     const SizedBox(height: Dimens.spacing8),
                     Text(
-                      S.of(context).aiMealPhotoReviewNotice,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      S.of(context).aiMealRefineLoadingLabel,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AiCorrectionBubble extends StatelessWidget {
+  final String label;
+  final String message;
+  final bool isUser;
+
+  const _AiCorrectionBubble({
+    required this.label,
+    required this.message,
+    required this.isUser,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Semantics(
+      label: '$label: $message',
+      child: Align(
+        alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 280),
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacing12,
+            vertical: Dimens.spacing8,
+          ),
+          decoration: BoxDecoration(
+            color: isUser
+                ? colors.primaryContainer
+                : colors.surfaceContainerHighest,
+            borderRadius: Dimens.borderRadiusM,
+          ),
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: Theme.of(context).textTheme.labelSmall),
+                const SizedBox(height: Dimens.spacing4),
+                Text(message),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -732,6 +989,7 @@ class _AiDraftCard extends StatefulWidget {
   final ValueChanged<int> onCandidateSelected;
   final ValueChanged<String> onMatchRequested;
   final VoidCallback onRemove;
+  final bool enabled;
 
   const _AiDraftCard({
     super.key,
@@ -741,6 +999,7 @@ class _AiDraftCard extends StatefulWidget {
     required this.onCandidateSelected,
     required this.onMatchRequested,
     required this.onRemove,
+    required this.enabled,
   });
 
   @override
@@ -835,7 +1094,7 @@ class _AiDraftCardState extends State<_AiDraftCard> {
                           ),
                           IconButton(
                             tooltip: S.of(context).aiMealRemoveTooltip,
-                            onPressed: widget.onRemove,
+                            onPressed: widget.enabled ? widget.onRemove : null,
                             icon: const Icon(Icons.delete_outline_rounded),
                           ),
                         ],
@@ -845,13 +1104,14 @@ class _AiDraftCardState extends State<_AiDraftCard> {
                       const SizedBox(height: Dimens.spacing16),
                       TextField(
                         controller: _queryController,
+                        enabled: widget.enabled,
                         textInputAction: TextInputAction.search,
                         onSubmitted: widget.onMatchRequested,
                         decoration: InputDecoration(
                           labelText: S.of(context).aiMealFoodSearchLabel,
                           suffixIcon: IconButton(
                             tooltip: S.of(context).aiMealSearchMatchTooltip,
-                            onPressed: item.isResolving
+                            onPressed: item.isResolving || !widget.enabled
                                 ? null
                                 : () => widget.onMatchRequested(
                                     _queryController.text,
@@ -886,11 +1146,13 @@ class _AiDraftCardState extends State<_AiDraftCard> {
                                 ),
                               ),
                           ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              widget.onCandidateSelected(value);
-                            }
-                          },
+                          onChanged: widget.enabled
+                              ? (value) {
+                                  if (value != null) {
+                                    widget.onCandidateSelected(value);
+                                  }
+                                }
+                              : null,
                         )
                       else
                         Text(
@@ -902,6 +1164,7 @@ class _AiDraftCardState extends State<_AiDraftCard> {
                       const SizedBox(height: Dimens.spacing12),
                       TextField(
                         controller: _amountController,
+                        enabled: widget.enabled,
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),

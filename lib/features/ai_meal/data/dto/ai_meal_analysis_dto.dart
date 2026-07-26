@@ -36,15 +36,36 @@ class AiExtractedFood extends Equatable {
     );
   }
 
-  AiExtractedFood copyWith({String? canonicalName}) => AiExtractedFood(
-    originalText: originalText,
+  Map<String, dynamic> toJson() => {
+    'original_text': originalText,
+    'canonical_name': canonicalName,
+    'quantity': quantity,
+    'unit': unit,
+    'estimated_grams': estimatedGrams,
+    'preparation': preparation,
+    'confidence': confidence,
+    'requires_user_confirmation': requiresUserConfirmation,
+  };
+
+  AiExtractedFood copyWith({
+    String? originalText,
+    String? canonicalName,
+    double? quantity,
+    String? unit,
+    double? estimatedGrams,
+    String? preparation,
+    double? confidence,
+    bool? requiresUserConfirmation,
+  }) => AiExtractedFood(
+    originalText: originalText ?? this.originalText,
     canonicalName: canonicalName ?? this.canonicalName,
-    quantity: quantity,
-    unit: unit,
-    estimatedGrams: estimatedGrams,
-    preparation: preparation,
-    confidence: confidence,
-    requiresUserConfirmation: requiresUserConfirmation,
+    quantity: quantity ?? this.quantity,
+    unit: unit ?? this.unit,
+    estimatedGrams: estimatedGrams ?? this.estimatedGrams,
+    preparation: preparation ?? this.preparation,
+    confidence: confidence ?? this.confidence,
+    requiresUserConfirmation:
+        requiresUserConfirmation ?? this.requiresUserConfirmation,
   );
 
   @override
@@ -83,4 +104,46 @@ class AiMealAnalysis extends Equatable {
 
   @override
   List<Object?> get props => [foods, notes, modelUsed];
+}
+
+class AiMealCorrectionTurn extends Equatable {
+  final String instruction;
+  final String assistantMessage;
+
+  const AiMealCorrectionTurn({
+    required this.instruction,
+    required this.assistantMessage,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'instruction': instruction,
+    'assistant_message': assistantMessage,
+  };
+
+  @override
+  List<Object?> get props => [instruction, assistantMessage];
+}
+
+class AiMealRefinement extends AiMealAnalysis {
+  final String assistantMessage;
+
+  const AiMealRefinement({
+    required super.foods,
+    required super.notes,
+    required super.modelUsed,
+    required this.assistantMessage,
+  });
+
+  factory AiMealRefinement.fromJson(Map<String, dynamic> json) {
+    final analysis = AiMealAnalysis.fromJson(json);
+    return AiMealRefinement(
+      foods: analysis.foods,
+      notes: analysis.notes,
+      modelUsed: analysis.modelUsed,
+      assistantMessage: json['assistant_message'] as String? ?? '',
+    );
+  }
+
+  @override
+  List<Object?> get props => [...super.props, assistantMessage];
 }

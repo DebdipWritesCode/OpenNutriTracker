@@ -1,6 +1,7 @@
+import json
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, TypeVar
 
 from openai import (
     APIConnectionError,
@@ -11,10 +12,21 @@ from openai import (
     NotFoundError,
     RateLimitError,
 )
+from pydantic import BaseModel
 
 from app.config import Settings
-from app.prompts import build_meal_image_prompt, build_meal_text_prompt
-from app.schemas.analysis import AnalyzeImageRequest, AnalyzeTextRequest, MealExtraction
+from app.prompts import (
+    build_meal_image_prompt,
+    build_meal_refinement_prompt,
+    build_meal_text_prompt,
+)
+from app.schemas.analysis import (
+    AnalyzeImageRequest,
+    AnalyzeTextRequest,
+    MealExtraction,
+    MealRefinement,
+    RefineImageRequest,
+)
 from app.services.errors import (
     InvalidAPIKeyError,
     MissingAPIKeyError,
@@ -23,11 +35,18 @@ from app.services.errors import (
 )
 
 logger = logging.getLogger(__name__)
+ResponseT = TypeVar("ResponseT", bound=BaseModel)
 
 
 @dataclass(frozen=True, slots=True)
 class MealAnalysisResult:
     extraction: MealExtraction
+    model_used: str
+
+
+@dataclass(frozen=True, slots=True)
+class MealRefinementResult:
+    refinement: MealRefinement
     model_used: str
 
 
@@ -40,11 +59,13 @@ class MealAnalysisService:
         request: AnalyzeTextRequest,
         request_api_key: str | None,
     ) -> MealAnalysisResult:
-        return await self._analyze(
+        extraction, model = await self._analyze(
             instructions=build_meal_text_prompt(request.locale),
             model_input=request.text,
             request_api_key=request_api_key,
+            response_format=MealExtraction,
         )
+        return MealAnalysisResult(extraction, model)
 
     async def analyze_image(
         self,
@@ -55,31 +76,63 @@ class MealAnalysisService:
         # never leave this service. The original Base64 string is then used in
         # a data URL and discarded with the request object.
         request.decoded_image()
-        return await self._analyze(
+        extraction, model = await self._analyze(
             instructions=build_meal_image_prompt(request.locale),
-            model_input=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": (
-                                "Identify the foods and estimate their portions. "
-                                "The user will review every result before saving."
-                            ),
-                        },
-                        {
-                            "type": "input_image",
-                            "image_url": (
-                                f"data:{request.mime_type};base64,{request.image_base64}"
-                            ),
-                            "detail": "high",
-                        },
-                    ],
-                }
-            ],
+            model_input=self._image_input(
+                request,
+                (
+                    "Identify the foods and estimate their portions. "
+                    "The user will review every result before saving."
+                ),
+            ),
             request_api_key=request_api_key,
+            response_format=MealExtraction,
         )
+        return MealAnalysisResult(extraction, model)
+
+    async def refine_image(
+        self,
+        request: RefineImageRequest,
+        request_api_key: str | None,
+    ) -> MealRefinementResult:
+        request.decoded_image()
+        refinement_context = {
+            "task": "Correct the current meal draft using the photo and user feedback.",
+            "current_foods": [food.model_dump(mode="json") for food in request.current_foods],
+            "correction_history": [
+                turn.model_dump(mode="json") for turn in request.correction_history
+            ],
+            "latest_correction": request.correction,
+        }
+        refinement, model = await self._analyze(
+            instructions=build_meal_refinement_prompt(request.locale),
+            model_input=self._image_input(
+                request,
+                json.dumps(refinement_context, ensure_ascii=False),
+            ),
+            request_api_key=request_api_key,
+            response_format=MealRefinement,
+        )
+        return MealRefinementResult(refinement, model)
+
+    def _image_input(
+        self,
+        request: AnalyzeImageRequest,
+        text: str,
+    ) -> list[dict[str, Any]]:
+        return [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "input_text", "text": text},
+                    {
+                        "type": "input_image",
+                        "image_url": (f"data:{request.mime_type};base64,{request.image_base64}"),
+                        "detail": "high",
+                    },
+                ],
+            }
+        ]
 
     async def _analyze(
         self,
@@ -87,7 +140,8 @@ class MealAnalysisService:
         instructions: str,
         model_input: str | list[dict[str, Any]],
         request_api_key: str | None,
-    ) -> MealAnalysisResult:
+        response_format: type[ResponseT],
+    ) -> tuple[ResponseT, str]:
         api_key = self._resolve_api_key(request_api_key)
         client = AsyncOpenAI(
             api_key=api_key,
@@ -111,14 +165,14 @@ class MealAnalysisService:
                         model=model,
                         instructions=instructions,
                         input=model_input,
-                        text_format=MealExtraction,
+                        text_format=response_format,
                         reasoning={"effort": "none"},
                         max_output_tokens=self.settings.openai_max_output_tokens,
                         store=False,
                     )
                     if response.output_parsed is None:
                         raise ModelResponseError("The model did not return a meal extraction")
-                    return MealAnalysisResult(response.output_parsed, model)
+                    return response.output_parsed, model
                 except AuthenticationError as exc:
                     raise InvalidAPIKeyError("The provided OpenAI API key was rejected") from exc
                 except (NotFoundError, RateLimitError, APITimeoutError, APIConnectionError) as exc:

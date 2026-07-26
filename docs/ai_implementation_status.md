@@ -176,3 +176,40 @@ Photo-flow validation:
 1. Configure the generated `ONT_AI_ACCESS_TOKEN` in Vercel and enter the same token once on the device.
 2. Add a shared edge/Redis rate limiter before horizontally scaling the backend.
 3. Add native translations for the new AI meal strings.
+
+## Fourth implementation slice
+
+The photo review now supports conversational corrections without treating model output as nutrition data:
+
+```text
+original meal photo + current editable food list
+   ↓ user correction (portion, identity, add, or remove)
+POST /api/v1/analyze/image/refine
+   ↓ same photo + recent correction history, store=false
+complete corrected food list + short assistant acknowledgement
+   ↓ trusted USDA/FDC and Open Food Facts resolution
+editable nutrition preview
+```
+
+- The fixed-height photo summary was replaced with an adaptive layout that grows with content and stacks on
+  narrow screens, removing the reported 20-pixel bottom overflow.
+- An inline correction conversation lets users refine portion sizes, replace a wrongly identified food, add a
+  missed item, or remove an incorrect item while retaining the original photo and current meal context.
+- Refinement is stateless on the server: the app resends the same compressed photo, current draft, and the ten
+  most recent correction turns. OpenAI requests continue to use `store=false`.
+- The backend returns the complete corrected food list rather than a partial patch, so both minor and complete
+  corrections remain predictable.
+- Unchanged foods retain the user's selected trusted database match. Foods whose identity changes are resolved
+  again through the configured USDA/FDC and Open Food Facts path.
+- The model still returns no calorie, macro, or micronutrient values. Nutrition continues to come exclusively
+  from the trusted database match selected in the editable preview.
+- The correction form retains text after network/authentication errors, shows an in-place progress state, and
+  prevents saving or conflicting edits while a refinement is running.
+
+Correction-flow validation:
+
+- Backend Ruff lint and format checks: passing.
+- Backend Pytest suite: 23 passing tests.
+- Dart formatting and Flutter static analysis: passing with no issues.
+- Flutter test suite: 745 passing tests.
+- Narrow-phone widget coverage at 360 × 640 and 1.3× text scale: passing with no overflow exceptions.

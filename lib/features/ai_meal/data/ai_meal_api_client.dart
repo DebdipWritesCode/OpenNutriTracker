@@ -17,6 +17,14 @@ abstract interface class AiMealGateway {
     required AiMealPhoto photo,
     required String locale,
   });
+
+  Future<AiMealRefinement> refinePhoto({
+    required AiMealPhoto photo,
+    required List<AiExtractedFood> currentFoods,
+    required List<AiMealCorrectionTurn> correctionHistory,
+    required String correction,
+    required String locale,
+  });
 }
 
 enum AiApiFailureKind {
@@ -44,6 +52,7 @@ class AiMealApiClient implements AiMealGateway {
   final AiAccessTokenStore _tokenStore;
   final Uri _textEndpoint;
   final Uri _imageEndpoint;
+  final Uri _imageRefineEndpoint;
   final Duration timeout;
   final int maxAttempts;
   final Future<void> Function(Duration) _delay;
@@ -59,6 +68,9 @@ class AiMealApiClient implements AiMealGateway {
        _tokenStore = tokenStore,
        _textEndpoint = Uri.parse(baseUrl).resolve('/api/v1/analyze/text'),
        _imageEndpoint = Uri.parse(baseUrl).resolve('/api/v1/analyze/image'),
+       _imageRefineEndpoint = Uri.parse(
+         baseUrl,
+       ).resolve('/api/v1/analyze/image/refine'),
        _delay = delay ?? Future<void>.delayed;
 
   @override
@@ -76,6 +88,7 @@ class AiMealApiClient implements AiMealGateway {
           )
           .timeout(timeout),
       validationMessage: 'Describe at least one food or drink and try again.',
+      decode: AiMealAnalysis.fromJson,
     );
   }
 
@@ -99,6 +112,41 @@ class AiMealApiClient implements AiMealGateway {
           .timeout(timeout),
       validationMessage:
           'Choose a clear JPEG, PNG, or WebP meal photo under 3 MB.',
+      decode: AiMealAnalysis.fromJson,
+    );
+  }
+
+  @override
+  Future<AiMealRefinement> refinePhoto({
+    required AiMealPhoto photo,
+    required List<AiExtractedFood> currentFoods,
+    required List<AiMealCorrectionTurn> correctionHistory,
+    required String correction,
+    required String locale,
+  }) async {
+    final token = await _tokenStore.read();
+    return _sendWithRetry(
+      () => _client
+          .post(
+            _imageRefineEndpoint,
+            headers: _headers(token),
+            body: jsonEncode({
+              'image_base64': base64Encode(photo.bytes),
+              'mime_type': photo.mimeType,
+              'locale': locale,
+              'correction': correction.trim(),
+              'current_foods': currentFoods
+                  .map((food) => food.toJson())
+                  .toList(growable: false),
+              'correction_history': correctionHistory
+                  .map((turn) => turn.toJson())
+                  .toList(growable: false),
+            }),
+          )
+          .timeout(timeout),
+      validationMessage:
+          'Enter a correction and keep the current meal photo available.',
+      decode: AiMealRefinement.fromJson,
     );
   }
 
@@ -109,9 +157,10 @@ class AiMealApiClient implements AiMealGateway {
       HttpHeaders.authorizationHeader: 'Bearer $token',
   };
 
-  Future<AiMealAnalysis> _sendWithRetry(
+  Future<T> _sendWithRetry<T>(
     Future<http.Response> Function() send, {
     required String validationMessage,
+    required T Function(Map<String, dynamic>) decode,
   }) async {
     AiApiException? lastFailure;
 
@@ -121,9 +170,7 @@ class AiMealApiClient implements AiMealGateway {
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           try {
-            return AiMealAnalysis.fromJson(
-              jsonDecode(response.body) as Map<String, dynamic>,
-            );
+            return decode(jsonDecode(response.body) as Map<String, dynamic>);
           } on Object catch (_) {
             throw const AiApiException(
               AiApiFailureKind.invalidResponse,

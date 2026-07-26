@@ -30,8 +30,10 @@ This clone is adding a privacy-first, self-hosted AI meal logging layer. The imp
 [`backend/`](backend/).
 
 Text and photo meal logging are available from **Add meal → AI**. A meal photo is compressed on-device, sent
-only for the requested analysis, and shown with editable AI portion estimates. Nutrition values still come from
-the app's configured trusted food databases rather than the model. Production deployments must set the same
+only for the requested analysis, and shown with editable AI portion estimates. The photo review includes an
+inline correction chat for changes ranging from a portion adjustment to a completely misidentified food; every
+turn rechecks the same photo without creating a stored server-side conversation. Nutrition values still come
+from the app's configured trusted food databases rather than the model. Production deployments must set the same
 randomly generated `ONT_AI_ACCESS_TOKEN` on the backend; the app asks for it once and stores it in platform secure
 storage.
 

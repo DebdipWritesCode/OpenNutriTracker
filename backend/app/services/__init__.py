@@ -1,3 +1,7 @@
-from app.services.meal_analysis import MealAnalysisResult, MealAnalysisService
+from app.services.meal_analysis import (
+    MealAnalysisResult,
+    MealAnalysisService,
+    MealRefinementResult,
+)
 
-__all__ = ["MealAnalysisResult", "MealAnalysisService"]
+__all__ = ["MealAnalysisResult", "MealAnalysisService", "MealRefinementResult"]

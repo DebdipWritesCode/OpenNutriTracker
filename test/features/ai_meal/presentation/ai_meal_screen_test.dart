@@ -47,6 +47,31 @@ class _Gateway implements AiMealGateway {
     required AiMealPhoto photo,
     required String locale,
   }) => analyzeMeal(text: 'photo', locale: locale);
+
+  @override
+  Future<AiMealRefinement> refinePhoto({
+    required AiMealPhoto photo,
+    required List<AiExtractedFood> currentFoods,
+    required List<AiMealCorrectionTurn> correctionHistory,
+    required String correction,
+    required String locale,
+  }) async => const AiMealRefinement(
+    foods: [
+      AiExtractedFood(
+        originalText: '180g rice',
+        canonicalName: 'rice',
+        quantity: 180,
+        unit: 'g',
+        estimatedGrams: 180,
+        preparation: null,
+        confidence: 0.99,
+        requiresUserConfirmation: false,
+      ),
+    ],
+    notes: [],
+    modelUsed: 'test',
+    assistantMessage: 'Updated the rice portion to 180 g.',
+  );
 }
 
 class _PhotoPicker implements AiMealPhotoPicker {
@@ -233,10 +258,114 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Review your meal'), findsOneWidget);
-    expect(find.text('Rice, cooked'), findsOneWidget);
     expect(
       find.textContaining('AI estimated these foods and portions'),
       findsOneWidget,
     );
+    expect(find.text('Correct the AI'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Rice, cooked'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Rice, cooked'), findsOneWidget);
+  });
+
+  testWidgets('sends a photo correction and shows the AI update', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        onGenerateRoute: (_) => MaterialPageRoute<void>(
+          settings: RouteSettings(
+            arguments: AiMealScreenArguments(
+              intakeType: IntakeTypeEntity.lunch,
+              day: DateTime(2026, 7, 26),
+            ),
+          ),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Photo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Take photo'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Analyze photo'));
+    await tester.tap(find.text('Analyze photo'));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(
+      find.widgetWithText(TextFormField, 'Correction'),
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Correction'),
+      'The rice portion was 180 g.',
+    );
+    await tester.tap(find.byTooltip('Send correction'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your correction'), findsOneWidget);
+    expect(find.text('The rice portion was 180 g.'), findsOneWidget);
+    expect(find.text('AI update'), findsOneWidget);
+    expect(find.text('Updated the rice portion to 180 g.'), findsOneWidget);
+    expect(find.widgetWithText(TextField, '180'), findsOneWidget);
+  });
+
+  testWidgets('photo review does not overflow on a narrow phone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(1.3)),
+          child: child!,
+        ),
+        onGenerateRoute: (_) => MaterialPageRoute<void>(
+          settings: RouteSettings(
+            arguments: AiMealScreenArguments(
+              intakeType: IntakeTypeEntity.lunch,
+              day: DateTime(2026, 7, 26),
+            ),
+          ),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Photo'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Take photo'));
+    await tester.tap(find.text('Take photo'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Analyze photo'));
+    await tester.tap(find.text('Analyze photo'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Review your meal'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

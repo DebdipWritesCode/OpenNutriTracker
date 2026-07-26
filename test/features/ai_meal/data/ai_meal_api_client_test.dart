@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 
 class _TokenStore implements AiAccessTokenStore {
@@ -127,6 +128,82 @@ void main() {
       0xff,
       0xe0,
     ]);
+  });
+
+  test('re-sends photo, current draft, and history for a correction', () async {
+    late http.Request captured;
+    final client = AiMealApiClient(
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response(
+          jsonEncode({
+            'foods': [
+              {
+                'original_text': '180g paneer curry',
+                'canonical_name': 'paneer curry',
+                'quantity': 180,
+                'unit': 'g',
+                'estimated_grams': 180,
+                'preparation': null,
+                'confidence': 0.96,
+                'requires_user_confirmation': false,
+              },
+            ],
+            'notes': [],
+            'assistant_message':
+                'Changed the dish to paneer curry and set it to 180 g.',
+            'model_used': 'gpt-test',
+          }),
+          200,
+        );
+      }),
+      tokenStore: _TokenStore('app-token'),
+      baseUrl: 'https://api.example.test',
+      delay: (_) async {},
+    );
+    final photo = AiMealPhoto(
+      path: '/tmp/meal.jpg',
+      bytes: Uint8List.fromList([0xff, 0xd8, 0xff, 0xe0]),
+      mimeType: 'image/jpeg',
+      fileName: 'meal-photo.jpg',
+    );
+    const currentFood = AiExtractedFood(
+      originalText: 'mixed vegetable dish',
+      canonicalName: 'mixed cooked vegetable dish',
+      quantity: 1,
+      unit: 'bowl',
+      estimatedGrams: 120,
+      preparation: null,
+      confidence: 0.55,
+      requiresUserConfirmation: true,
+    );
+
+    final result = await client.refinePhoto(
+      photo: photo,
+      currentFoods: const [currentFood],
+      correctionHistory: const [
+        AiMealCorrectionTurn(
+          instruction: 'There was one bowl.',
+          assistantMessage: 'Kept one bowl in the draft.',
+        ),
+      ],
+      correction: 'That is paneer curry, not mixed vegetables.',
+      locale: 'en-IN',
+    );
+
+    final body = jsonDecode(captured.body) as Map<String, dynamic>;
+    expect(captured.url.path, '/api/v1/analyze/image/refine');
+    expect(body['correction'], 'That is paneer curry, not mixed vegetables.');
+    expect(
+      (body['current_foods'] as List<dynamic>).single,
+      containsPair('estimated_grams', 120),
+    );
+    expect(
+      (body['correction_history'] as List<dynamic>).single,
+      containsPair('instruction', 'There was one bowl.'),
+    );
+    expect(result.foods.single.canonicalName, 'paneer curry');
+    expect(result.assistantMessage, contains('180 g'));
   });
 
   test('retries a transient server error and then succeeds', () async {

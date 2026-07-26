@@ -9,7 +9,10 @@ from app.schemas.analysis import (
     AnalyzeImageRequest,
     AnalyzeTextRequest,
     ExtractedFood,
+    MealCorrectionTurn,
     MealExtraction,
+    MealRefinement,
+    RefineImageRequest,
 )
 from app.services.meal_analysis import MealAnalysisService
 
@@ -22,6 +25,22 @@ class FakeResponses:
         self.calls.append(kwargs)
         if kwargs["model"] == "gpt-5.4-mini":
             raise APITimeoutError(request=httpx.Request("POST", "https://api.openai.com"))
+        if kwargs["text_format"] is MealRefinement:
+            return SimpleNamespace(
+                output_parsed=MealRefinement(
+                    foods=[
+                        ExtractedFood(
+                            original_text="180g paneer curry",
+                            canonical_name="paneer curry",
+                            quantity=180,
+                            unit="g",
+                            estimated_grams=180,
+                            confidence=0.96,
+                        )
+                    ],
+                    assistant_message="Changed the dish to paneer curry and set it to 180 g.",
+                )
+            )
         return SimpleNamespace(
             output_parsed=MealExtraction(
                 foods=[
@@ -107,3 +126,57 @@ async def test_service_sends_image_as_high_detail_data_url(monkeypatch: Any) -> 
     assert content[1]["image_url"].startswith("data:image/png;base64,")
     assert "Never calculate or return calories" in call["instructions"]
     assert call["store"] is False
+
+
+async def test_service_refines_with_photo_current_draft_and_history(
+    monkeypatch: Any,
+) -> None:
+    monkeypatch.setattr("app.services.meal_analysis.AsyncOpenAI", FakeOpenAIClient)
+    settings = Settings(
+        environment="test",
+        openai_api_key="server-key",
+        openai_primary_model="gpt-5.4",
+        openai_fallback_model="gpt-5.4",
+    )
+    service = MealAnalysisService(settings)
+
+    result = await service.refine_image(
+        RefineImageRequest(
+            image_base64="iVBORw0KGgp0ZXN0",
+            mime_type="image/png",
+            locale="en-IN",
+            correction="That dish is paneer curry and the portion was 180 g.",
+            current_foods=[
+                ExtractedFood(
+                    original_text="mixed vegetable dish",
+                    canonical_name="mixed cooked vegetable dish",
+                    quantity=1,
+                    unit="bowl",
+                    estimated_grams=120,
+                    confidence=0.55,
+                    requires_user_confirmation=True,
+                )
+            ],
+            correction_history=[
+                MealCorrectionTurn(
+                    instruction="There was one bowl.",
+                    assistant_message="Kept one bowl in the meal draft.",
+                )
+            ],
+        ),
+        None,
+    )
+
+    assert result.refinement.foods[0].canonical_name == "paneer curry"
+    assert result.refinement.assistant_message.startswith("Changed the dish")
+    client = FakeOpenAIClient.last_instance
+    assert client is not None
+    call = client.responses.calls[0]
+    prompt_data = call["input"][0]["content"][0]["text"]
+    assert '"latest_correction": "That dish is paneer curry' in prompt_data
+    assert '"current_foods"' in prompt_data
+    assert '"correction_history"' in prompt_data
+    assert call["input"][0]["content"][1]["detail"] == "high"
+    assert call["text_format"] is MealRefinement
+    assert call["store"] is False
+    assert "Never calculate or return calories" in call["instructions"]

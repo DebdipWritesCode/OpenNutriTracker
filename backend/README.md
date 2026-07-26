@@ -7,6 +7,7 @@ The first vertical slice provides:
 - `GET /health` with SQLite readiness.
 - `POST /api/v1/analyze/text` for structured food and portion extraction.
 - `POST /api/v1/analyze/image` for food and portion extraction from a JPEG, PNG, or WebP meal photo.
+- `POST /api/v1/analyze/image/refine` to correct the current photo draft with conversational feedback.
 - Per-request OpenAI BYOK through `X-OpenAI-API-Key`, with an optional server key fallback.
 - Fail-closed production Bearer authentication and per-client rate limiting.
 - `gpt-5.4-mini` as the primary model and `gpt-5.4` as the configurable fallback.
@@ -57,6 +58,11 @@ The request key is passed directly to an in-memory OpenAI client. It is not writ
 single-user self-hosted deployment, set `ONT_AI_OPENAI_API_KEY` in `backend/.env` instead and omit the header.
 Meal photos are likewise kept in the request's memory, are sent to OpenAI with `store=false`, and are not written
 to the backend database or filesystem.
+
+Photo corrections are stateless: the app re-sends the compressed photo, current editable food draft, recent
+correction turns, and latest instruction. The backend does not retain a server-side conversation or photo. Each
+refinement returns the complete corrected meal list, while nutrition continues to come only from the app's
+trusted database matches.
 
 Production deployments must also configure a separate, randomly generated `ONT_AI_ACCESS_TOKEN`. The Flutter
 client stores this application token in platform secure storage and sends it as `Authorization: Bearer <token>`.

@@ -47,6 +47,9 @@ MealEntity _meal() => const MealEntity(
 
 class _Gateway implements AiMealGateway {
   AiApiException? failure;
+  List<AiExtractedFood>? refinementFoods;
+  List<AiMealCorrectionTurn>? refinementHistory;
+  String? capturedCorrection;
 
   @override
   Future<AiMealAnalysis> analyzeMeal({
@@ -64,6 +67,37 @@ class _Gateway implements AiMealGateway {
   }) async {
     if (failure != null) throw failure!;
     return const AiMealAnalysis(foods: [_food], notes: [], modelUsed: 'test');
+  }
+
+  @override
+  Future<AiMealRefinement> refinePhoto({
+    required AiMealPhoto photo,
+    required List<AiExtractedFood> currentFoods,
+    required List<AiMealCorrectionTurn> correctionHistory,
+    required String correction,
+    required String locale,
+  }) async {
+    if (failure != null) throw failure!;
+    refinementFoods = currentFoods;
+    refinementHistory = correctionHistory;
+    capturedCorrection = correction;
+    return const AiMealRefinement(
+      foods: [
+        AiExtractedFood(
+          originalText: '180g rice',
+          canonicalName: 'rice',
+          quantity: 180,
+          unit: 'g',
+          estimatedGrams: 180,
+          preparation: null,
+          confidence: 0.99,
+          requiresUserConfirmation: false,
+        ),
+      ],
+      notes: [],
+      modelUsed: 'test',
+      assistantMessage: 'Updated the rice portion to 180 g.',
+    );
   }
 }
 
@@ -171,6 +205,47 @@ void main() {
     expect(state.items.single.calories, 130);
     expect(state.canSave, isTrue);
   });
+
+  test(
+    'refines a photo while preserving its trusted nutrition match',
+    () async {
+      final photoReview = bloc.stream.firstWhere(
+        (state) => state.status == AiMealStatus.review,
+      );
+      final photo = AiMealPhoto(
+        path: '/tmp/meal.jpg',
+        bytes: Uint8List.fromList([0xff, 0xd8, 0xff]),
+        mimeType: 'image/jpeg',
+        fileName: 'meal-photo.jpg',
+      );
+      bloc.add(AnalyzeAiMealPhotoRequested(photo: photo, locale: 'en'));
+      await photoReview;
+
+      final refined = bloc.stream.firstWhere(
+        (state) =>
+            state.status == AiMealStatus.review &&
+            state.correctionHistory.isNotEmpty,
+      );
+      bloc.add(
+        const RefineAiMealPhotoRequested(
+          correction: 'The rice portion was 180 g.',
+          locale: 'en',
+        ),
+      );
+      final state = await refined;
+
+      expect(gateway.capturedCorrection, 'The rice portion was 180 g.');
+      expect(gateway.refinementFoods?.single.estimatedGrams, 100);
+      expect(gateway.refinementHistory, isEmpty);
+      expect(state.items.single.amount, 180);
+      expect(state.items.single.selectedMeal?.source, MealSourceEntity.fdc);
+      expect(
+        state.correctionHistory.single.assistantMessage,
+        contains('180 g'),
+      );
+      expect(state.canSave, isTrue);
+    },
+  );
 
   test('saves every ready item through the save use case', () async {
     final review = bloc.stream.firstWhere(

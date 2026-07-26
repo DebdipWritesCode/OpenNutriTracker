@@ -277,6 +277,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "aiMealPhotoReviewNotice": MessageLookupByLibrary.simpleMessage(
       "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.",
     ),
+    "aiMealRefineTitle": MessageLookupByLibrary.simpleMessage("Correct the AI"),
+    "aiMealRefineBody": MessageLookupByLibrary.simpleMessage(
+      "Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.",
+    ),
+    "aiMealRefineExample": MessageLookupByLibrary.simpleMessage(
+      "For example: “That is paneer, not eggplant” or “The rice was about 180 g.”",
+    ),
+    "aiMealRefineInputLabel": MessageLookupByLibrary.simpleMessage(
+      "Correction",
+    ),
+    "aiMealRefineInputHint": MessageLookupByLibrary.simpleMessage(
+      "What should the AI change?",
+    ),
+    "aiMealRefineSendTooltip": MessageLookupByLibrary.simpleMessage(
+      "Send correction",
+    ),
+    "aiMealRefineLoadingLabel": MessageLookupByLibrary.simpleMessage(
+      "Rechecking the photo and updating estimates…",
+    ),
+    "aiMealRefineRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Enter what the AI should change.",
+    ),
+    "aiMealRefineUserLabel": MessageLookupByLibrary.simpleMessage(
+      "Your correction",
+    ),
+    "aiMealRefineAssistantLabel": MessageLookupByLibrary.simpleMessage(
+      "AI update",
+    ),
+    "aiMealRefiningSaveLabel": MessageLookupByLibrary.simpleMessage(
+      "Updating estimates…",
+    ),
     "aiMealTitle": MessageLookupByLibrary.simpleMessage("AI meal logging"),
     "aiMealTrustedMatchLabel": MessageLookupByLibrary.simpleMessage(
       "Trusted nutrition match",

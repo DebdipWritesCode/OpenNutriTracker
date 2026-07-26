@@ -12,6 +12,10 @@ from pydantic import (
 )
 
 MealText = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=4000)]
+MealCorrectionText = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, min_length=2, max_length=1000),
+]
 ImageMimeType = Literal["image/jpeg", "image/png", "image/webp"]
 MAX_IMAGE_BYTES = 3_000_000
 MAX_IMAGE_BASE64_LENGTH = 4_000_000
@@ -92,5 +96,31 @@ class MealExtraction(BaseModel):
     notes: list[str] = Field(default_factory=list, max_length=20)
 
 
+class MealCorrectionTurn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    instruction: MealCorrectionText
+    assistant_message: str = Field(min_length=1, max_length=300)
+
+
+class RefineImageRequest(AnalyzeImageRequest):
+    """A stateless correction request that re-sends the photo and current draft."""
+
+    correction: MealCorrectionText
+    current_foods: list[ExtractedFood] = Field(min_length=1, max_length=50)
+    correction_history: list[MealCorrectionTurn] = Field(
+        default_factory=list,
+        max_length=10,
+    )
+
+
+class MealRefinement(MealExtraction):
+    assistant_message: str = Field(min_length=1, max_length=300)
+
+
 class AnalyzeTextResponse(MealExtraction):
+    model_used: str
+
+
+class RefineImageResponse(MealRefinement):
     model_used: str

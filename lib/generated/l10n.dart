@@ -8447,6 +8447,116 @@ class S {
       args: [],
     );
   }
+
+  /// `Correct the AI`
+  String get aiMealRefineTitle {
+    return Intl.message(
+      'Correct the AI',
+      name: 'aiMealRefineTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.`
+  String get aiMealRefineBody {
+    return Intl.message(
+      'Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.',
+      name: 'aiMealRefineBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For example: “That is paneer, not eggplant” or “The rice was about 180 g.”`
+  String get aiMealRefineExample {
+    return Intl.message(
+      'For example: “That is paneer, not eggplant” or “The rice was about 180 g.”',
+      name: 'aiMealRefineExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Correction`
+  String get aiMealRefineInputLabel {
+    return Intl.message(
+      'Correction',
+      name: 'aiMealRefineInputLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What should the AI change?`
+  String get aiMealRefineInputHint {
+    return Intl.message(
+      'What should the AI change?',
+      name: 'aiMealRefineInputHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send correction`
+  String get aiMealRefineSendTooltip {
+    return Intl.message(
+      'Send correction',
+      name: 'aiMealRefineSendTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rechecking the photo and updating estimates…`
+  String get aiMealRefineLoadingLabel {
+    return Intl.message(
+      'Rechecking the photo and updating estimates…',
+      name: 'aiMealRefineLoadingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter what the AI should change.`
+  String get aiMealRefineRequiredError {
+    return Intl.message(
+      'Enter what the AI should change.',
+      name: 'aiMealRefineRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your correction`
+  String get aiMealRefineUserLabel {
+    return Intl.message(
+      'Your correction',
+      name: 'aiMealRefineUserLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI update`
+  String get aiMealRefineAssistantLabel {
+    return Intl.message(
+      'AI update',
+      name: 'aiMealRefineAssistantLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating estimates…`
+  String get aiMealRefiningSaveLabel {
+    return Intl.message(
+      'Updating estimates…',
+      name: 'aiMealRefiningSaveLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

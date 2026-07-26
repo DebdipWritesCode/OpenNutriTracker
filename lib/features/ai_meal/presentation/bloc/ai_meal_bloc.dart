@@ -9,7 +9,15 @@ import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.da
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 
-enum AiMealStatus { initial, analyzing, review, saving, saved, failure }
+enum AiMealStatus {
+  initial,
+  analyzing,
+  review,
+  refining,
+  saving,
+  saved,
+  failure,
+}
 
 sealed class AiMealEvent extends Equatable {
   const AiMealEvent();
@@ -39,6 +47,19 @@ class AnalyzeAiMealPhotoRequested extends AiMealEvent {
 
   @override
   List<Object?> get props => [photo, locale];
+}
+
+class RefineAiMealPhotoRequested extends AiMealEvent {
+  final String correction;
+  final String locale;
+
+  const RefineAiMealPhotoRequested({
+    required this.correction,
+    required this.locale,
+  });
+
+  @override
+  List<Object?> get props => [correction, locale];
 }
 
 class AiMealAmountChanged extends AiMealEvent {
@@ -108,6 +129,8 @@ class AiMealState extends Equatable {
   final String? errorMessage;
   final bool authenticationRequired;
   final AiMealPhoto? photo;
+  final List<AiMealCorrectionTurn> correctionHistory;
+  final String? pendingCorrection;
 
   const AiMealState({
     this.status = AiMealStatus.initial,
@@ -117,12 +140,16 @@ class AiMealState extends Equatable {
     this.errorMessage,
     this.authenticationRequired = false,
     this.photo,
+    this.correctionHistory = const [],
+    this.pendingCorrection,
   });
 
   bool get canSave =>
       status == AiMealStatus.review &&
       items.isNotEmpty &&
       items.every((item) => item.isReady && !item.isResolving);
+  bool get isReviewBusy =>
+      status == AiMealStatus.refining || status == AiMealStatus.saving;
 
   AiMealState copyWith({
     AiMealStatus? status,
@@ -134,6 +161,9 @@ class AiMealState extends Equatable {
     bool? authenticationRequired,
     AiMealPhoto? photo,
     bool clearPhoto = false,
+    List<AiMealCorrectionTurn>? correctionHistory,
+    String? pendingCorrection,
+    bool clearPendingCorrection = false,
   }) => AiMealState(
     status: status ?? this.status,
     description: description ?? this.description,
@@ -143,6 +173,10 @@ class AiMealState extends Equatable {
     authenticationRequired:
         authenticationRequired ?? this.authenticationRequired,
     photo: clearPhoto ? null : (photo ?? this.photo),
+    correctionHistory: correctionHistory ?? this.correctionHistory,
+    pendingCorrection: clearPendingCorrection
+        ? null
+        : (pendingCorrection ?? this.pendingCorrection),
   );
 
   @override
@@ -154,6 +188,8 @@ class AiMealState extends Equatable {
     errorMessage,
     authenticationRequired,
     photo,
+    correctionHistory,
+    pendingCorrection,
   ];
 }
 
@@ -167,6 +203,7 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     : super(const AiMealState()) {
     on<AnalyzeAiMealRequested>(_analyze);
     on<AnalyzeAiMealPhotoRequested>(_analyzePhoto);
+    on<RefineAiMealPhotoRequested>(_refinePhoto);
     on<AiMealAmountChanged>(_changeAmount);
     on<AiMealCandidateSelected>(_selectCandidate);
     on<AiMealItemRemoved>(_removeItem);
@@ -263,6 +300,86 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     }
   }
 
+  Future<void> _refinePhoto(
+    RefineAiMealPhotoRequested event,
+    Emitter<AiMealState> emit,
+  ) async {
+    final correction = event.correction.trim();
+    final photo = state.photo;
+    if (photo == null || state.items.isEmpty || correction.length < 2) {
+      emit(
+        state.copyWith(
+          status: AiMealStatus.review,
+          errorMessage: 'Enter a correction for the current meal photo.',
+          authenticationRequired: false,
+        ),
+      );
+      return;
+    }
+
+    final beforeItems = [...state.items];
+    final beforeHistory = state.correctionHistory.length <= 10
+        ? [...state.correctionHistory]
+        : state.correctionHistory.sublist(state.correctionHistory.length - 10);
+    emit(
+      state.copyWith(
+        status: AiMealStatus.refining,
+        pendingCorrection: correction,
+        clearError: true,
+        authenticationRequired: false,
+      ),
+    );
+
+    try {
+      final refinement = await _gateway.refinePhoto(
+        photo: photo,
+        currentFoods: beforeItems
+            .map(
+              (item) => item.extractedFood.copyWith(
+                estimatedGrams:
+                    item.amount ?? item.extractedFood.estimatedGrams,
+              ),
+            )
+            .toList(growable: false),
+        correctionHistory: beforeHistory,
+        correction: correction,
+        locale: event.locale,
+      );
+      await _resolveRefinement(
+        refinement,
+        previousItems: beforeItems,
+        correction: correction,
+        previousHistory: beforeHistory,
+        emit: emit,
+      );
+    } on AiApiException catch (error) {
+      final needsToken = error.kind == AiApiFailureKind.authentication;
+      emit(
+        state.copyWith(
+          status: AiMealStatus.review,
+          items: beforeItems,
+          correctionHistory: beforeHistory,
+          errorMessage: error.message,
+          authenticationRequired: needsToken,
+          pendingCorrection: needsToken ? correction : null,
+          clearPendingCorrection: !needsToken,
+        ),
+      );
+    } on Object catch (_) {
+      emit(
+        state.copyWith(
+          status: AiMealStatus.review,
+          items: beforeItems,
+          correctionHistory: beforeHistory,
+          errorMessage:
+              'Could not apply that correction. Check your connection and try again.',
+          authenticationRequired: false,
+          clearPendingCorrection: true,
+        ),
+      );
+    }
+  }
+
   Future<void> _resolveAnalysis(
     AiMealAnalysis analysis, {
     required String emptyMessage,
@@ -301,6 +418,86 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     );
   }
 
+  Future<void> _resolveRefinement(
+    AiMealRefinement refinement, {
+    required List<AiMealDraftItem> previousItems,
+    required String correction,
+    required List<AiMealCorrectionTurn> previousHistory,
+    required Emitter<AiMealState> emit,
+  }) async {
+    if (refinement.foods.isEmpty) {
+      emit(
+        state.copyWith(
+          status: AiMealStatus.review,
+          items: previousItems,
+          correctionHistory: previousHistory,
+          errorMessage:
+              'The correction removed every food. Rephrase it or remove items manually.',
+          clearPendingCorrection: true,
+        ),
+      );
+      return;
+    }
+
+    final unmatched = [...previousItems];
+    final drafts = <AiMealDraftItem>[];
+    for (final food in refinement.foods) {
+      final matchingIndex = _matchingDraftIndex(unmatched, food);
+      if (matchingIndex >= 0) {
+        final existing = unmatched.removeAt(matchingIndex);
+        final amount = food.estimatedGrams ?? existing.amount;
+        drafts.add(
+          existing.copyWith(
+            extractedFood: food,
+            amount: amount,
+            clearAmount: amount == null,
+            isResolving: false,
+          ),
+        );
+        continue;
+      }
+      try {
+        drafts.add(await _resolver.resolve(food));
+      } on Object catch (_) {
+        drafts.add(_unresolvedDraft(food));
+      }
+    }
+
+    final updatedHistory = [
+      ...previousHistory,
+      AiMealCorrectionTurn(
+        instruction: correction,
+        assistantMessage: refinement.assistantMessage,
+      ),
+    ];
+    emit(
+      state.copyWith(
+        status: AiMealStatus.review,
+        items: drafts,
+        notes: refinement.notes,
+        correctionHistory: updatedHistory.length <= 10
+            ? updatedHistory
+            : updatedHistory.sublist(updatedHistory.length - 10),
+        clearError: true,
+        authenticationRequired: false,
+        clearPendingCorrection: true,
+      ),
+    );
+  }
+
+  int _matchingDraftIndex(List<AiMealDraftItem> drafts, AiExtractedFood food) {
+    String normalize(String value) => value.trim().toLowerCase();
+    final canonical = normalize(food.canonicalName);
+    final canonicalMatch = drafts.indexWhere(
+      (item) => normalize(item.extractedFood.canonicalName) == canonical,
+    );
+    if (canonicalMatch >= 0) return canonicalMatch;
+    final original = normalize(food.originalText);
+    return drafts.indexWhere(
+      (item) => normalize(item.extractedFood.originalText) == original,
+    );
+  }
+
   AiMealDraftItem _unresolvedDraft(AiExtractedFood food) => AiMealDraftItem(
     extractedFood: food,
     searchQuery: food.canonicalName,
@@ -310,7 +507,9 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
   );
 
   void _changeAmount(AiMealAmountChanged event, Emitter<AiMealState> emit) {
-    if (!_validIndex(event.index)) return;
+    if (state.status != AiMealStatus.review || !_validIndex(event.index)) {
+      return;
+    }
     final items = [...state.items];
     items[event.index] = event.amount == null
         ? items[event.index].copyWith(clearAmount: true)
@@ -322,7 +521,9 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     AiMealCandidateSelected event,
     Emitter<AiMealState> emit,
   ) {
-    if (!_validIndex(event.itemIndex)) return;
+    if (state.status != AiMealStatus.review || !_validIndex(event.itemIndex)) {
+      return;
+    }
     final item = state.items[event.itemIndex];
     if (event.candidateIndex < 0 ||
         event.candidateIndex >= item.candidates.length) {
@@ -336,7 +537,9 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
   }
 
   void _removeItem(AiMealItemRemoved event, Emitter<AiMealState> emit) {
-    if (!_validIndex(event.index)) return;
+    if (state.status != AiMealStatus.review || !_validIndex(event.index)) {
+      return;
+    }
     final items = [...state.items]..removeAt(event.index);
     emit(state.copyWith(items: items, clearError: true));
   }
@@ -345,7 +548,11 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     AiMealMatchRequested event,
     Emitter<AiMealState> emit,
   ) async {
-    if (!_validIndex(event.index) || event.query.trim().length < 2) return;
+    if (state.status != AiMealStatus.review ||
+        !_validIndex(event.index) ||
+        event.query.trim().length < 2) {
+      return;
+    }
     final before = state.items[event.index];
     final loadingItems = [...state.items];
     loadingItems[event.index] = before.copyWith(
@@ -425,7 +632,14 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     final token = event.token.trim();
     if (token.isEmpty) return;
     await _tokenStore.save(token);
-    if (state.photo != null) {
+    if (state.photo != null && state.pendingCorrection != null) {
+      add(
+        RefineAiMealPhotoRequested(
+          correction: state.pendingCorrection!,
+          locale: event.locale,
+        ),
+      );
+    } else if (state.photo != null) {
       add(
         AnalyzeAiMealPhotoRequested(photo: state.photo!, locale: event.locale),
       );

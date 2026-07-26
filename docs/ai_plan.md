@@ -221,6 +221,7 @@ Tasks
 - [x] JSON parsing
 - [x] Confidence scores
 - [x] Manual corrections
+- [x] Conversational photo corrections
 - [x] Save meal
 
 Deliverable

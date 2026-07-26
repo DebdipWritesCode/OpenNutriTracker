@@ -1162,5 +1162,16 @@
   "aiMealPhotoRequiredError": "Take or choose a meal photo first.",
   "aiMealPhotoPickerError": "The photo could not be prepared. Choose another image and try again.",
   "aiMealPhotoAnalyzingLabel": "Identifying foods and estimating portions from your photo…",
-  "aiMealPhotoReviewNotice": "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving."
+  "aiMealPhotoReviewNotice": "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.",
+  "aiMealRefineTitle": "Correct the AI",
+  "aiMealRefineBody": "Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.",
+  "aiMealRefineExample": "For example: “That is paneer, not eggplant” or “The rice was about 180 g.”",
+  "aiMealRefineInputLabel": "Correction",
+  "aiMealRefineInputHint": "What should the AI change?",
+  "aiMealRefineSendTooltip": "Send correction",
+  "aiMealRefineLoadingLabel": "Rechecking the photo and updating estimates…",
+  "aiMealRefineRequiredError": "Enter what the AI should change.",
+  "aiMealRefineUserLabel": "Your correction",
+  "aiMealRefineAssistantLabel": "AI update",
+  "aiMealRefiningSaveLabel": "Updating estimates…"
 }
