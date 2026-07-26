@@ -173,9 +173,8 @@ Photo-flow validation:
 
 ## Remaining follow-ups
 
-1. Configure the generated `ONT_AI_ACCESS_TOKEN` in Vercel and enter the same token once on the device.
-2. Add a shared edge/Redis rate limiter before horizontally scaling the backend.
-3. Add native translations for the new AI meal strings.
+1. Add a shared edge/Redis rate limiter before horizontally scaling the backend.
+2. Add native translations for the new AI meal strings.
 
 ## Fourth implementation slice
 
