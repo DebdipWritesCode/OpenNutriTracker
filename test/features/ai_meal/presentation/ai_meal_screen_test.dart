@@ -1,14 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_meal/data/ai_meal_photo_picker.dart';
 import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/ai_meal_screen.dart';
@@ -35,6 +40,22 @@ class _Gateway implements AiMealGateway {
     ],
     notes: [],
     modelUsed: 'test',
+  );
+
+  @override
+  Future<AiMealAnalysis> analyzePhoto({
+    required AiMealPhoto photo,
+    required String locale,
+  }) => analyzeMeal(text: 'photo', locale: locale);
+}
+
+class _PhotoPicker implements AiMealPhotoPicker {
+  @override
+  Future<AiMealPhoto?> pick(ImageSource source) async => AiMealPhoto(
+    path: '/tmp/test-meal-photo.jpg',
+    bytes: Uint8List.fromList([0xff, 0xd8, 0xff, 0xe0]),
+    mimeType: 'image/jpeg',
+    fileName: 'meal-photo.jpg',
   );
 }
 
@@ -122,7 +143,7 @@ void main() {
               day: DateTime(2026, 7, 22),
             ),
           ),
-          builder: (_) => const AiMealScreen(),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
         ),
       ),
     );
@@ -153,7 +174,7 @@ void main() {
               day: DateTime(2026, 7, 22),
             ),
           ),
-          builder: (_) => const AiMealScreen(),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
         ),
       ),
     );
@@ -171,5 +192,49 @@ void main() {
     expect(find.text('Ready to save'), findsOneWidget);
     expect(find.text('130 kcal'), findsOneWidget);
     expect(find.text('Save meal'), findsOneWidget);
+  });
+
+  testWidgets('captures a photo and shows the editable trusted review', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        onGenerateRoute: (_) => MaterialPageRoute<void>(
+          settings: RouteSettings(
+            arguments: AiMealScreenArguments(
+              intakeType: IntakeTypeEntity.lunch,
+              day: DateTime(2026, 7, 25),
+            ),
+          ),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Photo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Photograph your meal'), findsOneWidget);
+
+    await tester.tap(find.text('Take photo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Analyze photo'), findsOneWidget);
+
+    await tester.tap(find.text('Analyze photo'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Review your meal'), findsOneWidget);
+    expect(find.text('Rice, cooked'), findsOneWidget);
+    expect(
+      find.textContaining('AI estimated these foods and portions'),
+      findsOneWidget,
+    );
   });
 }

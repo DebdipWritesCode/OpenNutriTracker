@@ -7998,10 +7998,10 @@ class S {
     );
   }
 
-  /// `Describe meal with AI`
+  /// `Log meal with AI`
   String get aiMealActionLabel {
     return Intl.message(
-      'Describe meal with AI',
+      'Log meal with AI',
       name: 'aiMealActionLabel',
       desc: '',
       args: [],
@@ -8198,10 +8198,10 @@ class S {
     );
   }
 
-  /// `No foods remain. Go back and describe the meal again.`
+  /// `No foods remain. Go back and analyze the meal again.`
   String get aiMealEmptyItems {
     return Intl.message(
-      'No foods remain. Go back and describe the meal again.',
+      'No foods remain. Go back and analyze the meal again.',
       name: 'aiMealEmptyItems',
       desc: '',
       args: [],
@@ -8283,6 +8283,166 @@ class S {
     return Intl.message(
       'Set access token',
       name: 'aiMealSetAccessTokenButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe`
+  String get aiMealInputTextLabel {
+    return Intl.message(
+      'Describe',
+      name: 'aiMealInputTextLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo`
+  String get aiMealInputPhotoLabel {
+    return Intl.message(
+      'Photo',
+      name: 'aiMealInputPhotoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photograph your meal`
+  String get aiMealPhotoIntroTitle {
+    return Intl.message(
+      'Photograph your meal',
+      name: 'aiMealPhotoIntroTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use a clear overhead photo with the whole meal visible. AI will estimate the foods and portions for you to review.`
+  String get aiMealPhotoIntroBody {
+    return Intl.message(
+      'Use a clear overhead photo with the whole meal visible. AI will estimate the foods and portions for you to review.',
+      name: 'aiMealPhotoIntroBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a new meal photo or choose one from your gallery.`
+  String get aiMealPhotoEmptyLabel {
+    return Intl.message(
+      'Take a new meal photo or choose one from your gallery.',
+      name: 'aiMealPhotoEmptyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take photo`
+  String get aiMealTakePhotoButton {
+    return Intl.message(
+      'Take photo',
+      name: 'aiMealTakePhotoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get aiMealChoosePhotoButton {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'aiMealChoosePhotoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose another`
+  String get aiMealChooseAnotherPhotoButton {
+    return Intl.message(
+      'Choose another',
+      name: 'aiMealChooseAnotherPhotoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retake`
+  String get aiMealRetakePhotoButton {
+    return Intl.message(
+      'Retake',
+      name: 'aiMealRetakePhotoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Analyze photo`
+  String get aiMealAnalyzePhotoButton {
+    return Intl.message(
+      'Analyze photo',
+      name: 'aiMealAnalyzePhotoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected meal photo`
+  String get aiMealPhotoPreviewLabel {
+    return Intl.message(
+      'Selected meal photo',
+      name: 'aiMealPhotoPreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The photo is sent only for this analysis and is not saved by OpenNutriTracker.`
+  String get aiMealPhotoPrivacyLabel {
+    return Intl.message(
+      'The photo is sent only for this analysis and is not saved by OpenNutriTracker.',
+      name: 'aiMealPhotoPrivacyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take or choose a meal photo first.`
+  String get aiMealPhotoRequiredError {
+    return Intl.message(
+      'Take or choose a meal photo first.',
+      name: 'aiMealPhotoRequiredError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The photo could not be prepared. Choose another image and try again.`
+  String get aiMealPhotoPickerError {
+    return Intl.message(
+      'The photo could not be prepared. Choose another image and try again.',
+      name: 'aiMealPhotoPickerError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identifying foods and estimating portions from your photo…`
+  String get aiMealPhotoAnalyzingLabel {
+    return Intl.message(
+      'Identifying foods and estimating portions from your photo…',
+      name: 'aiMealPhotoAnalyzingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.`
+  String get aiMealPhotoReviewNotice {
+    return Intl.message(
+      'AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.',
+      name: 'aiMealPhotoReviewNotice',
       desc: '',
       args: [],
     );

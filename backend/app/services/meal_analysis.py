@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from typing import Any
 
 from openai import (
     APIConnectionError,
@@ -12,8 +13,8 @@ from openai import (
 )
 
 from app.config import Settings
-from app.prompts import build_meal_text_prompt
-from app.schemas.analysis import AnalyzeTextRequest, MealExtraction
+from app.prompts import build_meal_image_prompt, build_meal_text_prompt
+from app.schemas.analysis import AnalyzeImageRequest, AnalyzeTextRequest, MealExtraction
 from app.services.errors import (
     InvalidAPIKeyError,
     MissingAPIKeyError,
@@ -39,6 +40,54 @@ class MealAnalysisService:
         request: AnalyzeTextRequest,
         request_api_key: str | None,
     ) -> MealAnalysisResult:
+        return await self._analyze(
+            instructions=build_meal_text_prompt(request.locale),
+            model_input=request.text,
+            request_api_key=request_api_key,
+        )
+
+    async def analyze_image(
+        self,
+        request: AnalyzeImageRequest,
+        request_api_key: str | None,
+    ) -> MealAnalysisResult:
+        # Decode once before contacting OpenAI so a malformed signature can
+        # never leave this service. The original Base64 string is then used in
+        # a data URL and discarded with the request object.
+        request.decoded_image()
+        return await self._analyze(
+            instructions=build_meal_image_prompt(request.locale),
+            model_input=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": (
+                                "Identify the foods and estimate their portions. "
+                                "The user will review every result before saving."
+                            ),
+                        },
+                        {
+                            "type": "input_image",
+                            "image_url": (
+                                f"data:{request.mime_type};base64,{request.image_base64}"
+                            ),
+                            "detail": "high",
+                        },
+                    ],
+                }
+            ],
+            request_api_key=request_api_key,
+        )
+
+    async def _analyze(
+        self,
+        *,
+        instructions: str,
+        model_input: str | list[dict[str, Any]],
+        request_api_key: str | None,
+    ) -> MealAnalysisResult:
         api_key = self._resolve_api_key(request_api_key)
         client = AsyncOpenAI(
             api_key=api_key,
@@ -60,8 +109,8 @@ class MealAnalysisService:
                 try:
                     response = await client.responses.parse(
                         model=model,
-                        instructions=build_meal_text_prompt(request.locale),
-                        input=request.text,
+                        instructions=instructions,
+                        input=model_input,
                         text_format=MealExtraction,
                         reasoning={"effort": "none"},
                         max_output_tokens=self.settings.openai_max_output_tokens,

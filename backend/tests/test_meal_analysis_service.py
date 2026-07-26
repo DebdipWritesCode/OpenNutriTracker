@@ -5,7 +5,12 @@ import httpx
 from openai import APITimeoutError
 
 from app.config import Settings
-from app.schemas.analysis import AnalyzeTextRequest, ExtractedFood, MealExtraction
+from app.schemas.analysis import (
+    AnalyzeImageRequest,
+    AnalyzeTextRequest,
+    ExtractedFood,
+    MealExtraction,
+)
 from app.services.meal_analysis import MealAnalysisService
 
 
@@ -72,3 +77,33 @@ async def test_service_uses_byok_and_falls_back_without_storing_prompt(monkeypat
     assert all(call["store"] is False for call in client.responses.calls)
     assert all(call["reasoning"] == {"effort": "none"} for call in client.responses.calls)
     assert client.closed is True
+
+
+async def test_service_sends_image_as_high_detail_data_url(monkeypatch: Any) -> None:
+    monkeypatch.setattr("app.services.meal_analysis.AsyncOpenAI", FakeOpenAIClient)
+    settings = Settings(
+        environment="test",
+        openai_api_key="server-key",
+        openai_primary_model="gpt-5.4",
+        openai_fallback_model="gpt-5.4",
+    )
+    service = MealAnalysisService(settings)
+
+    await service.analyze_image(
+        AnalyzeImageRequest(
+            image_base64="iVBORw0KGgp0ZXN0",
+            mime_type="image/png",
+            locale="en-IN",
+        ),
+        None,
+    )
+
+    client = FakeOpenAIClient.last_instance
+    assert client is not None
+    call = client.responses.calls[0]
+    content = call["input"][0]["content"]
+    assert content[1]["type"] == "input_image"
+    assert content[1]["detail"] == "high"
+    assert content[1]["image_url"].startswith("data:image/png;base64,")
+    assert "Never calculate or return calories" in call["instructions"]
+    assert call["store"] is False

@@ -5,6 +5,7 @@ import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dar
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
 import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 
@@ -25,6 +26,19 @@ class AnalyzeAiMealRequested extends AiMealEvent {
 
   @override
   List<Object?> get props => [text, locale];
+}
+
+class AnalyzeAiMealPhotoRequested extends AiMealEvent {
+  final AiMealPhoto photo;
+  final String locale;
+
+  const AnalyzeAiMealPhotoRequested({
+    required this.photo,
+    required this.locale,
+  });
+
+  @override
+  List<Object?> get props => [photo, locale];
 }
 
 class AiMealAmountChanged extends AiMealEvent {
@@ -93,6 +107,7 @@ class AiMealState extends Equatable {
   final List<String> notes;
   final String? errorMessage;
   final bool authenticationRequired;
+  final AiMealPhoto? photo;
 
   const AiMealState({
     this.status = AiMealStatus.initial,
@@ -101,6 +116,7 @@ class AiMealState extends Equatable {
     this.notes = const [],
     this.errorMessage,
     this.authenticationRequired = false,
+    this.photo,
   });
 
   bool get canSave =>
@@ -116,6 +132,8 @@ class AiMealState extends Equatable {
     String? errorMessage,
     bool clearError = false,
     bool? authenticationRequired,
+    AiMealPhoto? photo,
+    bool clearPhoto = false,
   }) => AiMealState(
     status: status ?? this.status,
     description: description ?? this.description,
@@ -124,6 +142,7 @@ class AiMealState extends Equatable {
     errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     authenticationRequired:
         authenticationRequired ?? this.authenticationRequired,
+    photo: clearPhoto ? null : (photo ?? this.photo),
   );
 
   @override
@@ -134,6 +153,7 @@ class AiMealState extends Equatable {
     notes,
     errorMessage,
     authenticationRequired,
+    photo,
   ];
 }
 
@@ -146,6 +166,7 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
   AiMealBloc(this._gateway, this._resolver, this._saveMeal, this._tokenStore)
     : super(const AiMealState()) {
     on<AnalyzeAiMealRequested>(_analyze);
+    on<AnalyzeAiMealPhotoRequested>(_analyzePhoto);
     on<AiMealAmountChanged>(_changeAmount);
     on<AiMealCandidateSelected>(_selectCandidate);
     on<AiMealItemRemoved>(_removeItem);
@@ -176,33 +197,12 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
         text: description,
         locale: event.locale,
       );
-      if (analysis.foods.isEmpty) {
-        emit(
-          AiMealState(
-            status: AiMealStatus.failure,
-            description: description,
-            errorMessage:
-                'No foods were found. Add amounts or food names and try again.',
-          ),
-        );
-        return;
-      }
-
-      final drafts = <AiMealDraftItem>[];
-      for (final food in analysis.foods) {
-        try {
-          drafts.add(await _resolver.resolve(food));
-        } on Object catch (_) {
-          drafts.add(_unresolvedDraft(food));
-        }
-      }
-      emit(
-        AiMealState(
-          status: AiMealStatus.review,
-          description: description,
-          items: drafts,
-          notes: analysis.notes,
-        ),
+      await _resolveAnalysis(
+        analysis,
+        description: description,
+        emptyMessage:
+            'No foods were found. Add amounts or food names and try again.',
+        emit: emit,
       );
     } on AiApiException catch (error) {
       emit(
@@ -223,6 +223,82 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
         ),
       );
     }
+  }
+
+  Future<void> _analyzePhoto(
+    AnalyzeAiMealPhotoRequested event,
+    Emitter<AiMealState> emit,
+  ) async {
+    emit(AiMealState(status: AiMealStatus.analyzing, photo: event.photo));
+    try {
+      final analysis = await _gateway.analyzePhoto(
+        photo: event.photo,
+        locale: event.locale,
+      );
+      await _resolveAnalysis(
+        analysis,
+        photo: event.photo,
+        emptyMessage:
+            'No food was found in this photo. Try a clearer overhead photo.',
+        emit: emit,
+      );
+    } on AiApiException catch (error) {
+      emit(
+        AiMealState(
+          status: AiMealStatus.failure,
+          photo: event.photo,
+          errorMessage: error.message,
+          authenticationRequired: error.kind == AiApiFailureKind.authentication,
+        ),
+      );
+    } on Object catch (_) {
+      emit(
+        AiMealState(
+          status: AiMealStatus.failure,
+          photo: event.photo,
+          errorMessage:
+              'Could not analyze this photo. Check your connection and try again.',
+        ),
+      );
+    }
+  }
+
+  Future<void> _resolveAnalysis(
+    AiMealAnalysis analysis, {
+    required String emptyMessage,
+    required Emitter<AiMealState> emit,
+    String description = '',
+    AiMealPhoto? photo,
+  }) async {
+    if (analysis.foods.isEmpty) {
+      emit(
+        AiMealState(
+          status: AiMealStatus.failure,
+          description: description,
+          photo: photo,
+          errorMessage: emptyMessage,
+        ),
+      );
+      return;
+    }
+
+    final drafts = <AiMealDraftItem>[];
+    for (final food in analysis.foods) {
+      try {
+        drafts.add(await _resolver.resolve(food));
+      } on Object catch (_) {
+        drafts.add(_unresolvedDraft(food));
+      }
+    }
+    emit(
+      AiMealState(
+        status: AiMealStatus.review,
+        description: description,
+        photo: photo,
+        items: drafts,
+        notes: analysis.notes,
+      ),
+    );
   }
 
   AiMealDraftItem _unresolvedDraft(AiExtractedFood food) => AiMealDraftItem(
@@ -349,7 +425,14 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     final token = event.token.trim();
     if (token.isEmpty) return;
     await _tokenStore.save(token);
-    if (state.description.isNotEmpty) {
+    if (state.photo != null) {
+      add(
+        AnalyzeAiMealPhotoRequested(
+          photo: state.photo!,
+          locale: event.locale,
+        ),
+      );
+    } else if (state.description.isNotEmpty) {
       add(
         AnalyzeAiMealRequested(text: state.description, locale: event.locale),
       );

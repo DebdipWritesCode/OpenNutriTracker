@@ -13,6 +13,14 @@ inputs:
   supabase_project_anon_key:
     description: Supabase anon key.
     required: true
+  ont_ai_backend_url:
+    description: OpenNutriTracker AI backend URL.
+    required: false
+    default: https://open-nutri-tracker.vercel.app
+  ont_ai_access_token:
+    description: Optional bundled AI access token. Keep empty for public builds.
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -23,16 +31,20 @@ runs:
         SENTRY_DNS: ${{ inputs.sentry_dns }}
         SUPABASE_PROJECT_URL: ${{ inputs.supabase_project_url }}
         SUPABASE_PROJECT_ANON_KEY: ${{ inputs.supabase_project_anon_key }}
+        ONT_AI_BACKEND_URL: ${{ inputs.ont_ai_backend_url }}
+        ONT_AI_ACCESS_TOKEN: ${{ inputs.ont_ai_access_token }}
       run: |
         : "${FDC_API_KEY:?Missing fdc_api_key input}"
         : "${SENTRY_DNS:?Missing sentry_dns input}"
         : "${SUPABASE_PROJECT_URL:?Missing supabase_project_url input}"
         : "${SUPABASE_PROJECT_ANON_KEY:?Missing supabase_project_anon_key input}"
+        : "${ONT_AI_BACKEND_URL:?Missing ont_ai_backend_url input}"
 
         cat > .env <<EOF
         FDC_API_KEY="$FDC_API_KEY"
         SENTRY_DNS="$SENTRY_DNS"
         SUPABASE_PROJECT_URL="$SUPABASE_PROJECT_URL"
         SUPABASE_PROJECT_ANON_KEY="$SUPABASE_PROJECT_ANON_KEY"
+        ONT_AI_BACKEND_URL="$ONT_AI_BACKEND_URL"
+        ONT_AI_ACCESS_TOKEN="$ONT_AI_ACCESS_TOKEN"
         EOF
-

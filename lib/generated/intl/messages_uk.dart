@@ -182,7 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "AI access token",
     ),
     "aiMealActionLabel": MessageLookupByLibrary.simpleMessage(
-      "Describe meal with AI",
+      "Log meal with AI",
     ),
     "aiMealAmountError": MessageLookupByLibrary.simpleMessage(
       "Enter an amount greater than zero.",
@@ -202,7 +202,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Meal description",
     ),
     "aiMealEmptyItems": MessageLookupByLibrary.simpleMessage(
-      "No foods remain. Go back and describe the meal again.",
+      "No foods remain. Go back and analyze the meal again.",
     ),
     "aiMealFoodSearchLabel": MessageLookupByLibrary.simpleMessage(
       "Food match search",
@@ -236,6 +236,46 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "aiMealSetAccessTokenButton": MessageLookupByLibrary.simpleMessage(
       "Set access token",
+    ),
+    "aiMealInputTextLabel": MessageLookupByLibrary.simpleMessage("Describe"),
+    "aiMealInputPhotoLabel": MessageLookupByLibrary.simpleMessage("Photo"),
+    "aiMealPhotoIntroTitle": MessageLookupByLibrary.simpleMessage(
+      "Photograph your meal",
+    ),
+    "aiMealPhotoIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Use a clear overhead photo with the whole meal visible. AI will estimate the foods and portions for you to review.",
+    ),
+    "aiMealPhotoEmptyLabel": MessageLookupByLibrary.simpleMessage(
+      "Take a new meal photo or choose one from your gallery.",
+    ),
+    "aiMealTakePhotoButton": MessageLookupByLibrary.simpleMessage("Take photo"),
+    "aiMealChoosePhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Choose from gallery",
+    ),
+    "aiMealChooseAnotherPhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Choose another",
+    ),
+    "aiMealRetakePhotoButton": MessageLookupByLibrary.simpleMessage("Retake"),
+    "aiMealAnalyzePhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Analyze photo",
+    ),
+    "aiMealPhotoPreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Selected meal photo",
+    ),
+    "aiMealPhotoPrivacyLabel": MessageLookupByLibrary.simpleMessage(
+      "The photo is sent only for this analysis and is not saved by OpenNutriTracker.",
+    ),
+    "aiMealPhotoRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Take or choose a meal photo first.",
+    ),
+    "aiMealPhotoPickerError": MessageLookupByLibrary.simpleMessage(
+      "The photo could not be prepared. Choose another image and try again.",
+    ),
+    "aiMealPhotoAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
+      "Identifying foods and estimating portions from your photo…",
+    ),
+    "aiMealPhotoReviewNotice": MessageLookupByLibrary.simpleMessage(
+      "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.",
     ),
     "aiMealTitle": MessageLookupByLibrary.simpleMessage("AI meal logging"),
     "aiMealTrustedMatchLabel": MessageLookupByLibrary.simpleMessage(

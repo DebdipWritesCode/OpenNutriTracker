@@ -6,13 +6,14 @@ The first vertical slice provides:
 
 - `GET /health` with SQLite readiness.
 - `POST /api/v1/analyze/text` for structured food and portion extraction.
+- `POST /api/v1/analyze/image` for food and portion extraction from a JPEG, PNG, or WebP meal photo.
 - Per-request OpenAI BYOK through `X-OpenAI-API-Key`, with an optional server key fallback.
 - Fail-closed production Bearer authentication and per-client rate limiting.
 - `gpt-5.4-mini` as the primary model and `gpt-5.4` as the configurable fallback.
 - Request IDs, structured logs, CORS, OpenAPI docs, tests, and a non-root Docker image.
 
-The AI endpoint deliberately **does not return calories or macros**. Those values will be resolved by the
-database-backed nutrition engine in a later slice.
+The AI endpoints deliberately **do not return calories or macros**. The Flutter review resolves those values
+against its configured USDA/FoodData Central and Open Food Facts nutrition sources.
 
 ## Local setup
 
@@ -41,8 +42,21 @@ curl -X POST http://localhost:8000/api/v1/analyze/text \
   -d '{"text":"190g rice, 100g chicken and one katori curd","locale":"en-IN"}'
 ```
 
+Photo extraction accepts an in-memory Base64 payload up to 3 MB:
+
+```bash
+PHOTO_BASE64="$(base64 < meal.jpg | tr -d '\n')"
+curl -X POST http://localhost:8000/api/v1/analyze/image \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $ONT_AI_ACCESS_TOKEN" \
+  -H "X-OpenAI-API-Key: $OPENAI_API_KEY" \
+  -d "{\"image_base64\":\"$PHOTO_BASE64\",\"mime_type\":\"image/jpeg\",\"locale\":\"en-IN\"}"
+```
+
 The request key is passed directly to an in-memory OpenAI client. It is not written to SQLite or logs. For a
 single-user self-hosted deployment, set `ONT_AI_OPENAI_API_KEY` in `backend/.env` instead and omit the header.
+Meal photos are likewise kept in the request's memory, are sent to OpenAI with `store=false`, and are not written
+to the backend database or filesystem.
 
 Production deployments must also configure a separate, randomly generated `ONT_AI_ACCESS_TOKEN`. The Flutter
 client stores this application token in platform secure storage and sends it as `Authorization: Bearer <token>`.

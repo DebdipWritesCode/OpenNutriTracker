@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
+import 'package:opennutritracker/features/ai_meal/data/ai_meal_photo_picker.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
@@ -20,8 +25,12 @@ class AiMealScreenArguments {
   const AiMealScreenArguments({required this.intakeType, required this.day});
 }
 
+enum _AiMealInputMode { text, photo }
+
 class AiMealScreen extends StatefulWidget {
-  const AiMealScreen({super.key});
+  final AiMealPhotoPicker? photoPicker;
+
+  const AiMealScreen({super.key, this.photoPicker});
 
   @override
   State<AiMealScreen> createState() => _AiMealScreenState();
@@ -31,12 +40,17 @@ class _AiMealScreenState extends State<AiMealScreen> {
   final _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late final AiMealBloc _bloc;
+  late final AiMealPhotoPicker _photoPicker;
   late AiMealScreenArguments _arguments;
+  _AiMealInputMode _inputMode = _AiMealInputMode.text;
+  AiMealPhoto? _selectedPhoto;
+  String? _photoPickerError;
 
   @override
   void initState() {
     super.initState();
     _bloc = locator<AiMealBloc>();
+    _photoPicker = widget.photoPicker ?? locator<AiMealPhotoPicker>();
   }
 
   @override
@@ -89,7 +103,10 @@ class _AiMealScreenState extends State<AiMealScreen> {
 
   Widget _buildBody(BuildContext context, AiMealState state) {
     if (state.status == AiMealStatus.analyzing) {
-      return _AnalyzingView(key: const ValueKey('analyzing'));
+      return _AnalyzingView(
+        key: const ValueKey('analyzing'),
+        photo: state.photo,
+      );
     }
     if (state.status == AiMealStatus.review ||
         state.status == AiMealStatus.saving) {
@@ -100,6 +117,8 @@ class _AiMealScreenState extends State<AiMealScreen> {
 
   Widget _buildDescription(BuildContext context, AiMealState state) {
     final palette = _palette(context);
+    final isPhoto = _inputMode == _AiMealInputMode.photo;
+    final stateErrorMatchesMode = isPhoto == (state.photo != null);
     return SingleChildScrollView(
       key: const ValueKey('description'),
       padding: const EdgeInsets.all(Dimens.spacing16),
@@ -109,6 +128,32 @@ class _AiMealScreenState extends State<AiMealScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: Dimens.spacing8),
+            SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<_AiMealInputMode>(
+                segments: [
+                  ButtonSegment(
+                    value: _AiMealInputMode.text,
+                    icon: const Icon(Icons.notes_rounded),
+                    label: Text(S.of(context).aiMealInputTextLabel),
+                  ),
+                  ButtonSegment(
+                    value: _AiMealInputMode.photo,
+                    icon: const Icon(Icons.photo_camera_rounded),
+                    label: Text(S.of(context).aiMealInputPhotoLabel),
+                  ),
+                ],
+                selected: {_inputMode},
+                showSelectedIcon: false,
+                onSelectionChanged: (selection) {
+                  setState(() {
+                    _inputMode = selection.first;
+                    _photoPickerError = null;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: Dimens.spacing24),
             Container(
               width: 64,
               height: 64,
@@ -119,40 +164,55 @@ class _AiMealScreenState extends State<AiMealScreen> {
                 borderRadius: Dimens.borderRadiusM,
               ),
               child: Icon(
-                Icons.auto_awesome_rounded,
+                isPhoto
+                    ? Icons.add_a_photo_rounded
+                    : Icons.auto_awesome_rounded,
                 color: Theme.of(context).colorScheme.primary,
                 size: 32,
               ),
             ),
             const SizedBox(height: Dimens.spacing20),
             Text(
-              S.of(context).aiMealIntroTitle,
+              isPhoto
+                  ? S.of(context).aiMealPhotoIntroTitle
+                  : S.of(context).aiMealIntroTitle,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: Dimens.spacing8),
             Text(
-              S.of(context).aiMealIntroBody,
+              isPhoto
+                  ? S.of(context).aiMealPhotoIntroBody
+                  : S.of(context).aiMealIntroBody,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: palette.textMuted),
             ),
             const SizedBox(height: Dimens.spacing24),
-            TextFormField(
-              controller: _descriptionController,
-              minLines: 5,
-              maxLines: 9,
-              maxLength: 4000,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: S.of(context).aiMealDescriptionLabel,
-                hintText: S.of(context).aiMealDescriptionHint,
-                alignLabelWithHint: true,
+            if (isPhoto)
+              _buildPhotoInput(context)
+            else
+              TextFormField(
+                controller: _descriptionController,
+                minLines: 5,
+                maxLines: 9,
+                maxLength: 4000,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  labelText: S.of(context).aiMealDescriptionLabel,
+                  hintText: S.of(context).aiMealDescriptionHint,
+                  alignLabelWithHint: true,
+                ),
+                validator: (value) => (value?.trim().length ?? 0) < 2
+                    ? S.of(context).aiMealDescriptionError
+                    : null,
               ),
-              validator: (value) => (value?.trim().length ?? 0) < 2
-                  ? S.of(context).aiMealDescriptionError
-                  : null,
-            ),
-            if (state.errorMessage != null) ...[
+            if (_photoPickerError != null && isPhoto) ...[
+              const SizedBox(height: Dimens.spacing12),
+              _ErrorPanel(
+                message: _photoPickerError!,
+              ),
+            ],
+            if (state.errorMessage != null && stateErrorMatchesMode) ...[
               const SizedBox(height: Dimens.spacing12),
               _ErrorPanel(
                 message: state.errorMessage!,
@@ -164,14 +224,121 @@ class _AiMealScreenState extends State<AiMealScreen> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _submitDescription,
-                icon: const Icon(Icons.auto_awesome_rounded),
-                label: Text(S.of(context).aiMealAnalyzeButton),
+                onPressed: isPhoto ? _submitPhoto : _submitDescription,
+                icon: Icon(
+                  isPhoto
+                      ? Icons.center_focus_strong_rounded
+                      : Icons.auto_awesome_rounded,
+                ),
+                label: Text(
+                  isPhoto
+                      ? S.of(context).aiMealAnalyzePhotoButton
+                      : S.of(context).aiMealAnalyzeButton,
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPhotoInput(BuildContext context) {
+    final photo = _selectedPhoto;
+    if (photo == null) {
+      return AppCard(
+        padding: const EdgeInsets.all(Dimens.spacing20),
+        child: Column(
+          children: [
+            Icon(
+              Icons.camera_alt_outlined,
+              size: 48,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: Dimens.spacing12),
+            Text(
+              S.of(context).aiMealPhotoEmptyLabel,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: Dimens.spacing16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.camera),
+                icon: const Icon(Icons.photo_camera_rounded),
+                label: Text(S.of(context).aiMealTakePhotoButton),
+              ),
+            ),
+            const SizedBox(height: Dimens.spacing8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: Text(S.of(context).aiMealChoosePhotoButton),
+              ),
+            ),
+            const SizedBox(height: Dimens.spacing12),
+            Text(
+              S.of(context).aiMealPhotoPrivacyLabel,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          image: true,
+          label: S.of(context).aiMealPhotoPreviewLabel,
+          child: ClipRRect(
+            borderRadius: Dimens.borderRadiusM,
+            child: AspectRatio(
+              aspectRatio: 4 / 3,
+              child: Image.file(
+                File(photo.path),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  child: const Center(
+                    child: Icon(Icons.broken_image_outlined, size: 48),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: Dimens.spacing12),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.camera),
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(S.of(context).aiMealRetakePhotoButton),
+              ),
+            ),
+            const SizedBox(width: Dimens.spacing8),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: Text(S.of(context).aiMealChooseAnotherPhotoButton),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: Dimens.spacing8),
+        Text(
+          S.of(context).aiMealPhotoPrivacyLabel,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
     );
   }
 
@@ -197,6 +364,10 @@ class _AiMealScreenState extends State<AiMealScreen> {
             context,
           ).textTheme.bodyLarge?.copyWith(color: palette.textMuted),
         ),
+        if (state.photo != null) ...[
+          const SizedBox(height: Dimens.spacing16),
+          _PhotoReviewBanner(photo: state.photo!),
+        ],
         if (state.notes.isNotEmpty) ...[
           const SizedBox(height: Dimens.spacing16),
           AppCard(
@@ -291,6 +462,43 @@ class _AiMealScreenState extends State<AiMealScreen> {
     );
   }
 
+  Future<void> _pickPhoto(ImageSource source) async {
+    setState(() => _photoPickerError = null);
+    try {
+      final photo = await _photoPicker.pick(source);
+      if (!mounted || photo == null) return;
+      setState(() {
+        _selectedPhoto = photo;
+        _photoPickerError = null;
+      });
+    } on AiMealPhotoPickerException catch (error) {
+      if (!mounted) return;
+      setState(() => _photoPickerError = error.message);
+    } on Object catch (_) {
+      if (!mounted) return;
+      setState(
+        () => _photoPickerError = S.of(context).aiMealPhotoPickerError,
+      );
+    }
+  }
+
+  void _submitPhoto() {
+    final photo = _selectedPhoto;
+    if (photo == null) {
+      setState(
+        () => _photoPickerError = S.of(context).aiMealPhotoRequiredError,
+      );
+      return;
+    }
+    setState(() => _photoPickerError = null);
+    _bloc.add(
+      AnalyzeAiMealPhotoRequested(
+        photo: photo,
+        locale: Localizations.localeOf(context).toLanguageTag(),
+      ),
+    );
+  }
+
   Future<void> _showAccessTokenDialog(AiMealState state) async {
     final controller = TextEditingController();
     final token = await showDialog<String>(
@@ -356,7 +564,9 @@ class _AiMealScreenState extends State<AiMealScreen> {
 }
 
 class _AnalyzingView extends StatelessWidget {
-  const _AnalyzingView({super.key});
+  final AiMealPhoto? photo;
+
+  const _AnalyzingView({super.key, this.photo});
 
   @override
   Widget build(BuildContext context) {
@@ -366,12 +576,108 @@ class _AnalyzingView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const CircularProgressIndicator(),
+            if (photo == null)
+              const CircularProgressIndicator()
+            else
+              SizedBox(
+                width: 240,
+                child: ClipRRect(
+                  borderRadius: Dimens.borderRadiusL,
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.file(
+                          File(photo!.path),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => ColoredBox(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainer,
+                          ),
+                        ),
+                        ColoredBox(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.scrim.withValues(alpha: 0.38),
+                        ),
+                        const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             const SizedBox(height: Dimens.spacing20),
             Text(
-              S.of(context).aiMealAnalyzingLabel,
+              photo == null
+                  ? S.of(context).aiMealAnalyzingLabel
+                  : S.of(context).aiMealPhotoAnalyzingLabel,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoReviewBanner extends StatelessWidget {
+  final AiMealPhoto photo;
+
+  const _PhotoReviewBanner({required this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: SizedBox(
+        height: 144,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Semantics(
+              image: true,
+              label: S.of(context).aiMealPhotoPreviewLabel,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(Dimens.radiusL),
+                ),
+                child: SizedBox(
+                  width: 112,
+                  child: Image.file(
+                    File(photo.path),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => ColoredBox(
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      child: const Icon(Icons.broken_image_outlined),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(Dimens.spacing16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.fact_check_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(height: Dimens.spacing8),
+                    Text(
+                      S.of(context).aiMealPhotoReviewNotice,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

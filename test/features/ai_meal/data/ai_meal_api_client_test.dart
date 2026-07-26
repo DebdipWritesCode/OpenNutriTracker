@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 
 class _TokenStore implements AiAccessTokenStore {
   String? token;
@@ -86,6 +88,42 @@ void main() {
           AiApiFailureKind.authentication,
         ),
       ),
+    );
+  });
+
+  test('sends a compressed photo to the image analysis endpoint', () async {
+    late http.Request captured;
+    final client = AiMealApiClient(
+      client: MockClient((request) async {
+        captured = request;
+        return http.Response(
+          jsonEncode({'foods': [], 'notes': [], 'model_used': 'gpt-test'}),
+          200,
+        );
+      }),
+      tokenStore: _TokenStore('app-token'),
+      baseUrl: 'https://api.example.test',
+      delay: (_) async {},
+    );
+
+    await client.analyzePhoto(
+      photo: AiMealPhoto(
+        path: '/tmp/meal.jpg',
+        bytes: Uint8List.fromList([0xff, 0xd8, 0xff, 0xe0]),
+        mimeType: 'image/jpeg',
+        fileName: 'meal-photo.jpg',
+      ),
+      locale: 'en-IN',
+    );
+
+    final body = jsonDecode(captured.body) as Map<String, dynamic>;
+    expect(captured.url.path, '/api/v1/analyze/image');
+    expect(captured.headers['authorization'], 'Bearer app-token');
+    expect(body['mime_type'], 'image/jpeg');
+    expect(body['locale'], 'en-IN');
+    expect(
+      base64Decode(body['image_base64'] as String),
+      [0xff, 0xd8, 0xff, 0xe0],
     );
   });
 

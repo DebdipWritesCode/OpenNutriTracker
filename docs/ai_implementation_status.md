@@ -1,6 +1,6 @@
 # AI layer implementation status
 
-Last updated: 2026-07-22
+Last updated: 2026-07-25
 
 ## First implementation slice
 
@@ -131,9 +131,38 @@ Additional validation performed:
 - Android develop debug APK: built successfully at
   `build/app/outputs/flutter-apk/app-develop-debug.apk`.
 
-## Next slice
+## Third implementation slice
+
+The AI logging screen now supports an opt-in meal-photo flow:
+
+```text
+camera or gallery photo
+   ↓ on-device resize/compression (maximum 3 MB)
+POST /api/v1/analyze/image
+   ↓ OpenAI vision structured output (store=false)
+visible foods + estimated portions + confidence
+   ↓ existing USDA/FDC and Open Food Facts resolver
+editable trusted nutrition preview
+   ↓ existing AddIntakeUsecase
+encrypted local diary
+```
+
+- Camera and gallery controls live beside the existing description flow and include loading, empty-photo,
+  invalid-image, authentication, timeout, and retry states.
+- The backend accepts only Base64-encoded JPEG, PNG, or WebP images, verifies the file signature, and applies the
+  same Bearer authentication and per-client rate limit as text analysis.
+- The vision prompt handles Indian dish names and household portions while flagging uncertain identity or
+  quantity estimates for mandatory review.
+- The photo and model response are never persisted by the AI backend. Responses API requests explicitly use
+  `store=false`.
+- The model is still prohibited from calculating nutrition. Every detected food must resolve to a configured
+  trusted database entry; users can change the match, correct grams or millilitres, or remove an item before
+  saving.
+- Confirmed photo results use the same existing intake persistence and diary refresh path as text and manual
+  logging.
+
+## Remaining follow-ups
 
 1. Configure the generated `ONT_AI_ACCESS_TOKEN` in Vercel and enter the same token once on the device.
 2. Add a shared edge/Redis rate limiter before horizontally scaling the backend.
-3. Add image upload only after the text flow has been exercised on a physical Android device.
-4. Add native translations for the new AI meal strings.
+3. Add native translations for the new AI meal strings.

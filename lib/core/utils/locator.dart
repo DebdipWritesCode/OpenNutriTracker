@@ -74,6 +74,7 @@ import 'package:opennutritracker/core/utils/secure_app_storage_provider.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_meal/data/ai_meal_photo_picker.dart';
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
@@ -148,6 +149,9 @@ Future<void> initLocator() async {
       tokenStore: locator(),
       baseUrl: Env.aiBackendUrl,
     ),
+  );
+  locator.registerLazySingleton<AiMealPhotoPicker>(
+    () => DeviceAiMealPhotoPicker(),
   );
   locator.registerLazySingleton<HiveDBProvider>(() => hiveDBProvider);
   locator.registerLazySingleton<DeleteAllUserDataUsecase>(

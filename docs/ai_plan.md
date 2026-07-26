@@ -216,12 +216,12 @@ Calories
 
 Tasks
 
-- [ ] Image upload
-- [ ] Vision prompt
-- [ ] JSON parsing
-- [ ] Confidence scores
-- [ ] Manual corrections
-- [ ] Save meal
+- [x] Image upload
+- [x] Vision prompt
+- [x] JSON parsing
+- [x] Confidence scores
+- [x] Manual corrections
+- [x] Save meal
 
 Deliverable
 

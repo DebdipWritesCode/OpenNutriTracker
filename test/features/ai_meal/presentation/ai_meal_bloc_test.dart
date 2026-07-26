@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -6,6 +8,7 @@ import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dar
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
 import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
@@ -48,6 +51,15 @@ class _Gateway implements AiMealGateway {
   @override
   Future<AiMealAnalysis> analyzeMeal({
     required String text,
+    required String locale,
+  }) async {
+    if (failure != null) throw failure!;
+    return const AiMealAnalysis(foods: [_food], notes: [], modelUsed: 'test');
+  }
+
+  @override
+  Future<AiMealAnalysis> analyzePhoto({
+    required AiMealPhoto photo,
     required String locale,
   }) async {
     if (failure != null) throw failure!;
@@ -138,6 +150,26 @@ void main() {
 
     expect(state.authenticationRequired, isTrue);
     expect(state.errorMessage, 'Token required');
+  });
+
+  test('analyzes a photo before trusted nutrition resolution', () async {
+    final review = bloc.stream.firstWhere(
+      (state) => state.status == AiMealStatus.review,
+    );
+    final photo = AiMealPhoto(
+      path: '/tmp/meal.jpg',
+      bytes: Uint8List.fromList([0xff, 0xd8, 0xff]),
+      mimeType: 'image/jpeg',
+      fileName: 'meal-photo.jpg',
+    );
+
+    bloc.add(AnalyzeAiMealPhotoRequested(photo: photo, locale: 'en'));
+    final state = await review;
+
+    expect(state.photo, photo);
+    expect(state.items.single.selectedMeal?.source, MealSourceEntity.fdc);
+    expect(state.items.single.calories, 130);
+    expect(state.canSave, isTrue);
   });
 
   test('saves every ready item through the save use case', () async {

@@ -29,8 +29,11 @@ This clone is adding a privacy-first, self-hosted AI meal logging layer. The imp
 [`docs/ai_implementation_status.md`](docs/ai_implementation_status.md), and the FastAPI service is in
 [`backend/`](backend/).
 
-The text-meal flow is available from **Add meal → AI**. Production deployments must set the same randomly
-generated `ONT_AI_ACCESS_TOKEN` on the backend; the app asks for it once and stores it in platform secure storage.
+Text and photo meal logging are available from **Add meal → AI**. A meal photo is compressed on-device, sent
+only for the requested analysis, and shown with editable AI portion estimates. Nutrition values still come from
+the app's configured trusted food databases rather than the model. Production deployments must set the same
+randomly generated `ONT_AI_ACCESS_TOKEN` on the backend; the app asks for it once and stores it in platform secure
+storage.
 
 ## Screenshots
 <p align="center">

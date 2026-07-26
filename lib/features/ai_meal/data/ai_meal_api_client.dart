@@ -5,10 +5,16 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.dart';
+import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 
 abstract interface class AiMealGateway {
   Future<AiMealAnalysis> analyzeMeal({
     required String text,
+    required String locale,
+  });
+
+  Future<AiMealAnalysis> analyzePhoto({
+    required AiMealPhoto photo,
     required String locale,
   });
 }
@@ -36,7 +42,8 @@ class AiApiException implements Exception {
 class AiMealApiClient implements AiMealGateway {
   final http.Client _client;
   final AiAccessTokenStore _tokenStore;
-  final Uri _endpoint;
+  final Uri _textEndpoint;
+  final Uri _imageEndpoint;
   final Duration timeout;
   final int maxAttempts;
   final Future<void> Function(Duration) _delay;
@@ -50,7 +57,8 @@ class AiMealApiClient implements AiMealGateway {
     Future<void> Function(Duration)? delay,
   }) : _client = client,
        _tokenStore = tokenStore,
-       _endpoint = Uri.parse(baseUrl).resolve('/api/v1/analyze/text'),
+       _textEndpoint = Uri.parse(baseUrl).resolve('/api/v1/analyze/text'),
+       _imageEndpoint = Uri.parse(baseUrl).resolve('/api/v1/analyze/image'),
        _delay = delay ?? Future<void>.delayed;
 
   @override
@@ -59,22 +67,57 @@ class AiMealApiClient implements AiMealGateway {
     required String locale,
   }) async {
     final token = await _tokenStore.read();
+    return _sendWithRetry(
+      () => _client
+          .post(
+            _textEndpoint,
+            headers: _headers(token),
+            body: jsonEncode({'text': text.trim(), 'locale': locale}),
+          )
+          .timeout(timeout),
+      validationMessage: 'Describe at least one food or drink and try again.',
+    );
+  }
+
+  @override
+  Future<AiMealAnalysis> analyzePhoto({
+    required AiMealPhoto photo,
+    required String locale,
+  }) async {
+    final token = await _tokenStore.read();
+    return _sendWithRetry(
+      () => _client
+          .post(
+            _imageEndpoint,
+            headers: _headers(token),
+            body: jsonEncode({
+              'image_base64': base64Encode(photo.bytes),
+              'mime_type': photo.mimeType,
+              'locale': locale,
+            }),
+          )
+          .timeout(timeout),
+      validationMessage:
+          'Choose a clear JPEG, PNG, or WebP meal photo under 3 MB.',
+    );
+  }
+
+  Map<String, String> _headers(String? token) => {
+    HttpHeaders.contentTypeHeader: 'application/json',
+    HttpHeaders.acceptHeader: 'application/json',
+    if (token != null && token.isNotEmpty)
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+  };
+
+  Future<AiMealAnalysis> _sendWithRetry(
+    Future<http.Response> Function() send, {
+    required String validationMessage,
+  }) async {
     AiApiException? lastFailure;
 
     for (var attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        final response = await _client
-            .post(
-              _endpoint,
-              headers: {
-                HttpHeaders.contentTypeHeader: 'application/json',
-                HttpHeaders.acceptHeader: 'application/json',
-                if (token != null && token.isNotEmpty)
-                  HttpHeaders.authorizationHeader: 'Bearer $token',
-              },
-              body: jsonEncode({'text': text.trim(), 'locale': locale}),
-            )
-            .timeout(timeout);
+        final response = await send();
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           try {
@@ -89,7 +132,10 @@ class AiMealApiClient implements AiMealGateway {
           }
         }
 
-        final failure = _failureFromResponse(response);
+        final failure = _failureFromResponse(
+          response,
+          validationMessage: validationMessage,
+        );
         lastFailure = failure;
         if (!_isRetryable(failure) || attempt == maxAttempts) throw failure;
         await _delay(
@@ -126,7 +172,10 @@ class AiMealApiClient implements AiMealGateway {
         );
   }
 
-  AiApiException _failureFromResponse(http.Response response) {
+  AiApiException _failureFromResponse(
+    http.Response response, {
+    required String validationMessage,
+  }) {
     String? serverMessage;
     try {
       final decoded = jsonDecode(response.body) as Map<String, dynamic>;
@@ -144,9 +193,10 @@ class AiMealApiClient implements AiMealGateway {
           serverMessage ?? 'The AI access token is missing or invalid.',
         );
       case 422:
-        return const AiApiException(
+      case 413:
+        return AiApiException(
           AiApiFailureKind.validation,
-          'Describe at least one food or drink and try again.',
+          validationMessage,
         );
       case 429:
         final seconds = int.tryParse(response.headers['retry-after'] ?? '');
