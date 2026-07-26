@@ -227,6 +227,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Analyze photo'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Analyze photo'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Analyze photo'));
     await tester.pumpAndSettle();
 

@@ -121,10 +121,12 @@ void main() {
     expect(captured.headers['authorization'], 'Bearer app-token');
     expect(body['mime_type'], 'image/jpeg');
     expect(body['locale'], 'en-IN');
-    expect(
-      base64Decode(body['image_base64'] as String),
-      [0xff, 0xd8, 0xff, 0xe0],
-    );
+    expect(base64Decode(body['image_base64'] as String), [
+      0xff,
+      0xd8,
+      0xff,
+      0xe0,
+    ]);
   });
 
   test('retries a transient server error and then succeeds', () async {

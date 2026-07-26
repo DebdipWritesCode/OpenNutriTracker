@@ -208,9 +208,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
               ),
             if (_photoPickerError != null && isPhoto) ...[
               const SizedBox(height: Dimens.spacing12),
-              _ErrorPanel(
-                message: _photoPickerError!,
-              ),
+              _ErrorPanel(message: _photoPickerError!),
             ],
             if (state.errorMessage != null && stateErrorMatchesMode) ...[
               const SizedBox(height: Dimens.spacing12),
@@ -303,7 +301,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
               child: Image.file(
                 File(photo.path),
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: Theme.of(context).colorScheme.surfaceContainer,
                   child: const Center(
                     child: Icon(Icons.broken_image_outlined, size: 48),
@@ -476,9 +474,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
       setState(() => _photoPickerError = error.message);
     } on Object catch (_) {
       if (!mounted) return;
-      setState(
-        () => _photoPickerError = S.of(context).aiMealPhotoPickerError,
-      );
+      setState(() => _photoPickerError = S.of(context).aiMealPhotoPickerError);
     }
   }
 
@@ -591,7 +587,7 @@ class _AnalyzingView extends StatelessWidget {
                         Image.file(
                           File(photo!.path),
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => ColoredBox(
+                          errorBuilder: (_, _, _) => ColoredBox(
                             color: Theme.of(
                               context,
                             ).colorScheme.surfaceContainer,
@@ -651,7 +647,7 @@ class _PhotoReviewBanner extends StatelessWidget {
                   child: Image.file(
                     File(photo.path),
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => ColoredBox(
+                    errorBuilder: (_, _, _) => ColoredBox(
                       color: Theme.of(context).colorScheme.surfaceContainer,
                       child: const Icon(Icons.broken_image_outlined),
                     ),

@@ -194,10 +194,7 @@ class AiMealApiClient implements AiMealGateway {
         );
       case 422:
       case 413:
-        return AiApiException(
-          AiApiFailureKind.validation,
-          validationMessage,
-        );
+        return AiApiException(AiApiFailureKind.validation, validationMessage);
       case 429:
         final seconds = int.tryParse(response.headers['retry-after'] ?? '');
         return AiApiException(

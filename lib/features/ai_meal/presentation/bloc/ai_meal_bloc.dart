@@ -427,10 +427,7 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     await _tokenStore.save(token);
     if (state.photo != null) {
       add(
-        AnalyzeAiMealPhotoRequested(
-          photo: state.photo!,
-          locale: event.locale,
-        ),
+        AnalyzeAiMealPhotoRequested(photo: state.photo!, locale: event.locale),
       );
     } else if (state.description.isNotEmpty) {
       add(

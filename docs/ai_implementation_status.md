@@ -161,6 +161,16 @@ encrypted local diary
 - Confirmed photo results use the same existing intake persistence and diary refresh path as text and manual
   logging.
 
+Photo-flow validation:
+
+- Backend Ruff lint and format checks: passing.
+- Backend Pytest suite: 20 passing tests.
+- Dart formatting and Flutter static analysis: passing with no issues.
+- Flutter test suite: 741 passing tests, including image-client, BLoC, and camera-to-review widget coverage.
+- Deployed Swagger UI browser smoke check: passing; `/docs` exposes the authenticated image-analysis operation.
+- Live vision smoke test: passing. A representative Indian thali photo returned editable food and portion
+  estimates from `gpt-5.4-mini`, with ambiguous items flagged for confirmation and no model-calculated nutrition.
+
 ## Remaining follow-ups
 
 1. Configure the generated `ONT_AI_ACCESS_TOKEN` in Vercel and enter the same token once on the device.
