@@ -333,7 +333,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "наприклад, пластівці, молоко, кава ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Сніданок"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("спалено"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("Далі"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Скинути"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Зберегти"),
@@ -1721,6 +1727,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Бажаєте повідомити про помилку розробнику?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Повторити"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("насичені жири"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage(
       "Сканувати продукт",
@@ -2112,6 +2121,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Відкрити джерело",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker використовує для кожного розрахунку усталені, рецензовані методики. Наведені нижче посилання ведуть до оригінальних джерел, щоб ти могла самостійно перевірити будь-яке число.",

@@ -320,7 +320,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "ör. mısır gevreği, süt, kahve ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Kahvaltı"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("yakılan"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("İLERİ"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Sıfırla"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Kaydet"),
@@ -1640,6 +1646,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Geliştiriciye bir hata bildirmek istiyor musunuz?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("doymuş yağ"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage("Ürünü Tara"),
     "scannerLockOrientationTooltip": MessageLookupByLibrary.simpleMessage(
@@ -2021,6 +2030,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Kaynağı aç",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker, gösterdiği her hesaplama için yerleşik ve hakemli yöntemler kullanır. Aşağıdaki kaynaklar orijinal yayınlara bağlanır, böylece her değeri kendin doğrulayabilirsin.",

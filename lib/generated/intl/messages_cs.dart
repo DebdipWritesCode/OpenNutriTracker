@@ -332,7 +332,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "např. obilniny, mléko, káva...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Snídaně"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("vydáno"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("DALŠÍ"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Reset"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Uložit"),
@@ -1678,6 +1684,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Přejete si nahlásit chybu vývojáři aplikace?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Znovu"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage(
       "nasycené mastné kyseliny",
     ),
@@ -2063,6 +2072,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Otevřít zdroj",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker používá pro každý zobrazený výpočet zavedené, recenzované metody. Následující odkazy vedou na původní zdroje, takže si můžeš každé číslo sám ověřit.",

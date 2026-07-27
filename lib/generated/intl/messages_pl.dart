@@ -332,7 +332,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "np. płatki, mleko, kawa ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Śniadanie"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("spalone"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("DALEJ"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Resetuj"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Zapisz"),
@@ -1674,6 +1680,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Czy chcesz zgłosić błąd deweloperowi?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Ponów"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage(
       "tłuszcze nasycone",
     ),
@@ -2059,6 +2068,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Otwórz źródło",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker stosuje dla każdego obliczenia uznane, recenzowane metody. Poniższe odnośniki prowadzą do oryginalnych źródeł, dzięki czemu możesz samodzielnie zweryfikować dowolną wartość.",

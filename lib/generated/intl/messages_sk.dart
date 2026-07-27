@@ -335,7 +335,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "napr. cereálie, mlieko, káva ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Raňajky"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("spálené"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("ĎALEJ"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Obnoviť"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Uložiť"),
@@ -1703,6 +1709,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Chcete nahlásiť chybu vývojárovi?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Skúsiť znova"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("nasýtené tuky"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage(
       "Naskenovať produkt",
@@ -2092,6 +2101,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Zobraziť zdroj",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker používa pre každý zobrazený výpočet zavedené, recenzované metódy. Nasledujúce odkazy vedú na pôvodné zdroje, takže si každé číslo môžete sami overiť.",

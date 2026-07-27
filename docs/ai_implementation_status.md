@@ -270,3 +270,28 @@ Activity-flow validation:
 - Flutter unit tests cover workout parsing-client behavior, duration assumptions, mph/km/h conversion, both
   ACSM equations, and structured metadata round trips.
 - Android develop debug compilation: passing.
+
+## Daily resting-energy dashboard
+
+The Home dashboard no longer treats logged workouts as the user's entire daily energy expenditure:
+
+- A full-day resting estimate is calculated locally with the Mifflin–St Jeor equation using the saved profile
+  age, height, weight, and calorie-reference selection.
+- Resting calories accrue against the clock from the user's configured diary-day boundary and refresh every
+  minute while the Home screen is mounted, plus immediately when the app resumes.
+- The burned total is split into **Resting so far** and **Activity above rest**. Since the app's MET and ACSM
+  workout figures are gross session energy, the resting share of each duration-based workout is subtracted from
+  the activity contribution before it is added to the continuous resting estimate. Direct tracker/custom kcal
+  entries without a duration remain fully active.
+- The implementation is offline, cross-platform, and private. It does not depend on the deprecated Google Fit
+  APIs. A future Android sensor import should use Health Connect and can replace the local estimate when a user
+  grants permission.
+- The in-app Sources screen links to the original Mifflin–St Jeor paper and explains the non-double-counting
+  behavior.
+- Six focused calculation tests cover the equation, progressive accrual, shifted diary boundaries, custom
+  tracker entries, and non-negative active energy. The complete Flutter suite passes with 766 tests, including a
+  360 × 640 dashboard check at 1.3× text scale. Android develop-debug compilation also passes.
+
+Reference:
+
+- [Mifflin MD, et al. (1990), PubMed PMID 2305711](https://pubmed.ncbi.nlm.nih.gov/2305711/)

@@ -44,6 +44,11 @@ sets, reps, and loads into an editable preview, while calories are calculated lo
 profile weight, and the 2024 Adult Compendium. Selecting treadmill running opens dedicated walking/running,
 minutes, seconds, speed-unit, and incline controls backed by the local ACSM treadmill equations.
 
+The Home dashboard now reports total energy burned as a continuously accrued resting estimate plus logged
+activity energy above rest. Resting energy is calculated locally from the profile with the Mifflin–St Jeor
+equation and follows the user's configured diary-day boundary. The breakdown is explicit, avoids counting the
+resting portion of a workout twice, and needs no Google Fit account, sensor permission, network call, or AI.
+
 ## Screenshots
 <p align="center">
   <img alt="Logo" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="20%" />
@@ -67,7 +72,7 @@ minutes, seconds, speed-unit, and incline controls backed by the local ACSM trea
 - **🍽️ Custom meals + recipes:** Build a one-off custom meal or save a reusable recipe with photo, brand, and barcode. The recipe builder has its own ingredient picker with barcode scanning so you can compose meals from real products without leaving the screen.
 - **⚡ Quick add:** When you already know roughly how much you ate, skip the search flow entirely — Quick add takes a title plus kcal (and optional macros) and logs it straight to the meal section.
 - **📷 Barcode scanner:** Scan packaged items for instant lookup, paste a barcode manually when the camera struggles, or attach a barcode to a custom meal so future scans recognise your own foods.
-- **🏃 Activities:** Log workouts from a categorised activity catalogue or define your own custom activities with direct kcal entry and reusable templates.
+- **🏃 Activities:** Log workouts from a categorised activity catalogue or define your own custom activities with direct kcal entry and reusable templates. The Home dashboard combines logged activity with a resting-calorie estimate that progresses throughout the diary day.
 - **💧 Water tracker:** A water chip on the home screen with quick-add increments, an editable goal, and undo for the last entry.
 - **⏱️ Fasting timer:** Optional intermittent-fasting timer with content-warning gate, a home chip showing time remaining, and a completion notification when you reach your window.
 - **⚖️ Weight history:** Capture weight during onboarding and on demand, see the trend on a chart with a dashed line at your target weight, and optionally taper the calorie goal as you approach it.

@@ -489,9 +489,29 @@ class S {
     );
   }
 
+  /// `Activity above rest`
+  String get activeBurnedLabel {
+    return Intl.message(
+      'Activity above rest',
+      name: 'activeBurnedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `burned`
   String get burnedLabel {
     return Intl.message('burned', name: 'burnedLabel', desc: '', args: []);
+  }
+
+  /// `Updates throughout your diary day`
+  String get burnedUpdatesLabel {
+    return Intl.message(
+      'Updates throughout your diary day',
+      name: 'burnedUpdatesLabel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `NEXT`
@@ -7083,6 +7103,36 @@ class S {
     return Intl.message(
       'View sources',
       name: 'sourcesIconTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resting so far`
+  String get restingBurnedLabel {
+    return Intl.message(
+      'Resting so far',
+      name: 'restingBurnedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.`
+  String get sourcesRestingEnergyDescription {
+    return Intl.message(
+      'Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.',
+      name: 'sourcesRestingEnergyDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resting calories`
+  String get sourcesRestingEnergyTitle {
+    return Intl.message(
+      'Resting calories',
+      name: 'sourcesRestingEnergyTitle',
       desc: '',
       args: [],
     );

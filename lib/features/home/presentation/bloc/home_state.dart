@@ -19,7 +19,13 @@ class HomeLoadedState extends HomeState {
   final double totalKcalDaily;
   final double totalKcalLeft;
   final double totalKcalSupplied;
-  final double totalKcalBurned;
+  // Estimated resting energy for a complete diary day. The presentation
+  // accrues this value against the clock without re-reading Hive every minute.
+  final double dailyRestingKcal;
+  // Logged activity energy above the resting share for the same minutes, so
+  // the dashboard total does not count basal energy twice.
+  final double activityKcalAboveRest;
+  final int dayStartOffsetTotalMinutes;
   final double totalCarbsIntake;
   final double totalFatsIntake;
   final double totalProteinsIntake;
@@ -66,7 +72,9 @@ class HomeLoadedState extends HomeState {
     required this.totalKcalDaily,
     required this.totalKcalLeft,
     required this.totalKcalSupplied,
-    required this.totalKcalBurned,
+    required this.dailyRestingKcal,
+    required this.activityKcalAboveRest,
+    required this.dayStartOffsetTotalMinutes,
     required this.totalCarbsIntake,
     required this.totalFatsIntake,
     required this.totalProteinsIntake,
@@ -108,6 +116,9 @@ class HomeLoadedState extends HomeState {
     bodyWeightUnit,
     userWeightKg,
     totalKcalDaily,
+    dailyRestingKcal,
+    activityKcalAboveRest,
+    dayStartOffsetTotalMinutes,
     waterMlToday,
     waterGoalMl,
     waterIntakes,

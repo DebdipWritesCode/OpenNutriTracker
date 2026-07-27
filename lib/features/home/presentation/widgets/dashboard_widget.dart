@@ -14,7 +14,8 @@ class DashboardWidget extends StatefulWidget {
   final double totalKcalDaily;
   final double totalKcalLeft;
   final double totalKcalSupplied;
-  final double totalKcalBurned;
+  final double restingKcalBurned;
+  final double activityKcalBurned;
   final double totalCarbsIntake;
   final double totalFatsIntake;
   final double totalProteinsIntake;
@@ -25,7 +26,8 @@ class DashboardWidget extends StatefulWidget {
   const DashboardWidget({
     super.key,
     required this.totalKcalSupplied,
-    required this.totalKcalBurned,
+    required this.restingKcalBurned,
+    required this.activityKcalBurned,
     required this.totalKcalDaily,
     required this.totalKcalLeft,
     required this.totalCarbsIntake,
@@ -62,50 +64,83 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     } else {
       kcalValue = widget.totalKcalLeft;
       gaugeValue =
-          (widget.totalKcalDaily - widget.totalKcalLeft) / widget.totalKcalDaily;
+          (widget.totalKcalDaily - widget.totalKcalLeft) /
+          widget.totalKcalDaily;
     }
-    final displayValue = usesKilojoules ? UnitCalc.kcalToKj(kcalValue) : kcalValue;
+    final displayValue = usesKilojoules
+        ? UnitCalc.kcalToKj(kcalValue)
+        : kcalValue;
     final displaySupplied = usesKilojoules
         ? UnitCalc.kcalToKj(widget.totalKcalSupplied)
         : widget.totalKcalSupplied;
+    final totalKcalBurned =
+        widget.restingKcalBurned + widget.activityKcalBurned;
     final displayBurned = usesKilojoules
-        ? UnitCalc.kcalToKj(widget.totalKcalBurned)
-        : widget.totalKcalBurned;
+        ? UnitCalc.kcalToKj(totalKcalBurned)
+        : totalKcalBurned;
+    final displayResting = usesKilojoules
+        ? UnitCalc.kcalToKj(widget.restingKcalBurned)
+        : widget.restingKcalBurned;
+    final displayActivity = usesKilojoules
+        ? UnitCalc.kcalToKj(widget.activityKcalBurned)
+        : widget.activityKcalBurned;
+    final energyUnit = usesKilojoules
+        ? S.of(context).kjLabel
+        : S.of(context).kcalLabel;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final palette = isDark ? AppPalette.dark : AppPalette.light;
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Dimens.spacing16, Dimens.spacing8, Dimens.spacing16, Dimens.spacing4),
+      padding: const EdgeInsets.fromLTRB(
+        Dimens.spacing16,
+        Dimens.spacing8,
+        Dimens.spacing16,
+        Dimens.spacing4,
+      ),
       child: Column(
         children: [
           AppCard(
-            padding: const EdgeInsets.fromLTRB(Dimens.spacing24, Dimens.spacing20, Dimens.spacing24, Dimens.spacing24),
+            padding: const EdgeInsets.fromLTRB(
+              Dimens.spacing24,
+              Dimens.spacing20,
+              Dimens.spacing24,
+              Dimens.spacing24,
+            ),
             child: Column(
               children: [
                 Row(
                   children: [
-                    _MiniStat(
-                      icon: Icons.arrow_downward_rounded,
-                      value: '${displaySupplied.toInt()}',
-                      label: S.of(context).suppliedLabel,
-                      color: palette.proteinColor,
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const SourcesScreen()),
+                    Expanded(
+                      child: _MiniStat(
+                        icon: Icons.arrow_downward_rounded,
+                        value: '${displaySupplied.toInt()}',
+                        label: S.of(context).suppliedLabel,
+                        color: palette.proteinColor,
                       ),
-                      child: Icon(Icons.info_outline_rounded, color: palette.textMuted, size: 22),
                     ),
-                    const Spacer(),
-                    _MiniStat(
-                      icon: Icons.local_fire_department_rounded,
-                      value: '${displayBurned.toInt()}',
-                      label: S.of(context).burnedLabel,
-                      color: palette.carbsColor,
-                      trailing: true,
+                    IconButton(
+                      tooltip: S.of(context).sourcesIconTooltip,
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const SourcesScreen(),
+                        ),
+                      ),
+                      icon: Icon(
+                        Icons.info_outline_rounded,
+                        color: palette.textMuted,
+                        size: 22,
+                      ),
+                    ),
+                    Expanded(
+                      child: _MiniStat(
+                        icon: Icons.local_fire_department_rounded,
+                        value: '${displayBurned.toInt()}',
+                        label: S.of(context).burnedLabel,
+                        color: palette.carbsColor,
+                        trailing: true,
+                      ),
                     ),
                   ],
                 ),
@@ -114,29 +149,43 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   label: '${displayValue.toInt()} $kcalLabelText',
                   excludeSemantics: true,
                   child: CircularPercentIndicator(
-                  radius: 90,
-                  lineWidth: 16,
-                  percent: gaugeValue.clamp(0.0, 1.0),
-                  animation: true,
-                  animationDuration: 800,
-                  curve: AppMotion.emphasized,
-                  circularStrokeCap: CircularStrokeCap.round,
-                  backgroundColor: palette.surfaceMuted,
-                  progressColor: Theme.of(context).colorScheme.primary,
-                  center: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedFlipCounter(
-                        duration: const Duration(milliseconds: 800),
-                        curve: AppMotion.emphasized,
-                        value: displayValue.toInt(),
-                        textStyle: textTheme.displaySmall?.copyWith(height: 1),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(kcalLabelText, style: textTheme.bodyMedium?.copyWith(color: palette.textMuted)),
-                    ],
+                    radius: 90,
+                    lineWidth: 16,
+                    percent: gaugeValue.clamp(0.0, 1.0),
+                    animation: true,
+                    animationDuration: 800,
+                    curve: AppMotion.emphasized,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    backgroundColor: palette.surfaceMuted,
+                    progressColor: Theme.of(context).colorScheme.primary,
+                    center: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedFlipCounter(
+                          duration: const Duration(milliseconds: 800),
+                          curve: AppMotion.emphasized,
+                          value: displayValue.toInt(),
+                          textStyle: textTheme.displaySmall?.copyWith(
+                            height: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          kcalLabelText,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: palette.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  ),
+                ),
+                const SizedBox(height: Dimens.spacing16),
+                _EnergyBurnBreakdown(
+                  restingValue: displayResting,
+                  activityValue: displayActivity,
+                  unit: energyUnit,
+                  palette: palette,
                 ),
               ],
             ),
@@ -181,6 +230,130 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   }
 }
 
+class _EnergyBurnBreakdown extends StatelessWidget {
+  final double restingValue;
+  final double activityValue;
+  final String unit;
+  final AppPalette palette;
+
+  const _EnergyBurnBreakdown({
+    required this.restingValue,
+    required this.activityValue,
+    required this.unit,
+    required this.palette,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = S.of(context);
+    final semanticsLabel =
+        '${l10n.restingBurnedLabel}: ${restingValue.toInt()} $unit. '
+        '${l10n.activeBurnedLabel}: ${activityValue.toInt()} $unit. '
+        '${l10n.burnedUpdatesLabel}.';
+
+    return Semantics(
+      container: true,
+      label: semanticsLabel,
+      excludeSemantics: true,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(Dimens.spacing12),
+        decoration: BoxDecoration(
+          color: palette.surfaceMuted,
+          borderRadius: Dimens.borderRadiusM,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.schedule_rounded,
+                  size: 18,
+                  color: palette.textMuted,
+                ),
+                const SizedBox(width: Dimens.spacing8),
+                Expanded(
+                  child: Text(
+                    l10n.burnedUpdatesLabel,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelMedium?.copyWith(color: palette.textMuted),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Dimens.spacing12),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _BurnBreakdownMetric(
+                      value: restingValue,
+                      unit: unit,
+                      label: l10n.restingBurnedLabel,
+                      palette: palette,
+                    ),
+                  ),
+                  VerticalDivider(
+                    width: Dimens.spacing24,
+                    color: palette.border,
+                  ),
+                  Expanded(
+                    child: _BurnBreakdownMetric(
+                      value: activityValue,
+                      unit: unit,
+                      label: l10n.activeBurnedLabel,
+                      palette: palette,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BurnBreakdownMetric extends StatelessWidget {
+  final double value;
+  final String unit;
+  final String label;
+  final AppPalette palette;
+
+  const _BurnBreakdownMetric({
+    required this.value,
+    required this.unit,
+    required this.label,
+    required this.palette,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${value.toInt()} $unit',
+          style: textTheme.titleSmall?.copyWith(
+            color: palette.textStrong,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: textTheme.labelSmall?.copyWith(color: palette.textMuted),
+        ),
+      ],
+    );
+  }
+}
+
 class _MiniStat extends StatelessWidget {
   final IconData icon;
   final String value;
@@ -200,11 +373,16 @@ class _MiniStat extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
-      crossAxisAlignment: trailing ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: trailing
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withValues(alpha: 0.16), shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.16),
+            shape: BoxShape.circle,
+          ),
           child: Icon(icon, color: color, size: 20),
         ),
         const SizedBox(height: 6),
@@ -236,13 +414,22 @@ class _MacroTile extends StatelessWidget {
     final pct = (goal <= 0) ? 0.0 : (intake / goal).clamp(0.0, 1.0);
     return AppCard(
       borderRadius: Dimens.radiusM,
-      padding: const EdgeInsets.fromLTRB(Dimens.spacing16, Dimens.spacing16, Dimens.spacing16, Dimens.spacing16),
+      padding: const EdgeInsets.fromLTRB(
+        Dimens.spacing16,
+        Dimens.spacing16,
+        Dimens.spacing16,
+        Dimens.spacing16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(width: 9, height: 9, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+              Container(
+                width: 9,
+                height: 9,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
               const SizedBox(width: 6),
               Flexible(child: Text(label, style: textTheme.labelMedium)),
             ],
@@ -260,7 +447,10 @@ class _MacroTile extends StatelessWidget {
           const SizedBox(height: Dimens.spacing12),
           Text(
             '${intake.toInt()}/${goal.toInt()} g',
-            style: textTheme.bodySmall?.copyWith(color: palette.textStrong, fontWeight: FontWeight.w700),
+            style: textTheme.bodySmall?.copyWith(
+              color: palette.textStrong,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),

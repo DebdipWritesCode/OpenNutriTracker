@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -8,6 +10,7 @@ import 'package:opennutritracker/core/presentation/widgets/empty_hint.dart';
 import 'package:opennutritracker/core/presentation/widgets/low_kcal_warning_card.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
+import 'package:opennutritracker/core/utils/calc/daily_energy_burn_calc.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
@@ -41,17 +44,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool _isIntakeDragging = false;
   bool _isActivityDragging = false;
   bool get _isDragging => _isIntakeDragging || _isActivityDragging;
+  DateTime _energyNow = DateTime.now();
+  Timer? _energyTimer;
+  int _energyDayStartOffsetTotalMinutes = 0;
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
     _homeBloc = locator<HomeBloc>();
-    super.initState();
+    _energyTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (!mounted) return;
+      final now = DateTime.now();
+      final previousDayStart = DailyEnergyBurnCalc.diaryDayStart(
+        _energyNow,
+        dayStartOffsetTotalMinutes: _energyDayStartOffsetTotalMinutes,
+      );
+      final currentDayStart = DailyEnergyBurnCalc.diaryDayStart(
+        now,
+        dayStartOffsetTotalMinutes: _energyDayStartOffsetTotalMinutes,
+      );
+      setState(() => _energyNow = now);
+      if (!currentDayStart.isAtSameMomentAs(previousDayStart)) {
+        _homeBloc.add(const LoadItemsEvent());
+      }
+    });
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _energyTimer?.cancel();
     super.dispose();
   }
 
@@ -66,6 +89,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         } else if (state is HomeLoadingState) {
           return _getLoadingContent();
         } else if (state is HomeLoadedState) {
+          _energyDayStartOffsetTotalMinutes = state.dayStartOffsetTotalMinutes;
           return _getLoadedContent(
             context,
             state.showDisclaimerDialog,
@@ -74,7 +98,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             state.userCaloriesProfile,
             state.totalKcalLeft,
             state.totalKcalSupplied,
-            state.totalKcalBurned,
+            state.dailyRestingKcal,
+            state.activityKcalAboveRest,
+            state.dayStartOffsetTotalMinutes,
             state.totalCarbsIntake,
             state.totalFatsIntake,
             state.totalProteinsIntake,
@@ -113,6 +139,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       log.info('App resumed');
+      setState(() => _energyNow = DateTime.now());
       _refreshPageOnDayChange();
     }
     super.didChangeAppLifecycleState(state);
@@ -130,7 +157,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     CaloriesProfileEntity? userCaloriesProfile,
     double totalKcalLeft,
     double totalKcalSupplied,
-    double totalKcalBurned,
+    double dailyRestingKcal,
+    double activityKcalAboveRest,
+    int dayStartOffsetTotalMinutes,
     double totalCarbsIntake,
     double totalFatsIntake,
     double totalProteinsIntake,
@@ -161,6 +190,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (showDisclaimerDialog) {
       _showDisclaimerDialog(context);
     }
+    final restingKcalSoFar = DailyEnergyBurnCalc.restingKcalSoFar(
+      dailyRestingKcal: dailyRestingKcal,
+      now: _energyNow,
+      dayStartOffsetTotalMinutes: dayStartOffsetTotalMinutes,
+    );
     return Stack(
       children: [
         ListView(
@@ -195,7 +229,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               totalKcalDaily: totalKcalDaily,
               totalKcalLeft: totalKcalLeft,
               totalKcalSupplied: totalKcalSupplied,
-              totalKcalBurned: totalKcalBurned,
+              restingKcalBurned: restingKcalSoFar,
+              activityKcalBurned: activityKcalAboveRest,
               totalCarbsIntake: totalCarbsIntake,
               totalFatsIntake: totalFatsIntake,
               totalProteinsIntake: totalProteinsIntake,

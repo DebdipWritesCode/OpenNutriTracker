@@ -336,7 +336,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "z. B. Müsli, Milch, Kaffee ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Frühstück"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("verbrannt"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("WEITER"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Zurücksetzen"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Speichern"),
@@ -1692,6 +1698,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Möchten Sie einen Fehler an den Entwickler melden?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage(
       "gesättigtes Fett",
     ),
@@ -2073,6 +2082,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Quelle öffnen",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker verwendet für alle Berechnungen etablierte, peer-reviewed Methoden. Die folgenden Quellenangaben verlinken auf die Originaltexte, damit du jede Zahl selbst überprüfen kannst.",

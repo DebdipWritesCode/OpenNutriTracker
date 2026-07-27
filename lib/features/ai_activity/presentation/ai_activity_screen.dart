@@ -130,6 +130,7 @@ class _AiActivityScreenState extends State<AiActivityScreen> {
 
   Future<void> _showAccessTokenDialog(BuildContext context) async {
     final controller = TextEditingController();
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final token = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -164,12 +165,7 @@ class _AiActivityScreenState extends State<AiActivityScreen> {
     );
     controller.dispose();
     if (token == null || token.isEmpty || !mounted) return;
-    _bloc.add(
-      AiActivityAccessTokenSubmitted(
-        token,
-        Localizations.localeOf(context).toLanguageTag(),
-      ),
-    );
+    _bloc.add(AiActivityAccessTokenSubmitted(token, locale));
   }
 }
 

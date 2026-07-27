@@ -24,6 +24,7 @@ import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
+import 'package:opennutritracker/core/utils/calc/daily_energy_burn_calc.dart';
 import 'package:opennutritracker/core/utils/calc/day_boundary_calc.dart';
 import 'package:opennutritracker/core/utils/calc/macro_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
@@ -151,10 +152,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         dayStartOffsetHours: dayStartOffsetHours,
         dayStartOffsetMinutes: dayStartOffsetMinutes,
       );
-      final totalKcalActivities = userActivities
-          .map((activity) => activity.burnedKcal)
-          .toList()
-          .sum;
 
       final waterIntakes = await _getWaterIntakeUsecase.getTodayEntries(
         dayStartOffsetTotalMinutes: configData.dayStartOffsetTotalMinutes,
@@ -164,6 +161,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .fold<int>(0, (sum, ml) => sum + ml);
 
       final user = await _getUserUsecase.getUserData();
+      final dailyRestingKcal = DailyEnergyBurnCalc.dailyRestingKcal(user);
+      final activityKcalAboveRest = DailyEnergyBurnCalc.activityKcalAboveRest(
+        dailyRestingKcal: dailyRestingKcal,
+        activities: userActivities,
+      );
       final totalKcalGoal = await _getKcalGoalUsecase.getKcalGoal(
         userEntity: user,
       );
@@ -206,7 +208,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           totalKcalDaily: totalKcalGoal,
           totalKcalLeft: totalKcalLeft,
           totalKcalSupplied: totalKcalIntake,
-          totalKcalBurned: totalKcalActivities,
+          dailyRestingKcal: dailyRestingKcal,
+          activityKcalAboveRest: activityKcalAboveRest,
+          dayStartOffsetTotalMinutes: configData.dayStartOffsetTotalMinutes,
           totalCarbsIntake: totalCarbsIntake,
           totalFatsIntake: totalFatsIntake,
           totalCarbsGoal: totalCarbsGoal,

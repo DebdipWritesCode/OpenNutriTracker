@@ -311,7 +311,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "例如： cereal、牛奶、咖啡...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("早餐"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("消耗"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("下一步"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("重置"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("保存"),
@@ -1307,6 +1313,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "您想向开发者报告错误吗？",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("重试"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("饱和脂肪"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage("扫描产品"),
     "scannerLockOrientationTooltip": MessageLookupByLibrary.simpleMessage(
@@ -1583,6 +1592,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "营养参考摄入量",
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage("打开来源"),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
+    ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker 的每一项计算都采用成熟的、经同行评审的方法。以下引用直接链接到原始文献，你可以自行核对其中的每一个数值。",
     ),

@@ -332,7 +332,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "e.g. cereal, milk, coffee ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Breakfast"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("burned"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("NEXT"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Reset"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Save"),
@@ -1634,6 +1640,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Do you want to report an error to the developer?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("saturated fat"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage("Scan Product"),
     "scannerLockOrientationTooltip": MessageLookupByLibrary.simpleMessage(
@@ -2005,6 +2014,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "View source",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker uses well-established, peer-reviewed methodologies for every calculation it shows. The citations below link to the original sources so you can verify any number yourself.",

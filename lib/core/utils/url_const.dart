@@ -10,6 +10,8 @@ class URLConst {
   // can verify each number we show against its peer-reviewed source.
   static const sourceEnergyIomDriURL =
       "https://nap.nationalacademies.org/catalog/10490";
+  static const sourceRestingEnergyMifflinStJeorURL =
+      "https://pubmed.ncbi.nlm.nih.gov/2305711/";
   // Per-nutrient reference intakes shown on the diary's daily nutrient
   // panel (fibre, iron, calcium, vitamins, etc.) come from this Summary
   // Report, which covers the broader DRI tables — distinct from the

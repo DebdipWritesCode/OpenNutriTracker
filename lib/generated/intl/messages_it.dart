@@ -336,7 +336,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "es. cereali, latte, caffè ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Colazione"),
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("bruciate"),
+    "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
+      "Updates throughout your diary day",
+    ),
     "buttonNextLabel": MessageLookupByLibrary.simpleMessage("AVANTI"),
     "buttonResetLabel": MessageLookupByLibrary.simpleMessage("Resetta"),
     "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Salva"),
@@ -1722,6 +1728,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vuoi segnalare un errore allo sviluppatore?",
     ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Riprova"),
+    "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resting so far",
+    ),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("grassi saturi"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage(
       "Scansiona prodotto",
@@ -2107,6 +2116,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sourcesOpenSourceLabel": MessageLookupByLibrary.simpleMessage(
       "Apri la fonte",
+    ),
+    "sourcesRestingEnergyDescription": MessageLookupByLibrary.simpleMessage(
+      "Resting calories use the Mifflin–St Jeor equation with your profile age, height, weight, and calorie reference. They accrue across your configured diary day. Logged workout values include their resting component, so the dashboard adds only activity energy above rest to avoid counting the same energy twice.",
+    ),
+    "sourcesRestingEnergyTitle": MessageLookupByLibrary.simpleMessage(
+      "Resting calories",
     ),
     "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
       "OpenNutriTracker utilizza per ogni calcolo metodologie consolidate e sottoposte a peer review. I riferimenti seguenti rimandano alle fonti originali, così puoi verificare ogni numero in autonomia.",

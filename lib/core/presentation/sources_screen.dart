@@ -31,6 +31,19 @@ class SourcesScreen extends StatelessWidget {
         ],
       ),
       _SourceEntry(
+        title: l10n.sourcesRestingEnergyTitle,
+        description: l10n.sourcesRestingEnergyDescription,
+        sources: const [
+          _SourceLink(
+            citation:
+                'Mifflin MD, et al. (1990). A new predictive equation for '
+                'resting energy expenditure in healthy individuals. '
+                'American Journal of Clinical Nutrition, 51(2):241–247.',
+            url: URLConst.sourceRestingEnergyMifflinStJeorURL,
+          ),
+        ],
+      ),
+      _SourceEntry(
         title: l10n.sourcesBmiTitle,
         description: l10n.sourcesBmiDescription,
         sources: const [
@@ -115,7 +128,10 @@ class SourcesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsSourcesLabel)),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing16, vertical: Dimens.spacing16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacing16,
+          vertical: Dimens.spacing16,
+        ),
         children: [
           Text(
             l10n.sourcesScreenIntro,
@@ -162,9 +178,9 @@ class _SourceCard extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.errorOpeningBrowser)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.errorOpeningBrowser)));
     }
   }
 
@@ -178,15 +194,9 @@ class _SourceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              entry.title,
-              style: theme.textTheme.titleMedium,
-            ),
+            Text(entry.title, style: theme.textTheme.titleMedium),
             const SizedBox(height: Dimens.spacing8),
-            Text(
-              entry.description,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(entry.description, style: theme.textTheme.bodyMedium),
             const SizedBox(height: Dimens.spacing12),
             ...entry.sources.map(
               (source) => Padding(
@@ -207,7 +217,9 @@ class _SourceCard extends StatelessWidget {
                         icon: const Icon(Icons.open_in_new_rounded, size: 18),
                         label: Text(S.of(context).sourcesOpenSourceLabel),
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Dimens.spacing8,
+                          ),
                           minimumSize: const Size(0, 32),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
