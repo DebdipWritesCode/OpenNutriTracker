@@ -50,6 +50,7 @@ class ActivityLogDetails {
   final double? speedKph;
   final double? inclinePercent;
   final TreadmillSpeedUnit? enteredSpeedUnit;
+  final DateTime? loggedAt;
 
   const ActivityLogDetails({
     required this.kind,
@@ -62,6 +63,7 @@ class ActivityLogDetails {
     this.speedKph,
     this.inclinePercent,
     this.enteredSpeedUnit,
+    this.loggedAt,
   });
 
   int get totalSets =>
@@ -81,6 +83,7 @@ class ActivityLogDetails {
     speedKph: speedKph,
     inclinePercent: inclinePercent,
     enteredSpeedUnit: enteredSpeedUnit,
+    loggedAt: loggedAt,
   );
 
   factory ActivityLogDetails.fromJson(Map<String, dynamic> json) =>
@@ -106,6 +109,9 @@ class ActivityLogDetails {
             : TreadmillSpeedUnit.values.byName(
                 json['entered_speed_unit'] as String,
               ),
+        loggedAt: json['logged_at'] == null
+            ? null
+            : DateTime.tryParse(json['logged_at'] as String),
       );
 
   static ActivityLogDetails? tryParse(String? encoded) {
@@ -130,5 +136,6 @@ class ActivityLogDetails {
     'speed_kph': speedKph,
     'incline_percent': inclinePercent,
     'entered_speed_unit': enteredSpeedUnit?.name,
+    'logged_at': loggedAt?.toIso8601String(),
   });
 }

@@ -14,6 +14,9 @@ import 'package:opennutritracker/features/add_activity/presentation/widgets/acti
 import 'package:opennutritracker/features/add_activity/presentation/widgets/quick_add_activity_bottom_sheet.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:opennutritracker/features/ai_activity/presentation/ai_activity_screen.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/get_recent_ai_logs_usecase.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
+import 'package:opennutritracker/features/ai_reuse/presentation/recent_ai_log_cards.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class AddActivityScreen extends StatefulWidget {
@@ -29,6 +32,7 @@ class _AddActivityScreenState extends State<AddActivityScreen>
 
   late ActivitiesBloc _activitiesBloc;
   late RecentActivitiesBloc _recentActivitiesBloc;
+  late Future<List<RecentAiWorkoutLog>> _recentAiWorkouts;
 
   late TabController _tabController;
 
@@ -36,6 +40,7 @@ class _AddActivityScreenState extends State<AddActivityScreen>
   void initState() {
     _activitiesBloc = locator<ActivitiesBloc>();
     _recentActivitiesBloc = locator<RecentActivitiesBloc>();
+    _recentAiWorkouts = _loadRecentAiWorkouts();
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -251,20 +256,70 @@ class _AddActivityScreenState extends State<AddActivityScreen>
                           }
                           if (state is RecentActivitiesLoadedState) {
                             final recentActivities = state.recentActivities;
-                            return state.recentActivities.isNotEmpty
-                                ? Flexible(
-                                    child: ListView.builder(
-                                      itemCount: recentActivities.length,
-                                      itemBuilder: (context, index) {
-                                        return ActivityItemCard(
-                                          physicalActivityEntity:
-                                              recentActivities[index],
-                                          day: _day,
+                            return Flexible(
+                              child: FutureBuilder<List<RecentAiWorkoutLog>>(
+                                future: _recentAiWorkouts,
+                                builder: (context, snapshot) {
+                                  final aiWorkouts =
+                                      snapshot.data ??
+                                      const <RecentAiWorkoutLog>[];
+                                  final visibleActivities = aiWorkouts.isEmpty
+                                      ? recentActivities
+                                      : recentActivities
+                                            .where(
+                                              (activity) =>
+                                                  activity.code !=
+                                                  PhysicalActivityEntity
+                                                      .aiStrengthCode,
+                                            )
+                                            .toList(growable: false);
+                                  if (aiWorkouts.isEmpty &&
+                                      visibleActivities.isEmpty) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                    return const NoResultsWidget();
+                                  }
+                                  return ListView.builder(
+                                    itemCount:
+                                        visibleActivities.length +
+                                        aiWorkouts.length +
+                                        (aiWorkouts.isEmpty ? 0 : 1),
+                                    itemBuilder: (context, index) {
+                                      if (aiWorkouts.isNotEmpty && index == 0) {
+                                        return RecentAiSectionHeader(
+                                          title: S
+                                              .of(context)
+                                              .recentAiWorkoutsTitle,
                                         );
-                                      },
-                                    ),
-                                  )
-                                : const NoResultsWidget();
+                                      }
+                                      final aiIndex =
+                                          index - (aiWorkouts.isEmpty ? 0 : 1);
+                                      if (aiIndex >= 0 &&
+                                          aiIndex < aiWorkouts.length) {
+                                        final log = aiWorkouts[aiIndex];
+                                        return RecentAiWorkoutCard(
+                                          key: ValueKey(log.activityId),
+                                          log: log,
+                                          onTap: () =>
+                                              _openRecentAiWorkout(log),
+                                        );
+                                      }
+                                      final activityIndex =
+                                          aiIndex - aiWorkouts.length;
+                                      return ActivityItemCard(
+                                        physicalActivityEntity:
+                                            visibleActivities[activityIndex],
+                                        day: _day,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            );
                           }
                           if (state is RecentActivitiesFailedState) {
                             return ErrorDialog(
@@ -303,6 +358,13 @@ class _AddActivityScreenState extends State<AddActivityScreen>
     );
   }
 
+  void _openRecentAiWorkout(RecentAiWorkoutLog log) {
+    Navigator.of(context).pushNamed(
+      NavigationOptions.aiActivityRoute,
+      arguments: AiActivityScreenArguments(day: _day, recentLog: log),
+    );
+  }
+
   void _onCustomActivityPressed() {
     Navigator.of(context).pushNamed(
       NavigationOptions.activityDetailRoute,
@@ -319,6 +381,14 @@ class _AddActivityScreenState extends State<AddActivityScreen>
 
   void _onRecentActivitiesRefreshButtonPressed() {
     _recentActivitiesBloc.add(LoadRecentActivitiesEvent(context: context));
+    setState(() => _recentAiWorkouts = _loadRecentAiWorkouts());
+  }
+
+  Future<List<RecentAiWorkoutLog>> _loadRecentAiWorkouts() {
+    if (!locator.isRegistered<GetRecentAiLogsUsecase>()) {
+      return Future.value(const []);
+    }
+    return locator<GetRecentAiLogsUsecase>().getWorkouts();
   }
 }
 

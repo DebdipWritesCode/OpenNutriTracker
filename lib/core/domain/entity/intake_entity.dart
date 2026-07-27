@@ -12,6 +12,18 @@ class IntakeEntity extends Equatable {
 
   final MealEntity meal;
 
+  /// Identifies all foods confirmed in one AI meal review.
+  ///
+  /// Legacy and manually logged intakes keep this null. Keeping the marker on
+  /// the diary entries themselves means a reusable recent meal always reflects
+  /// what is actually still in the user's profile (including deletions).
+  final String? aiMealGroupId;
+
+  /// Wall-clock time when the AI review was confirmed. [dateTime] is the diary
+  /// day and may be date-only, so it cannot reliably order two meals logged for
+  /// the same day.
+  final DateTime? aiMealSavedAt;
+
   const IntakeEntity({
     required this.id,
     required this.unit,
@@ -19,6 +31,8 @@ class IntakeEntity extends Equatable {
     required this.type,
     required this.meal,
     required this.dateTime,
+    this.aiMealGroupId,
+    this.aiMealSavedAt,
   });
 
   factory IntakeEntity.fromIntakeDBO(IntakeDBO intakeDBO) {
@@ -29,6 +43,8 @@ class IntakeEntity extends Equatable {
       type: IntakeTypeEntity.fromIntakeTypeDBO(intakeDBO.type),
       meal: MealEntity.fromMealDBO(intakeDBO.meal),
       dateTime: intakeDBO.dateTime,
+      aiMealGroupId: intakeDBO.aiMealGroupId,
+      aiMealSavedAt: intakeDBO.aiMealSavedAt,
     );
   }
 
@@ -43,5 +59,13 @@ class IntakeEntity extends Equatable {
       amount * (meal.nutriments.proteinsPerUnit ?? 0);
 
   @override
-  List<Object?> get props => [id, unit, amount, type, dateTime];
+  List<Object?> get props => [
+    id,
+    unit,
+    amount,
+    type,
+    dateTime,
+    aiMealGroupId,
+    aiMealSavedAt,
+  ];
 }

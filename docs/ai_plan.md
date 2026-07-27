@@ -223,10 +223,27 @@ Tasks
 - [x] Manual corrections
 - [x] Conversational photo corrections
 - [x] Save meal
+- [x] Reuse complete confirmed AI meals from Recents
 
 Deliverable
 
 Photo → Meal.
+
+---
+
+# Milestone 5A
+## AI Activity Logging
+
+Tasks
+
+- [x] Parse strength exercises, sets, reps and loads from text
+- [x] Review and edit before save
+- [x] Calculate calories locally from profile weight and published MET data
+- [x] Reuse complete confirmed AI workouts from Recents
+
+Deliverable
+
+Workout description → editable activity log.
 
 ---
 

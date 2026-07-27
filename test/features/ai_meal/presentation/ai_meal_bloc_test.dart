@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
@@ -12,6 +13,7 @@ import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.da
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 
 const _food = AiExtractedFood(
   originalText: '100g rice',
@@ -266,5 +268,35 @@ void main() {
     await saved;
 
     expect(saver.calls, 1);
+  });
+
+  test('opens a recent AI meal directly as an editable review', () async {
+    final review = bloc.stream.firstWhere(
+      (state) => state.status == AiMealStatus.review,
+    );
+    final log = RecentAiMealLog(
+      groupId: 'meal-group',
+      loggedAt: DateTime(2026, 7, 27, 12),
+      intakes: [
+        IntakeEntity(
+          id: 'intake',
+          unit: 'g',
+          amount: 180,
+          type: IntakeTypeEntity.lunch,
+          meal: _meal(),
+          dateTime: DateTime(2026, 7, 27),
+          aiMealGroupId: 'meal-group',
+          aiMealSavedAt: DateTime(2026, 7, 27, 12),
+        ),
+      ],
+    );
+
+    bloc.add(UseRecentAiMealRequested(log));
+    final state = await review;
+
+    expect(state.items.single.amount, 180);
+    expect(state.items.single.selectedMeal, _meal());
+    expect(state.canSave, isTrue);
+    expect(state.photo, isNull);
   });
 }

@@ -10,6 +10,7 @@ import 'package:opennutritracker/features/ai_activity/data/dto/ai_activity_analy
 import 'package:opennutritracker/features/ai_activity/domain/activity_duration_estimator.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 
 enum AiActivityStatus { initial, analyzing, review, saving, saved, failure }
 
@@ -70,6 +71,15 @@ class SaveAiActivityRequested extends AiActivityEvent {
 
   @override
   List<Object?> get props => [day, activityName];
+}
+
+class UseRecentAiWorkoutRequested extends AiActivityEvent {
+  final RecentAiWorkoutLog log;
+
+  const UseRecentAiWorkoutRequested(this.log);
+
+  @override
+  List<Object?> get props => [log];
 }
 
 class AiActivityAccessTokenSubmitted extends AiActivityEvent {
@@ -189,8 +199,52 @@ class AiActivityBloc extends Bloc<AiActivityEvent, AiActivityState> {
     on<AiActivityExerciseRemoved>(_removeExercise);
     on<AiActivityExerciseAdded>(_addExercise);
     on<AiActivityDurationChanged>(_changeDuration);
+    on<UseRecentAiWorkoutRequested>(_useRecentWorkout);
     on<SaveAiActivityRequested>(_save);
     on<AiActivityAccessTokenSubmitted>(_saveToken);
+  }
+
+  Future<void> _useRecentWorkout(
+    UseRecentAiWorkoutRequested event,
+    Emitter<AiActivityState> emit,
+  ) async {
+    try {
+      final user = await _getUser.getUserData();
+      final details = event.log.details;
+      emit(
+        AiActivityState(
+          status: AiActivityStatus.review,
+          description: details.exercises
+              .map((exercise) => exercise.name)
+              .join(', '),
+          exercises: details.exercises
+              .map(
+                (exercise) => AiExtractedExercise(
+                  originalText: exercise.name,
+                  canonicalName: exercise.name,
+                  sets: exercise.sets,
+                  repsPerSet: exercise.repsPerSet,
+                  loadValue: exercise.loadValue,
+                  loadUnit: exercise.loadUnit,
+                  confidence: 1,
+                  requiresUserConfirmation: false,
+                ),
+              )
+              .toList(growable: false),
+          durationMinutes: details.durationSeconds / 60,
+          durationWasEstimated: false,
+          profileWeightKg: user.weightKG,
+        ),
+      );
+    } on Object {
+      emit(
+        state.copyWith(
+          status: AiActivityStatus.failure,
+          errorMessage:
+              'Could not load this recent workout. Check your profile and try again.',
+        ),
+      );
+    }
   }
 
   Future<void> _analyze(
@@ -341,6 +395,7 @@ class AiActivityBloc extends Bloc<AiActivityEvent, AiActivityState> {
         durationWasEstimated: state.durationWasEstimated,
         profileWeightKg: state.profileWeightKg!,
         estimationMethod: '2024-adult-compendium-02054',
+        loggedAt: DateTime.now(),
         exercises: state.exercises
             .map(
               (exercise) => StrengthExerciseLog(

@@ -3,7 +3,8 @@ import 'package:opennutritracker/core/domain/entity/activity_log_details.dart';
 
 void main() {
   test('treadmill details round-trip through version-tolerant JSON', () {
-    const details = ActivityLogDetails(
+    final loggedAt = DateTime(2026, 7, 27, 18, 30);
+    final details = ActivityLogDetails(
       kind: ActivityLogKind.treadmill,
       durationSeconds: 1234,
       durationWasEstimated: false,
@@ -13,6 +14,7 @@ void main() {
       speedKph: 9.5,
       inclinePercent: 3,
       enteredSpeedUnit: TreadmillSpeedUnit.kilometersPerHour,
+      loggedAt: loggedAt,
     );
 
     final decoded = ActivityLogDetails.tryParse(details.encode());
@@ -23,6 +25,7 @@ void main() {
     expect(decoded.treadmillMode, TreadmillMode.running);
     expect(decoded.speedKph, 9.5);
     expect(decoded.inclinePercent, 3);
+    expect(decoded.loggedAt, loggedAt);
   });
 
   test('invalid or legacy missing metadata is treated as absent', () {

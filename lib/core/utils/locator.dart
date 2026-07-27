@@ -125,6 +125,7 @@ import 'package:opennutritracker/features/settings/domain/usecase/import_recipes
 import 'package:opennutritracker/features/settings/presentation/bloc/custom_meals_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/get_recent_ai_logs_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final locator = GetIt.instance;
@@ -392,6 +393,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<GetUserActivityUsecase>(
     () => GetUserActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<GetRecentAiLogsUsecase>(
+    () => GetRecentAiLogsUsecase(locator(), locator()),
   );
   locator.registerLazySingleton<AddUserActivityUsecase>(
     () => AddUserActivityUsecase(locator()),

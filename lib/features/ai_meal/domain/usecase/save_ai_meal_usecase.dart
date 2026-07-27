@@ -42,6 +42,8 @@ class SaveAiMealUsecase {
       );
     }
 
+    final groupId = IdGenerator.getUniqueID();
+    final savedAt = DateTime.now();
     for (final item in items) {
       final intake = IntakeEntity(
         id: IdGenerator.getUniqueID(),
@@ -50,6 +52,8 @@ class SaveAiMealUsecase {
         type: intakeType,
         meal: item.selectedMeal!,
         dateTime: day,
+        aiMealGroupId: groupId,
+        aiMealSavedAt: savedAt,
       );
       await _addIntake.addIntake(intake);
       await _addTrackedDay.addDayCaloriesTracked(day, intake.totalKcal);

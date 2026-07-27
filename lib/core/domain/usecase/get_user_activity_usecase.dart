@@ -36,4 +36,8 @@ class GetUserActivityUsecase {
   Future<List<UserActivityEntity>> getRecentUserActivity() {
     return _userActivityRepository.getRecentUserActivity();
   }
+
+  Future<List<UserActivityEntity>> getAllUserActivities() {
+    return _userActivityRepository.getAllUserActivities();
+  }
 }

@@ -17,6 +17,9 @@ import 'package:opennutritracker/features/add_meal/presentation/widgets/no_resul
 import 'package:opennutritracker/features/add_meal/presentation/widgets/meal_item_card.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/quick_add_bottom_sheet.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/ai_meal_screen.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/get_recent_ai_logs_usecase.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
+import 'package:opennutritracker/features/ai_reuse/presentation/recent_ai_log_cards.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/products_bloc.dart';
 import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/scanner/scanner_screen.dart';
@@ -39,6 +42,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
   late ProductsBloc _productsBloc;
   late FoodBloc _foodBloc;
   late RecentMealBloc _recentMealBloc;
+  late Future<List<RecentAiMealLog>> _recentAiMeals;
 
   // Single smart search: one field, one results list, and source-filter chips.
   // Opens on Recent (fast re-logging); typing searches Products by default,
@@ -50,6 +54,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
     _productsBloc = locator<ProductsBloc>();
     _foodBloc = locator<FoodBloc>();
     _recentMealBloc = locator<RecentMealBloc>();
+    _recentAiMeals = _loadRecentAiMeals();
     super.initState();
   }
 
@@ -159,6 +164,14 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
   void _onRecentMealsRefreshButtonPressed() {
     _recentMealBloc.add(const LoadRecentMealEvent(searchString: ""));
+    setState(() => _recentAiMeals = _loadRecentAiMeals());
+  }
+
+  Future<List<RecentAiMealLog>> _loadRecentAiMeals() {
+    if (!locator.isRegistered<GetRecentAiLogsUsecase>()) {
+      return Future.value(const []);
+    }
+    return locator<GetRecentAiLogsUsecase>().getMeals();
   }
 
   /// Resolves the source to search for a query: an empty query always returns
@@ -237,14 +250,14 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
   Widget _buildSourceChips(BuildContext context, AppPalette palette) {
     Widget chip(_SearchSource source, String label) => Padding(
-          padding: const EdgeInsets.only(right: Dimens.spacing8),
-          child: ChoiceChip(
-            label: Text(label),
-            selected: _source == source,
-            showCheckmark: false,
-            onSelected: (_) => _selectSource(source),
-          ),
-        );
+      padding: const EdgeInsets.only(right: Dimens.spacing8),
+      child: ChoiceChip(
+        label: Text(label),
+        selected: _source == source,
+        showCheckmark: false,
+        onSelected: (_) => _selectSource(source),
+      ),
+    );
     return Align(
       alignment: Alignment.centerLeft,
       child: SingleChildScrollView(
@@ -262,16 +275,16 @@ class _AddMealScreenState extends State<AddMealScreen> {
   }
 
   Widget _resultsHeader(BuildContext context, AppPalette palette) => Container(
-        padding: const EdgeInsets.symmetric(vertical: Dimens.spacing4),
-        alignment: Alignment.centerLeft,
-        child: Text(
-          S.of(context).searchResultsLabel,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: palette.textMuted,
-              ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(vertical: Dimens.spacing4),
+    alignment: Alignment.centerLeft,
+    child: Text(
+      S.of(context).searchResultsLabel,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.w700,
+        color: palette.textMuted,
+      ),
+    ),
+  );
 
   /// True while the results carried by [state] lag behind [query]: the
   /// search for the current input is still debouncing or in flight. Empty
@@ -334,10 +347,12 @@ class _AddMealScreenState extends State<AddMealScreen> {
                           _foodPending(fs, query)) {
                         return _pendingSpinner;
                       }
-                      final products =
-                          ps is ProductsLoadedState ? ps.products : const <MealEntity>[];
-                      final foods =
-                          fs is FoodLoadedState ? fs.food : const <MealEntity>[];
+                      final products = ps is ProductsLoadedState
+                          ? ps.products
+                          : const <MealEntity>[];
+                      final foods = fs is FoodLoadedState
+                          ? fs.food
+                          : const <MealEntity>[];
                       final merged = [...products, ...foods];
                       if (merged.isEmpty) {
                         if (ps is ProductsInitial && fs is FoodInitial) {
@@ -347,7 +362,9 @@ class _AddMealScreenState extends State<AddMealScreen> {
                       }
                       final imperial = ps is ProductsLoadedState
                           ? ps.usesImperialUnits
-                          : (fs is FoodLoadedState ? fs.usesImperialUnits : false);
+                          : (fs is FoodLoadedState
+                                ? fs.usesImperialUnits
+                                : false);
                       return ListView.builder(
                         itemCount: merged.length,
                         itemBuilder: (context, index) => MealItemCard(
@@ -386,7 +403,8 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   return Flexible(
                     child: ListView.builder(
                       itemCount:
-                          state.products.length + (state.remoteSourceEmpty ? 1 : 0),
+                          state.products.length +
+                          (state.remoteSourceEmpty ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index == state.products.length) {
                           return const NoResultsWidget();
@@ -432,7 +450,8 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   }
                   return Flexible(
                     child: ListView.builder(
-                      itemCount: state.food.length + (state.remoteSourceEmpty ? 1 : 0),
+                      itemCount:
+                          state.food.length + (state.remoteSourceEmpty ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index == state.food.length) {
                           return const NoResultsWidget();
@@ -470,19 +489,47 @@ class _AddMealScreenState extends State<AddMealScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is RecentMealLoadedState) {
-              return state.recentMeals.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: state.recentMeals.length,
-                      itemBuilder: (context, index) {
-                        return MealItemCard(
-                          day: _day,
-                          mealEntity: state.recentMeals[index],
-                          addMealType: _mealType,
-                          usesImperialUnits: state.usesImperialUnits,
+              return FutureBuilder<List<RecentAiMealLog>>(
+                future: _recentAiMeals,
+                builder: (context, snapshot) {
+                  final aiMeals = snapshot.data ?? const <RecentAiMealLog>[];
+                  if (aiMeals.isEmpty && state.recentMeals.isEmpty) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _pendingSpinner;
+                    }
+                    return const NoResultsWidget();
+                  }
+                  return ListView.builder(
+                    itemCount:
+                        state.recentMeals.length +
+                        aiMeals.length +
+                        (aiMeals.isEmpty ? 0 : 1),
+                    itemBuilder: (context, index) {
+                      if (aiMeals.isNotEmpty && index == 0) {
+                        return RecentAiSectionHeader(
+                          title: S.of(context).recentAiMealsTitle,
                         );
-                      },
-                    )
-                  : const NoResultsWidget();
+                      }
+                      final aiIndex = index - (aiMeals.isEmpty ? 0 : 1);
+                      if (aiIndex >= 0 && aiIndex < aiMeals.length) {
+                        final log = aiMeals[aiIndex];
+                        return RecentAiMealCard(
+                          key: ValueKey(log.groupId),
+                          log: log,
+                          onTap: () => _openRecentAiMeal(log),
+                        );
+                      }
+                      final mealIndex = aiIndex - aiMeals.length;
+                      return MealItemCard(
+                        day: _day,
+                        mealEntity: state.recentMeals[mealIndex],
+                        addMealType: _mealType,
+                        usesImperialUnits: state.usesImperialUnits,
+                      );
+                    },
+                  );
+                },
+              );
             } else if (state is RecentMealFailedState) {
               return ErrorDialog(
                 errorText: S.of(context).noMealsRecentlyAddedLabel,
@@ -502,15 +549,24 @@ class _AddMealScreenState extends State<AddMealScreen> {
     );
   }
 
+  void _openRecentAiMeal(RecentAiMealLog log) {
+    Navigator.of(context).pushNamed(
+      NavigationOptions.aiMealRoute,
+      arguments: AiMealScreenArguments(
+        intakeType: _mealType.getIntakeType(),
+        day: _day,
+        recentLog: log,
+      ),
+    );
+  }
+
   void _onQuickAddPressed() {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (sheetContext) => QuickAddBottomSheet(
-        intakeType: _mealType.getIntakeType(),
-        day: _day,
-      ),
+      builder: (sheetContext) =>
+          QuickAddBottomSheet(intakeType: _mealType.getIntakeType(), day: _day),
     );
   }
 

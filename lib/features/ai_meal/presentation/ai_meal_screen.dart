@@ -14,6 +14,7 @@ import 'package:opennutritracker/features/ai_meal/data/dto/ai_meal_analysis_dto.
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_item.dart';
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
@@ -22,8 +23,13 @@ import 'package:opennutritracker/generated/l10n.dart';
 class AiMealScreenArguments {
   final IntakeTypeEntity intakeType;
   final DateTime day;
+  final RecentAiMealLog? recentLog;
 
-  const AiMealScreenArguments({required this.intakeType, required this.day});
+  const AiMealScreenArguments({
+    required this.intakeType,
+    required this.day,
+    this.recentLog,
+  });
 }
 
 enum _AiMealInputMode { text, photo }
@@ -48,6 +54,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
   _AiMealInputMode _inputMode = _AiMealInputMode.text;
   AiMealPhoto? _selectedPhoto;
   String? _photoPickerError;
+  bool _initialRecentLogLoaded = false;
 
   @override
   void initState() {
@@ -60,6 +67,10 @@ class _AiMealScreenState extends State<AiMealScreen> {
   void didChangeDependencies() {
     _arguments =
         ModalRoute.of(context)!.settings.arguments as AiMealScreenArguments;
+    if (!_initialRecentLogLoaded && _arguments.recentLog != null) {
+      _initialRecentLogLoaded = true;
+      _bloc.add(UseRecentAiMealRequested(_arguments.recentLog!));
+    }
     super.didChangeDependencies();
   }
 
@@ -413,7 +424,7 @@ class _AiMealScreenState extends State<AiMealScreen> {
         const SizedBox(height: Dimens.spacing8),
         for (var i = 0; i < state.items.length; i++) ...[
           _AiDraftCard(
-            key: ValueKey(state.items[i].extractedFood.originalText),
+            key: ValueKey('${state.items[i].extractedFood.originalText}-$i'),
             item: state.items[i],
             index: i,
             onAmountChanged: (amount) =>

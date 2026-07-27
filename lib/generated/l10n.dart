@@ -8918,6 +8918,60 @@ class S {
     );
   }
 
+  /// `Recent AI meals`
+  String get recentAiMealsTitle {
+    return Intl.message(
+      'Recent AI meals',
+      name: 'recentAiMealsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent AI workouts`
+  String get recentAiWorkoutsTitle {
+    return Intl.message(
+      'Recent AI workouts',
+      name: 'recentAiWorkoutsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review and add`
+  String get recentAiReviewAndAddLabel {
+    return Intl.message(
+      'Review and add',
+      name: 'recentAiReviewAndAddLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{1 food} other{{count} foods}}`
+  String recentAiFoodCountLabel(int count) {
+    return Intl.plural(
+      count,
+      one: '1 food',
+      other: '$count foods',
+      name: 'recentAiFoodCountLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, =1{1 exercise} other{{count} exercises}}`
+  String recentAiExerciseCountLabel(int count) {
+    return Intl.plural(
+      count,
+      one: '1 exercise',
+      other: '$count exercises',
+      name: 'recentAiExerciseCountLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Duration (minutes)`
   String get activityDurationMinutesLabel {
     return Intl.message(

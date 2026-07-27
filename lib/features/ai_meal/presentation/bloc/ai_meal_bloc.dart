@@ -8,6 +8,7 @@ import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_draft_it
 import 'package:opennutritracker/features/ai_meal/domain/entity/ai_meal_photo.dart';
 import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_resolver.dart';
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 
 enum AiMealStatus {
   initial,
@@ -111,6 +112,15 @@ class SaveAiMealRequested extends AiMealEvent {
   List<Object?> get props => [intakeType, day];
 }
 
+class UseRecentAiMealRequested extends AiMealEvent {
+  final RecentAiMealLog log;
+
+  const UseRecentAiMealRequested(this.log);
+
+  @override
+  List<Object?> get props => [log];
+}
+
 class AiAccessTokenSubmitted extends AiMealEvent {
   final String token;
   final String locale;
@@ -208,6 +218,7 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
     on<AiMealCandidateSelected>(_selectCandidate);
     on<AiMealItemRemoved>(_removeItem);
     on<AiMealMatchRequested>(_resolveMatch);
+    on<UseRecentAiMealRequested>(_useRecentMeal);
     on<SaveAiMealRequested>(_save);
     on<AiAccessTokenSubmitted>(_saveToken);
   }
@@ -298,6 +309,44 @@ class AiMealBloc extends Bloc<AiMealEvent, AiMealState> {
         ),
       );
     }
+  }
+
+  void _useRecentMeal(
+    UseRecentAiMealRequested event,
+    Emitter<AiMealState> emit,
+  ) {
+    final items = event.log.intakes
+        .map((intake) {
+          final name = intake.meal.name?.trim();
+          final resolvedName = name == null || name.isEmpty ? 'Food' : name;
+          return AiMealDraftItem(
+            extractedFood: AiExtractedFood(
+              originalText: resolvedName,
+              canonicalName: resolvedName,
+              quantity: intake.amount,
+              unit: intake.unit,
+              estimatedGrams: intake.amount,
+              preparation: null,
+              confidence: 1,
+              requiresUserConfirmation: false,
+            ),
+            searchQuery: resolvedName,
+            candidates: [intake.meal],
+            selectedCandidateIndex: 0,
+            amount: intake.amount,
+          );
+        })
+        .toList(growable: false);
+    if (items.isEmpty) return;
+    emit(
+      AiMealState(
+        status: AiMealStatus.review,
+        description: items
+            .map((item) => item.extractedFood.canonicalName)
+            .join(', '),
+        items: items,
+      ),
+    );
   }
 
   Future<void> _refinePhoto(

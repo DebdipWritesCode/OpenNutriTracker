@@ -13,6 +13,7 @@ import 'package:opennutritracker/features/ai_activity/data/ai_activity_api_clien
 import 'package:opennutritracker/features/ai_activity/data/dto/ai_activity_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_activity/presentation/bloc/ai_activity_bloc.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 
 class _Gateway implements AiActivityGateway {
   @override
@@ -169,5 +170,51 @@ void main() {
     expect(details?.kind, ActivityLogKind.aiStrength);
     expect(details?.totalSets, 6);
     expect(details?.durationWasEstimated, isTrue);
+    expect(details?.loggedAt, isNotNull);
   });
+
+  test(
+    'reopens a recent workout and recalculates with profile weight',
+    () async {
+      final details = ActivityLogDetails(
+        kind: ActivityLogKind.aiStrength,
+        durationSeconds: 1800,
+        durationWasEstimated: false,
+        profileWeightKg: 90,
+        estimationMethod: 'test',
+        loggedAt: DateTime(2026, 7, 26, 18),
+        exercises: const [
+          StrengthExerciseLog(
+            name: 'Dumbbell press',
+            sets: 3,
+            repsPerSet: 8,
+            loadValue: 17.5,
+            loadUnit: 'kg',
+          ),
+        ],
+      );
+      final review = bloc.stream.firstWhere(
+        (state) => state.status == AiActivityStatus.review,
+      );
+
+      bloc.add(
+        UseRecentAiWorkoutRequested(
+          RecentAiWorkoutLog(
+            activityId: 'recent',
+            loggedAt: DateTime(2026, 7, 26, 18),
+            name: 'Strength workout',
+            details: details,
+          ),
+        ),
+      );
+      final state = await review;
+
+      expect(state.profileWeightKg, 70);
+      expect(state.durationMinutes, 30);
+      expect(state.estimatedCalories, closeTo(122.5, 0.001));
+      expect(state.exercises.single.loadValue, 17.5);
+      expect(state.durationWasEstimated, isFalse);
+      expect(state.canSave, isTrue);
+    },
+  );
 }

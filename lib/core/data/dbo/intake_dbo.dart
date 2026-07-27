@@ -24,6 +24,14 @@ class IntakeDBO extends HiveObject {
   @HiveField(5)
   DateTime dateTime;
 
+  /// Optional AI meal grouping metadata. Fields are appended so existing Hive
+  /// rows remain readable without a migration.
+  @HiveField(6)
+  String? aiMealGroupId;
+
+  @HiveField(7)
+  DateTime? aiMealSavedAt;
+
   IntakeDBO({
     required this.id,
     required this.unit,
@@ -31,6 +39,8 @@ class IntakeDBO extends HiveObject {
     required this.type,
     required this.meal,
     required this.dateTime,
+    this.aiMealGroupId,
+    this.aiMealSavedAt,
   });
 
   factory IntakeDBO.fromIntakeEntity(IntakeEntity entity) {
@@ -41,6 +51,8 @@ class IntakeDBO extends HiveObject {
       type: IntakeTypeDBO.fromIntakeTypeEntity(entity.type),
       meal: MealDBO.fromMealEntity(entity.meal),
       dateTime: entity.dateTime,
+      aiMealGroupId: entity.aiMealGroupId,
+      aiMealSavedAt: entity.aiMealSavedAt,
     );
   }
 

@@ -122,26 +122,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m40(mealType) => "Додано до ${mealType}";
 
-  static String m41(count) => "${count} інгредієнт(ів)";
+  static String m41(count) =>
+      "${Intl.plural(count, one: '1 exercise', other: '${count} exercises')}";
 
-  static String m42(count) => "Вибрано: ${count}";
+  static String m42(count) =>
+      "${Intl.plural(count, one: '1 food', other: '${count} foods')}";
 
-  static String m43(hour) => "${hour}:00";
+  static String m43(count) => "${count} інгредієнт(ів)";
 
-  static String m44(hour, minute) => "${hour}:${minute}";
+  static String m44(count) => "Вибрано: ${count}";
 
-  static String m45(time) => "Час нагадування: ${time}";
+  static String m45(hour) => "${hour}:00";
 
-  static String m46(current, goal) => "${current} / ${goal} мл";
+  static String m46(hour, minute) => "${hour}:${minute}";
 
-  static String m47(rate) => "${rate} кг/тиждень";
+  static String m47(time) => "Час нагадування: ${time}";
 
-  static String m48(rate) => "${rate} фунт/тиждень";
+  static String m48(current, goal) => "${current} / ${goal} мл";
 
-  static String m49(age) => "${age} років";
+  static String m49(rate) => "${rate} кг/тиждень";
+
+  static String m50(rate) => "${rate} фунт/тиждень";
+
+  static String m51(age) => "${age} років";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
+      "Activity above rest",
+    ),
+    "activityDurationMinutesLabel": MessageLookupByLibrary.simpleMessage(
+      "Duration (minutes)",
+    ),
     "activityExample": MessageLookupByLibrary.simpleMessage(
       "наприклад, біг, їзда на велосипеді, йога ...",
     ),
@@ -171,6 +183,91 @@ class MessageLookup extends MessageLookupByLibrary {
       "Невідомий елемент їжі",
     ),
     "ageLabel": MessageLookupByLibrary.simpleMessage("Вік"),
+    "aiActivityActionBody": MessageLookupByLibrary.simpleMessage(
+      "Use AI to turn sets, reps and weights into an editable log.",
+    ),
+    "aiActivityActionLabel": MessageLookupByLibrary.simpleMessage(
+      "Describe a workout",
+    ),
+    "aiActivityAddExercise": MessageLookupByLibrary.simpleMessage(
+      "Add exercise",
+    ),
+    "aiActivityAnalyzeButton": MessageLookupByLibrary.simpleMessage(
+      "Analyze workout",
+    ),
+    "aiActivityAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
+      "Structuring your exercises, sets, reps and loads…",
+    ),
+    "aiActivityBodyweightUnitLabel": MessageLookupByLibrary.simpleMessage(
+      "Body weight",
+    ),
+    "aiActivityDescriptionError": MessageLookupByLibrary.simpleMessage(
+      "Describe at least one strength exercise.",
+    ),
+    "aiActivityDescriptionHint": MessageLookupByLibrary.simpleMessage(
+      "For example: dumbbell press 17.5 kg for 3 sets of 8, then shoulder press 15 kg for 3 sets of 8",
+    ),
+    "aiActivityDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout description",
+    ),
+    "aiActivityDurationConfirmedHelper": MessageLookupByLibrary.simpleMessage(
+      "This duration will be used for the energy estimate.",
+    ),
+    "aiActivityDurationEstimateHelper": MessageLookupByLibrary.simpleMessage(
+      "Estimated from reps and standard rest assumptions. Replace it with your actual workout time when possible.",
+    ),
+    "aiActivityDurationLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout duration",
+    ),
+    "aiActivityEmptyExercises": MessageLookupByLibrary.simpleMessage(
+      "Keep at least one complete exercise before saving.",
+    ),
+    "aiActivityEnergyLabel": MessageLookupByLibrary.simpleMessage(
+      "Estimated energy",
+    ),
+    "aiActivityEstimateSource": MessageLookupByLibrary.simpleMessage(
+      "Calculated locally with 3.5 MET from 2024 Adult Compendium code 02054. AI only structures the workout text.",
+    ),
+    "aiActivityEstimateTitle": MessageLookupByLibrary.simpleMessage(
+      "Energy estimate",
+    ),
+    "aiActivityExerciseLabel": MessageLookupByLibrary.simpleMessage("Exercise"),
+    "aiActivityExerciseName": MessageLookupByLibrary.simpleMessage(
+      "Exercise name",
+    ),
+    "aiActivityIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Include the exercises, sets, reps, loads and total time you remember. AI structures the workout; the energy estimate uses your profile and a published activity value.",
+    ),
+    "aiActivityIntroTitle": MessageLookupByLibrary.simpleMessage(
+      "Describe your workout",
+    ),
+    "aiActivityLoadLabel": MessageLookupByLibrary.simpleMessage("Load"),
+    "aiActivityLoadUnitLabel": MessageLookupByLibrary.simpleMessage("Unit"),
+    "aiActivityMinutesUnit": MessageLookupByLibrary.simpleMessage("min"),
+    "aiActivityRemoveExercise": MessageLookupByLibrary.simpleMessage(
+      "Remove exercise",
+    ),
+    "aiActivityRepsLabel": MessageLookupByLibrary.simpleMessage("Reps per set"),
+    "aiActivityReviewBody": MessageLookupByLibrary.simpleMessage(
+      "Check every exercise and edit the duration before saving. AI does not calculate the calories.",
+    ),
+    "aiActivityReviewTitle": MessageLookupByLibrary.simpleMessage(
+      "Review your workout",
+    ),
+    "aiActivitySaveLabel": MessageLookupByLibrary.simpleMessage("Save workout"),
+    "aiActivitySavedLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout added",
+    ),
+    "aiActivitySavingLabel": MessageLookupByLibrary.simpleMessage(
+      "Saving workout…",
+    ),
+    "aiActivitySetsLabel": MessageLookupByLibrary.simpleMessage("Sets"),
+    "aiActivityTitle": MessageLookupByLibrary.simpleMessage(
+      "AI activity logging",
+    ),
+    "aiActivityWorkoutName": MessageLookupByLibrary.simpleMessage(
+      "Strength workout",
+    ),
     "aiMealAccessTokenBody": MessageLookupByLibrary.simpleMessage(
       "Enter the application access token configured on your backend. It is stored securely on this device.",
     ),
@@ -189,8 +286,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "aiMealAmountLabel": MessageLookupByLibrary.simpleMessage("Amount to log"),
     "aiMealAnalyzeButton": MessageLookupByLibrary.simpleMessage("Analyze meal"),
+    "aiMealAnalyzePhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Analyze photo",
+    ),
     "aiMealAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
       "Identifying foods and finding trusted nutrition matches…",
+    ),
+    "aiMealChooseAnotherPhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Choose another",
+    ),
+    "aiMealChoosePhotoButton": MessageLookupByLibrary.simpleMessage(
+      "Choose from gallery",
     ),
     "aiMealDescriptionError": MessageLookupByLibrary.simpleMessage(
       "Describe at least one food or drink.",
@@ -207,6 +313,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "aiMealFoodSearchLabel": MessageLookupByLibrary.simpleMessage(
       "Food match search",
     ),
+    "aiMealInputPhotoLabel": MessageLookupByLibrary.simpleMessage("Photo"),
+    "aiMealInputTextLabel": MessageLookupByLibrary.simpleMessage("Describe"),
     "aiMealIntroBody": MessageLookupByLibrary.simpleMessage(
       "Describe the foods and amounts in your own words. You will review every nutrition match before anything is saved.",
     ),
@@ -221,7 +329,66 @@ class MessageLookup extends MessageLookupByLibrary {
       "No nutrition match found. Change the search and try again.",
     ),
     "aiMealNotesTitle": MessageLookupByLibrary.simpleMessage("Items to review"),
+    "aiMealPhotoAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
+      "Identifying foods and estimating portions from your photo…",
+    ),
+    "aiMealPhotoEmptyLabel": MessageLookupByLibrary.simpleMessage(
+      "Take a new meal photo or choose one from your gallery.",
+    ),
+    "aiMealPhotoIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Use a clear overhead photo with the whole meal visible. AI will estimate the foods and portions for you to review.",
+    ),
+    "aiMealPhotoIntroTitle": MessageLookupByLibrary.simpleMessage(
+      "Photograph your meal",
+    ),
+    "aiMealPhotoPickerError": MessageLookupByLibrary.simpleMessage(
+      "The photo could not be prepared. Choose another image and try again.",
+    ),
+    "aiMealPhotoPreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Selected meal photo",
+    ),
+    "aiMealPhotoPrivacyLabel": MessageLookupByLibrary.simpleMessage(
+      "The photo is sent only for this analysis and is not saved by OpenNutriTracker.",
+    ),
+    "aiMealPhotoRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Take or choose a meal photo first.",
+    ),
+    "aiMealPhotoReviewNotice": MessageLookupByLibrary.simpleMessage(
+      "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.",
+    ),
+    "aiMealRefineAssistantLabel": MessageLookupByLibrary.simpleMessage(
+      "AI update",
+    ),
+    "aiMealRefineBody": MessageLookupByLibrary.simpleMessage(
+      "Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.",
+    ),
+    "aiMealRefineExample": MessageLookupByLibrary.simpleMessage(
+      "For example: “That is paneer, not eggplant” or “The rice was about 180 g.”",
+    ),
+    "aiMealRefineInputHint": MessageLookupByLibrary.simpleMessage(
+      "What should the AI change?",
+    ),
+    "aiMealRefineInputLabel": MessageLookupByLibrary.simpleMessage(
+      "Correction",
+    ),
+    "aiMealRefineLoadingLabel": MessageLookupByLibrary.simpleMessage(
+      "Rechecking the photo and updating estimates…",
+    ),
+    "aiMealRefineRequiredError": MessageLookupByLibrary.simpleMessage(
+      "Enter what the AI should change.",
+    ),
+    "aiMealRefineSendTooltip": MessageLookupByLibrary.simpleMessage(
+      "Send correction",
+    ),
+    "aiMealRefineTitle": MessageLookupByLibrary.simpleMessage("Correct the AI"),
+    "aiMealRefineUserLabel": MessageLookupByLibrary.simpleMessage(
+      "Your correction",
+    ),
+    "aiMealRefiningSaveLabel": MessageLookupByLibrary.simpleMessage(
+      "Updating estimates…",
+    ),
     "aiMealRemoveTooltip": MessageLookupByLibrary.simpleMessage("Remove food"),
+    "aiMealRetakePhotoButton": MessageLookupByLibrary.simpleMessage("Retake"),
     "aiMealReviewBody": MessageLookupByLibrary.simpleMessage(
       "Confirm the amount and database match for each food. Nutrition values come from trusted food databases, not from AI.",
     ),
@@ -237,77 +404,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "aiMealSetAccessTokenButton": MessageLookupByLibrary.simpleMessage(
       "Set access token",
     ),
-    "aiMealInputTextLabel": MessageLookupByLibrary.simpleMessage("Describe"),
-    "aiMealInputPhotoLabel": MessageLookupByLibrary.simpleMessage("Photo"),
-    "aiMealPhotoIntroTitle": MessageLookupByLibrary.simpleMessage(
-      "Photograph your meal",
-    ),
-    "aiMealPhotoIntroBody": MessageLookupByLibrary.simpleMessage(
-      "Use a clear overhead photo with the whole meal visible. AI will estimate the foods and portions for you to review.",
-    ),
-    "aiMealPhotoEmptyLabel": MessageLookupByLibrary.simpleMessage(
-      "Take a new meal photo or choose one from your gallery.",
-    ),
     "aiMealTakePhotoButton": MessageLookupByLibrary.simpleMessage("Take photo"),
-    "aiMealChoosePhotoButton": MessageLookupByLibrary.simpleMessage(
-      "Choose from gallery",
-    ),
-    "aiMealChooseAnotherPhotoButton": MessageLookupByLibrary.simpleMessage(
-      "Choose another",
-    ),
-    "aiMealRetakePhotoButton": MessageLookupByLibrary.simpleMessage("Retake"),
-    "aiMealAnalyzePhotoButton": MessageLookupByLibrary.simpleMessage(
-      "Analyze photo",
-    ),
-    "aiMealPhotoPreviewLabel": MessageLookupByLibrary.simpleMessage(
-      "Selected meal photo",
-    ),
-    "aiMealPhotoPrivacyLabel": MessageLookupByLibrary.simpleMessage(
-      "The photo is sent only for this analysis and is not saved by OpenNutriTracker.",
-    ),
-    "aiMealPhotoRequiredError": MessageLookupByLibrary.simpleMessage(
-      "Take or choose a meal photo first.",
-    ),
-    "aiMealPhotoPickerError": MessageLookupByLibrary.simpleMessage(
-      "The photo could not be prepared. Choose another image and try again.",
-    ),
-    "aiMealPhotoAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
-      "Identifying foods and estimating portions from your photo…",
-    ),
-    "aiMealPhotoReviewNotice": MessageLookupByLibrary.simpleMessage(
-      "AI estimated these foods and portions from the photo. Confirm every amount and nutrition match before saving.",
-    ),
-    "aiMealRefineTitle": MessageLookupByLibrary.simpleMessage("Correct the AI"),
-    "aiMealRefineBody": MessageLookupByLibrary.simpleMessage(
-      "Tell the AI what it got wrong. It will recheck the same photo and update the complete meal.",
-    ),
-    "aiMealRefineExample": MessageLookupByLibrary.simpleMessage(
-      "For example: “That is paneer, not eggplant” or “The rice was about 180 g.”",
-    ),
-    "aiMealRefineInputLabel": MessageLookupByLibrary.simpleMessage(
-      "Correction",
-    ),
-    "aiMealRefineInputHint": MessageLookupByLibrary.simpleMessage(
-      "What should the AI change?",
-    ),
-    "aiMealRefineSendTooltip": MessageLookupByLibrary.simpleMessage(
-      "Send correction",
-    ),
-    "aiMealRefineLoadingLabel": MessageLookupByLibrary.simpleMessage(
-      "Rechecking the photo and updating estimates…",
-    ),
-    "aiMealRefineRequiredError": MessageLookupByLibrary.simpleMessage(
-      "Enter what the AI should change.",
-    ),
-    "aiMealRefineUserLabel": MessageLookupByLibrary.simpleMessage(
-      "Your correction",
-    ),
-    "aiMealRefineAssistantLabel": MessageLookupByLibrary.simpleMessage(
-      "AI update",
-    ),
-    "aiMealRefiningSaveLabel": MessageLookupByLibrary.simpleMessage(
-      "Updating estimates…",
-    ),
     "aiMealTitle": MessageLookupByLibrary.simpleMessage("AI meal logging"),
     "aiMealTrustedMatchLabel": MessageLookupByLibrary.simpleMessage(
       "Trusted nutrition match",
@@ -333,9 +430,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "наприклад, пластівці, молоко, кава ...",
     ),
     "breakfastLabel": MessageLookupByLibrary.simpleMessage("Сніданок"),
-    "activeBurnedLabel": MessageLookupByLibrary.simpleMessage(
-      "Activity above rest",
-    ),
     "burnedLabel": MessageLookupByLibrary.simpleMessage("спалено"),
     "burnedUpdatesLabel": MessageLookupByLibrary.simpleMessage(
       "Updates throughout your diary day",
@@ -1632,6 +1726,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "readLabel": MessageLookupByLibrary.simpleMessage(
       "Я прочитав і приймаю політику конфіденційності.",
     ),
+    "recentAiExerciseCountLabel": m41,
+    "recentAiFoodCountLabel": m42,
+    "recentAiMealsTitle": MessageLookupByLibrary.simpleMessage(
+      "Recent AI meals",
+    ),
+    "recentAiReviewAndAddLabel": MessageLookupByLibrary.simpleMessage(
+      "Review and add",
+    ),
+    "recentAiWorkoutsTitle": MessageLookupByLibrary.simpleMessage(
+      "Recent AI workouts",
+    ),
     "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Нещодавно"),
     "recipeAddIngredientLabel": MessageLookupByLibrary.simpleMessage(
       "Додати інгредієнт",
@@ -1657,7 +1762,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Кількість",
     ),
-    "recipeIngredientCountLabel": m41,
+    "recipeIngredientCountLabel": m43,
     "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage(
       "Одиниця",
     ),
@@ -1726,10 +1831,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
       "Бажаєте повідомити про помилку розробнику?",
     ),
-    "retryLabel": MessageLookupByLibrary.simpleMessage("Повторити"),
     "restingBurnedLabel": MessageLookupByLibrary.simpleMessage(
       "Resting so far",
     ),
+    "retryLabel": MessageLookupByLibrary.simpleMessage("Повторити"),
     "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("насичені жири"),
     "scanProductLabel": MessageLookupByLibrary.simpleMessage(
       "Сканувати продукт",
@@ -1777,7 +1882,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage(
       "Виберіть вагу",
     ),
-    "selectionCountLabel": m42,
+    "selectionCountLabel": m44,
     "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
       "Надсилати анонімні дані про використання",
     ),
@@ -1859,7 +1964,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
       "Обери годину, з якої починається твій день. Прийоми їжі та активності, записані до цієї години, зараховуються до попереднього дня — зручно, якщо ти працюєш у нічну зміну або пізно вечеряєш.",
     ),
-    "settingsDayStartHourLabel": m43,
+    "settingsDayStartHourLabel": m45,
     "settingsDayStartHoursPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Години",
     ),
@@ -1869,7 +1974,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsDayStartMinutesPickerLabel": MessageLookupByLibrary.simpleMessage(
       "Хвилини",
     ),
-    "settingsDayStartTimeLabel": m44,
+    "settingsDayStartTimeLabel": m46,
     "settingsDeleteAllDataConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Видалити все",
     ),
@@ -1959,7 +2064,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage(
       "Щоденне нагадування",
     ),
-    "settingsNotificationsTimeLabel": m45,
+    "settingsNotificationsTimeLabel": m47,
     "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
       "Особисті цілі для кожної поживної речовини в щоденній панелі. Щоденник використовує їх замість стандартних добових норм щоразу, коли ти задаєш будь-яку з них.",
     ),
@@ -2138,145 +2243,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Змінити профіль",
     ),
     "transFatLabel": MessageLookupByLibrary.simpleMessage("трансжири"),
-    "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("рекорд"),
-    "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Калорії"),
-    "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage(
-      "Середнє за день",
-    ),
-    "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage(
-      "днів поспіль",
-    ),
-    "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage(
-      "днів у нормі цього тижня",
-    ),
-    "trendsLabel": MessageLookupByLibrary.simpleMessage("Тренди"),
-    "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/тиждень"),
-    "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Вода"),
-    "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage(
-      "тижнів до мети",
-    ),
-    "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
-    "vitaminALabel": MessageLookupByLibrary.simpleMessage("вітамін A"),
-    "vitaminB12Label": MessageLookupByLibrary.simpleMessage("вітамін B12"),
-    "vitaminB6Label": MessageLookupByLibrary.simpleMessage("вітамін B6"),
-    "vitaminCLabel": MessageLookupByLibrary.simpleMessage("вітамін C"),
-    "vitaminDLabel": MessageLookupByLibrary.simpleMessage("вітамін D"),
-    "warningLabel": MessageLookupByLibrary.simpleMessage("Попередження"),
-    "waterChipLabel": m46,
-    "weeklyWeightGoalKgPerWeek": m47,
-    "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
-      "Тижневий темп",
-    ),
-    "weeklyWeightGoalLbsPerWeek": m48,
-    "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
-      "Не встановлено",
-    ),
-    "weightHistoryAddEntry": MessageLookupByLibrary.simpleMessage(
-      "Додати запис",
-    ),
-    "weightHistoryChartEmptyState": MessageLookupByLibrary.simpleMessage(
-      "Запиши вагу принаймні за два дні, щоб побачити динаміку.",
-    ),
-    "weightHistoryDateLabel": MessageLookupByLibrary.simpleMessage("Дата"),
-    "weightHistoryNoEntries": MessageLookupByLibrary.simpleMessage(
-      "Поки немає записів ваги. Додай перший, щоб бачити динаміку.",
-    ),
-    "weightHistoryNoteLabel": MessageLookupByLibrary.simpleMessage(
-      "Нотатка (необов\'язково)",
-    ),
-    "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
-    "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
-    "yearsLabel": m49,
-    "youLabel": MessageLookupByLibrary.simpleMessage("Ви"),
-    "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
-    "activityDurationMinutesLabel": MessageLookupByLibrary.simpleMessage(
-      "Duration (minutes)",
-    ),
-    "aiActivityActionBody": MessageLookupByLibrary.simpleMessage(
-      "Use AI to turn sets, reps and weights into an editable log.",
-    ),
-    "aiActivityActionLabel": MessageLookupByLibrary.simpleMessage(
-      "Describe a workout",
-    ),
-    "aiActivityAddExercise": MessageLookupByLibrary.simpleMessage(
-      "Add exercise",
-    ),
-    "aiActivityAnalyzeButton": MessageLookupByLibrary.simpleMessage(
-      "Analyze workout",
-    ),
-    "aiActivityAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
-      "Structuring your exercises, sets, reps and loads…",
-    ),
-    "aiActivityBodyweightUnitLabel": MessageLookupByLibrary.simpleMessage(
-      "Body weight",
-    ),
-    "aiActivityDescriptionError": MessageLookupByLibrary.simpleMessage(
-      "Describe at least one strength exercise.",
-    ),
-    "aiActivityDescriptionHint": MessageLookupByLibrary.simpleMessage(
-      "For example: dumbbell press 17.5 kg for 3 sets of 8, then shoulder press 15 kg for 3 sets of 8",
-    ),
-    "aiActivityDescriptionLabel": MessageLookupByLibrary.simpleMessage(
-      "Workout description",
-    ),
-    "aiActivityDurationConfirmedHelper": MessageLookupByLibrary.simpleMessage(
-      "This duration will be used for the energy estimate.",
-    ),
-    "aiActivityDurationEstimateHelper": MessageLookupByLibrary.simpleMessage(
-      "Estimated from reps and standard rest assumptions. Replace it with your actual workout time when possible.",
-    ),
-    "aiActivityDurationLabel": MessageLookupByLibrary.simpleMessage(
-      "Workout duration",
-    ),
-    "aiActivityEmptyExercises": MessageLookupByLibrary.simpleMessage(
-      "Keep at least one complete exercise before saving.",
-    ),
-    "aiActivityEnergyLabel": MessageLookupByLibrary.simpleMessage(
-      "Estimated energy",
-    ),
-    "aiActivityEstimateSource": MessageLookupByLibrary.simpleMessage(
-      "Calculated locally with 3.5 MET from 2024 Adult Compendium code 02054. AI only structures the workout text.",
-    ),
-    "aiActivityEstimateTitle": MessageLookupByLibrary.simpleMessage(
-      "Energy estimate",
-    ),
-    "aiActivityExerciseLabel": MessageLookupByLibrary.simpleMessage("Exercise"),
-    "aiActivityExerciseName": MessageLookupByLibrary.simpleMessage(
-      "Exercise name",
-    ),
-    "aiActivityIntroBody": MessageLookupByLibrary.simpleMessage(
-      "Include the exercises, sets, reps, loads and total time you remember. AI structures the workout; the energy estimate uses your profile and a published activity value.",
-    ),
-    "aiActivityIntroTitle": MessageLookupByLibrary.simpleMessage(
-      "Describe your workout",
-    ),
-    "aiActivityLoadLabel": MessageLookupByLibrary.simpleMessage("Load"),
-    "aiActivityLoadUnitLabel": MessageLookupByLibrary.simpleMessage("Unit"),
-    "aiActivityMinutesUnit": MessageLookupByLibrary.simpleMessage("min"),
-    "aiActivityRemoveExercise": MessageLookupByLibrary.simpleMessage(
-      "Remove exercise",
-    ),
-    "aiActivityRepsLabel": MessageLookupByLibrary.simpleMessage("Reps per set"),
-    "aiActivityReviewBody": MessageLookupByLibrary.simpleMessage(
-      "Check every exercise and edit the duration before saving. AI does not calculate the calories.",
-    ),
-    "aiActivityReviewTitle": MessageLookupByLibrary.simpleMessage(
-      "Review your workout",
-    ),
-    "aiActivitySaveLabel": MessageLookupByLibrary.simpleMessage("Save workout"),
-    "aiActivitySavedLabel": MessageLookupByLibrary.simpleMessage(
-      "Workout added",
-    ),
-    "aiActivitySavingLabel": MessageLookupByLibrary.simpleMessage(
-      "Saving workout…",
-    ),
-    "aiActivitySetsLabel": MessageLookupByLibrary.simpleMessage("Sets"),
-    "aiActivityTitle": MessageLookupByLibrary.simpleMessage(
-      "AI activity logging",
-    ),
-    "aiActivityWorkoutName": MessageLookupByLibrary.simpleMessage(
-      "Strength workout",
-    ),
     "treadmillActivityTitle": MessageLookupByLibrary.simpleMessage(
       "Treadmill workout",
     ),
@@ -2332,5 +2298,56 @@ class MessageLookup extends MessageLookupByLibrary {
       "Speed unit",
     ),
     "treadmillWalkingLabel": MessageLookupByLibrary.simpleMessage("Walking"),
+    "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("рекорд"),
+    "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Калорії"),
+    "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage(
+      "Середнє за день",
+    ),
+    "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage(
+      "днів поспіль",
+    ),
+    "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage(
+      "днів у нормі цього тижня",
+    ),
+    "trendsLabel": MessageLookupByLibrary.simpleMessage("Тренди"),
+    "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/тиждень"),
+    "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Вода"),
+    "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage(
+      "тижнів до мети",
+    ),
+    "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
+    "vitaminALabel": MessageLookupByLibrary.simpleMessage("вітамін A"),
+    "vitaminB12Label": MessageLookupByLibrary.simpleMessage("вітамін B12"),
+    "vitaminB6Label": MessageLookupByLibrary.simpleMessage("вітамін B6"),
+    "vitaminCLabel": MessageLookupByLibrary.simpleMessage("вітамін C"),
+    "vitaminDLabel": MessageLookupByLibrary.simpleMessage("вітамін D"),
+    "warningLabel": MessageLookupByLibrary.simpleMessage("Попередження"),
+    "waterChipLabel": m48,
+    "weeklyWeightGoalKgPerWeek": m49,
+    "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage(
+      "Тижневий темп",
+    ),
+    "weeklyWeightGoalLbsPerWeek": m50,
+    "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage(
+      "Не встановлено",
+    ),
+    "weightHistoryAddEntry": MessageLookupByLibrary.simpleMessage(
+      "Додати запис",
+    ),
+    "weightHistoryChartEmptyState": MessageLookupByLibrary.simpleMessage(
+      "Запиши вагу принаймні за два дні, щоб побачити динаміку.",
+    ),
+    "weightHistoryDateLabel": MessageLookupByLibrary.simpleMessage("Дата"),
+    "weightHistoryNoEntries": MessageLookupByLibrary.simpleMessage(
+      "Поки немає записів ваги. Додай перший, щоб бачити динаміку.",
+    ),
+    "weightHistoryNoteLabel": MessageLookupByLibrary.simpleMessage(
+      "Нотатка (необов\'язково)",
+    ),
+    "weightHistoryWeightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
+    "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
+    "yearsLabel": m51,
+    "youLabel": MessageLookupByLibrary.simpleMessage("Ви"),
+    "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
   };
 }

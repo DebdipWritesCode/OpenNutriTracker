@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/data/repository/user_repository.dart';
+import 'package:opennutritracker/core/domain/entity/activity_log_details.dart';
 import 'package:opennutritracker/core/domain/entity/physical_activity_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
@@ -17,6 +18,7 @@ import 'package:opennutritracker/features/ai_activity/data/dto/ai_activity_analy
 import 'package:opennutritracker/features/ai_activity/presentation/ai_activity_screen.dart';
 import 'package:opennutritracker/features/ai_activity/presentation/bloc/ai_activity_bloc.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -158,6 +160,64 @@ void main() {
 
     expect(find.text('Review your workout'), findsOneWidget);
     expect(find.text('Save workout'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('opens a recent workout without calling AI again', (
+    tester,
+  ) async {
+    final recent = RecentAiWorkoutLog(
+      activityId: 'recent',
+      loggedAt: DateTime(2026, 7, 27, 18),
+      name: 'Strength workout',
+      details: ActivityLogDetails(
+        kind: ActivityLogKind.aiStrength,
+        durationSeconds: 1800,
+        durationWasEstimated: false,
+        profileWeightKg: 80,
+        estimationMethod: 'test',
+        loggedAt: DateTime(2026, 7, 27, 18),
+        exercises: const [
+          StrengthExerciseLog(
+            name: 'Dumbbell press',
+            sets: 3,
+            repsPerSet: 8,
+            loadValue: 17.5,
+            loadUnit: 'kg',
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => EnergyUnitProvider(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          onGenerateRoute: (_) => MaterialPageRoute<void>(
+            settings: RouteSettings(
+              arguments: AiActivityScreenArguments(
+                day: DateTime(2026, 7, 28),
+                recentLog: recent,
+              ),
+            ),
+            builder: (_) => const AiActivityScreen(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Review your workout'), findsOneWidget);
+    expect(find.text('Dumbbell press'), findsOneWidget);
+    expect(find.text('Save workout'), findsOneWidget);
+    expect(find.text('Analyze workout'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }

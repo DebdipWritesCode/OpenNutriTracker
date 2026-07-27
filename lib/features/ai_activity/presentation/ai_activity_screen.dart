@@ -9,6 +9,7 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/ai_activity/data/dto/ai_activity_analysis_dto.dart';
 import 'package:opennutritracker/features/ai_activity/presentation/bloc/ai_activity_bloc.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
@@ -26,6 +27,7 @@ class _AiActivityScreenState extends State<AiActivityScreen> {
   final _descriptionFormKey = GlobalKey<FormState>();
   late final AiActivityBloc _bloc;
   late DateTime _day;
+  bool _initialRecentLogLoaded = false;
 
   @override
   void initState() {
@@ -38,6 +40,10 @@ class _AiActivityScreenState extends State<AiActivityScreen> {
     final args =
         ModalRoute.of(context)?.settings.arguments as AiActivityScreenArguments;
     _day = args.day;
+    if (!_initialRecentLogLoaded && args.recentLog != null) {
+      _initialRecentLogLoaded = true;
+      _bloc.add(UseRecentAiWorkoutRequested(args.recentLog!));
+    }
     super.didChangeDependencies();
   }
 
@@ -664,6 +670,7 @@ class _SaveBar extends StatelessWidget {
 
 class AiActivityScreenArguments {
   final DateTime day;
+  final RecentAiWorkoutLog? recentLog;
 
-  const AiActivityScreenArguments({required this.day});
+  const AiActivityScreenArguments({required this.day, this.recentLog});
 }

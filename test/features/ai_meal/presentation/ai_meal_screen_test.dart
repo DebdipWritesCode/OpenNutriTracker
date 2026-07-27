@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
+import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
@@ -18,6 +19,7 @@ import 'package:opennutritracker/features/ai_meal/domain/service/ai_nutrition_re
 import 'package:opennutritracker/features/ai_meal/domain/usecase/save_ai_meal_usecase.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/ai_meal_screen.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/bloc/ai_meal_bloc.dart';
+import 'package:opennutritracker/features/ai_reuse/domain/recent_ai_log.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class _Gateway implements AiMealGateway {
@@ -84,6 +86,27 @@ class _PhotoPicker implements AiMealPhotoPicker {
   );
 }
 
+const _matchedMeal = MealEntity(
+  code: 'rice-1',
+  name: 'Rice, cooked',
+  url: null,
+  mealQuantity: null,
+  mealUnit: 'g',
+  servingQuantity: null,
+  servingUnit: 'g',
+  servingSize: null,
+  nutriments: MealNutrimentsEntity(
+    energyKcal100: 130,
+    carbohydrates100: 28,
+    fat100: 0.3,
+    proteins100: 2.7,
+    sugars100: 0,
+    saturatedFat100: 0.1,
+    fiber100: 0.4,
+  ),
+  source: MealSourceEntity.fdc,
+);
+
 class _Resolver implements AiNutritionResolver {
   @override
   Future<AiMealDraftItem> resolve(
@@ -92,28 +115,7 @@ class _Resolver implements AiNutritionResolver {
   }) async => AiMealDraftItem(
     extractedFood: food,
     searchQuery: query ?? food.canonicalName,
-    candidates: const [
-      MealEntity(
-        code: 'rice-1',
-        name: 'Rice, cooked',
-        url: null,
-        mealQuantity: null,
-        mealUnit: 'g',
-        servingQuantity: null,
-        servingUnit: 'g',
-        servingSize: null,
-        nutriments: MealNutrimentsEntity(
-          energyKcal100: 130,
-          carbohydrates100: 28,
-          fat100: 0.3,
-          proteins100: 2.7,
-          sugars100: 0,
-          saturatedFat100: 0.1,
-          fiber100: 0.4,
-        ),
-        source: MealSourceEntity.fdc,
-      ),
-    ],
+    candidates: const [_matchedMeal],
     selectedCandidateIndex: 0,
     amount: 100,
   );
@@ -178,6 +180,53 @@ void main() {
     expect(find.text('Meal description'), findsOneWidget);
     expect(find.text('Analyze meal'), findsOneWidget);
     expect(find.byIcon(Icons.auto_awesome_rounded), findsWidgets);
+  });
+
+  testWidgets('opens a recent AI meal directly in the editable review', (
+    tester,
+  ) async {
+    final recent = RecentAiMealLog(
+      groupId: 'recent-meal',
+      loggedAt: DateTime(2026, 7, 27, 12),
+      intakes: [
+        IntakeEntity(
+          id: 'recent-rice',
+          unit: 'g',
+          amount: 180,
+          type: IntakeTypeEntity.lunch,
+          meal: _matchedMeal,
+          dateTime: DateTime(2026, 7, 27),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        onGenerateRoute: (_) => MaterialPageRoute<void>(
+          settings: RouteSettings(
+            arguments: AiMealScreenArguments(
+              intakeType: IntakeTypeEntity.lunch,
+              day: DateTime(2026, 7, 28),
+              recentLog: recent,
+            ),
+          ),
+          builder: (_) => AiMealScreen(photoPicker: _PhotoPicker()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Review your meal'), findsOneWidget);
+    expect(find.text('180'), findsOneWidget);
+    expect(find.text('Save meal'), findsOneWidget);
+    expect(find.text('Analyze meal'), findsNothing);
   });
 
   testWidgets('analyzes a description into an editable trusted match', (
