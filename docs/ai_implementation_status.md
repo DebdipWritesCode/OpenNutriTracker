@@ -1,6 +1,6 @@
 # AI layer implementation status
 
-Last updated: 2026-07-25
+Last updated: 2026-07-27
 
 ## First implementation slice
 
@@ -212,3 +212,61 @@ Correction-flow validation:
 - Dart formatting and Flutter static analysis: passing with no issues.
 - Flutter test suite: 745 passing tests.
 - Narrow-phone widget coverage at 360 × 640 and 1.3× text scale: passing with no overflow exceptions.
+
+## Fifth implementation slice
+
+Activity logging now has two purpose-built flows rather than forcing every activity through a generic
+“quantity” field.
+
+### AI strength-workout text
+
+```text
+workout description
+   ↓ authenticated POST /api/v1/analyze/activity
+AI extracts names + sets + reps + loads + explicitly stated time
+   ↓
+editable workout preview
+   ↓ local deterministic duration assumption when time was omitted
+2024 Adult Compendium code 02054 (3.5 MET) × profile weight × reviewed time
+   ↓
+existing encrypted activity diary
+```
+
+- AI only structures resistance-workout text. Its response schema has no calories, MET value, heart rate, or
+  oxygen-consumption field.
+- Exercise name, sets, reps, load, load unit, and duration remain editable. Exercises can be removed or added
+  before saving.
+- If the user did not state a duration, the app starts with a visible, editable estimate: 4 seconds per rep,
+  90 seconds between sets, and 60 seconds between exercises. This assumption is never presented as measured
+  time.
+- Energy uses the user’s stored body weight and 3.5 MET from the
+  [2024 Adult Compendium of Physical Activities](https://pacompendium.com/wp-content/uploads/2024/01/2024-adult-compendium_1_2024.pdf),
+  code 02054 (“multiple exercises, 8–15 repetitions at varied resistance”). Height is not an input to the MET
+  equation.
+
+### Treadmill workout
+
+- Selecting treadmill running opens a dedicated form for walking/running mode, minutes, seconds, incline
+  percentage, and speed in km/h or mph.
+- The app uses the profile’s saved unit preference for the initial speed unit and converts the entered speed
+  when the unit changes.
+- The energy preview updates locally from the stored profile weight using the ACSM treadmill metabolic
+  equations. Walking uses `0.1 × speed + 1.8 × speed × grade + 3.5`; running uses
+  `0.2 × speed + 0.9 × speed × grade + 3.5`, with speed in metres/minute and grade as a fraction.
+- Height is shown as unnecessary for this equation rather than silently implying that it was used.
+- The saved diary metadata keeps reviewed duration, walking/running mode, normalized km/h speed, incline,
+  entered unit, profile weight, and estimation-method identifier in a backward-compatible optional JSON field.
+- Editing the duration later recalculates treadmill energy with the same saved speed, grade, and mode rather
+  than falling back to the generic treadmill MET row.
+
+Equation references:
+
+- [ACSM walking equation description and treadmill use](https://pmc.ncbi.nlm.nih.gov/articles/PMC7896743/)
+- [ACSM running equation description](https://pmc.ncbi.nlm.nih.gov/articles/PMC3743617/)
+
+Activity-flow validation:
+
+- Backend Ruff lint/format and Pytest suite: passing (26 tests).
+- Flutter unit tests cover workout parsing-client behavior, duration assumptions, mph/km/h conversion, both
+  ACSM equations, and structured metadata round trips.
+- Android develop debug compilation: passing.

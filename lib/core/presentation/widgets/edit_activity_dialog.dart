@@ -70,7 +70,7 @@ class _EditActivityDialogState extends State<EditActivityDialog> {
                     ? (usesKj
                         ? S.of(context).mealEnergyLabel
                         : S.of(context).customActivityKcalLabel)
-                    : S.of(context).quantityLabel,
+                    : S.of(context).activityDurationMinutesLabel,
                 suffixText: suffix,
               ),
             ),

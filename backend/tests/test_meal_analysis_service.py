@@ -6,8 +6,11 @@ from openai import APITimeoutError
 
 from app.config import Settings
 from app.schemas.analysis import (
+    ActivityExtraction,
+    AnalyzeActivityRequest,
     AnalyzeImageRequest,
     AnalyzeTextRequest,
+    ExtractedExercise,
     ExtractedFood,
     MealCorrectionTurn,
     MealExtraction,
@@ -39,6 +42,22 @@ class FakeResponses:
                         )
                     ],
                     assistant_message="Changed the dish to paneer curry and set it to 180 g.",
+                )
+            )
+        if kwargs["text_format"] is ActivityExtraction:
+            return SimpleNamespace(
+                output_parsed=ActivityExtraction(
+                    exercises=[
+                        ExtractedExercise(
+                            original_text="3 sets of 8 dumbbell press at 17.5 kg",
+                            canonical_name="dumbbell press",
+                            sets=3,
+                            reps_per_set=8,
+                            load_value=17.5,
+                            load_unit="kg",
+                            confidence=0.98,
+                        )
+                    ]
                 )
             )
         return SimpleNamespace(
@@ -126,6 +145,35 @@ async def test_service_sends_image_as_high_detail_data_url(monkeypatch: Any) -> 
     assert content[1]["image_url"].startswith("data:image/png;base64,")
     assert "Never calculate or return calories" in call["instructions"]
     assert call["store"] is False
+
+
+async def test_service_parses_activity_without_requesting_energy(monkeypatch: Any) -> None:
+    monkeypatch.setattr("app.services.meal_analysis.AsyncOpenAI", FakeOpenAIClient)
+    settings = Settings(
+        environment="test",
+        openai_api_key="server-key",
+        openai_primary_model="gpt-5.4",
+        openai_fallback_model="gpt-5.4",
+    )
+    service = MealAnalysisService(settings)
+
+    result = await service.analyze_activity(
+        AnalyzeActivityRequest(
+            text="3 sets of 8 dumbbell press at 17.5 kg",
+            locale="en-IN",
+        ),
+        None,
+    )
+
+    assert result.extraction.exercises[0].load_value == 17.5
+    client = FakeOpenAIClient.last_instance
+    assert client is not None
+    call = client.responses.calls[0]
+    assert call["text_format"] is ActivityExtraction
+    assert call["store"] is False
+    assert "Never calculate or return calories" in call["instructions"]
+    assert "Never infer" in call["instructions"]
+    assert "duration" in call["instructions"]
 
 
 async def test_service_refines_with_photo_current_draft_and_history(

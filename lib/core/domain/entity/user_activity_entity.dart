@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/data/data_source/user_activity_dbo.dart';
+import 'package:opennutritracker/core/domain/entity/activity_log_details.dart';
 import 'package:opennutritracker/core/domain/entity/physical_activity_entity.dart';
 
 class UserActivityEntity extends Equatable {
@@ -17,6 +18,7 @@ class UserActivityEntity extends Equatable {
   /// working unchanged. See `UserActivityDBO.userKcal` for the persistence
   /// reasoning.
   final double? userKcal;
+  final String? detailsJson;
 
   const UserActivityEntity(
     this.id,
@@ -25,6 +27,7 @@ class UserActivityEntity extends Equatable {
     this.date,
     this.physicalActivityEntity, {
     this.userKcal,
+    this.detailsJson,
   });
 
   factory UserActivityEntity.fromUserActivityDBO(UserActivityDBO activityDBO) {
@@ -37,6 +40,7 @@ class UserActivityEntity extends Equatable {
         activityDBO.physicalActivityDBO,
       ),
       userKcal: activityDBO.userKcal,
+      detailsJson: activityDBO.detailsJson,
     );
   }
 
@@ -44,9 +48,17 @@ class UserActivityEntity extends Equatable {
   /// the user-entered value when one is present (Custom activities),
   /// otherwise falls back to the MET-computed [burnedKcal].
   double get effectiveBurnedKcal => userKcal ?? burnedKcal;
+  ActivityLogDetails? get details => ActivityLogDetails.tryParse(detailsJson);
 
   @override
-  List<Object?> get props => [id, duration, burnedKcal, date, userKcal];
+  List<Object?> get props => [
+    id,
+    duration,
+    burnedKcal,
+    date,
+    userKcal,
+    detailsJson,
+  ];
 
   static IconData getIconData() => Icons.directions_run_outlined;
 }

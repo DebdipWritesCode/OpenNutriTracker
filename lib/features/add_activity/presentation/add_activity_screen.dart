@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/entity/physical_activity_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/error_dialog.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
@@ -12,6 +13,7 @@ import 'package:opennutritracker/features/add_activity/presentation/bloc/recent_
 import 'package:opennutritracker/features/add_activity/presentation/widgets/activity_item_card.dart';
 import 'package:opennutritracker/features/add_activity/presentation/widgets/quick_add_activity_bottom_sheet.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/no_results_widget.dart';
+import 'package:opennutritracker/features/ai_activity/presentation/ai_activity_screen.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class AddActivityScreen extends StatefulWidget {
@@ -40,8 +42,9 @@ class _AddActivityScreenState extends State<AddActivityScreen>
 
   @override
   void didChangeDependencies() {
-    final args = ModalRoute.of(context)!.settings.arguments
-        as AddActivityScreenArguments;
+    final args =
+        ModalRoute.of(context)!.settings.arguments
+            as AddActivityScreenArguments;
     _day = args.day;
     super.didChangeDependencies();
   }
@@ -93,15 +96,24 @@ class _AddActivityScreenState extends State<AddActivityScreen>
               decoration: InputDecoration(
                 filled: true,
                 fillColor: palette.surface,
-                prefixIcon: Icon(Icons.search_rounded, color: palette.textMuted),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: palette.textMuted,
+                ),
                 hintText: S.of(context).searchLabel,
                 border: OutlineInputBorder(
                   borderRadius: Dimens.borderRadiusM,
-                  borderSide: BorderSide(color: palette.border, width: Dimens.hairline),
+                  borderSide: BorderSide(
+                    color: palette.border,
+                    width: Dimens.hairline,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: Dimens.borderRadiusM,
-                  borderSide: BorderSide(color: palette.border, width: Dimens.hairline),
+                  borderSide: BorderSide(
+                    color: palette.border,
+                    width: Dimens.hairline,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: Dimens.borderRadiusM,
@@ -116,6 +128,50 @@ class _AddActivityScreenState extends State<AddActivityScreen>
                   ),
                 );
               },
+            ),
+            const SizedBox(height: Dimens.spacing12),
+            Semantics(
+              identifier: 'add-activity-ai',
+              button: true,
+              child: InkWell(
+                borderRadius: Dimens.borderRadiusM,
+                onTap: _onAiActivityPressed,
+                child: AppCard(
+                  padding: const EdgeInsets.all(Dimens.spacing12),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: accent.withValues(alpha: 0.14),
+                          borderRadius: Dimens.borderRadiusS,
+                        ),
+                        child: Icon(Icons.auto_awesome_rounded, color: accent),
+                      ),
+                      const SizedBox(width: Dimens.spacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              S.of(context).aiActivityActionLabel,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: Dimens.spacing4),
+                            Text(
+                              S.of(context).aiActivityActionBody,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: palette.textMuted),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: Dimens.spacing16),
             TabBar(
@@ -237,6 +293,13 @@ class _AddActivityScreenState extends State<AddActivityScreen>
       isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => QuickAddActivityBottomSheet(day: _day),
+    );
+  }
+
+  void _onAiActivityPressed() {
+    Navigator.of(context).pushNamed(
+      NavigationOptions.aiActivityRoute,
+      arguments: AiActivityScreenArguments(day: _day),
     );
   }
 

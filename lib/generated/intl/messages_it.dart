@@ -2169,5 +2169,148 @@ class MessageLookup extends MessageLookupByLibrary {
     "yearsLabel": m49,
     "youLabel": MessageLookupByLibrary.simpleMessage("Tu"),
     "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
+    "activityDurationMinutesLabel": MessageLookupByLibrary.simpleMessage(
+      "Duration (minutes)",
+    ),
+    "aiActivityActionBody": MessageLookupByLibrary.simpleMessage(
+      "Use AI to turn sets, reps and weights into an editable log.",
+    ),
+    "aiActivityActionLabel": MessageLookupByLibrary.simpleMessage(
+      "Describe a workout",
+    ),
+    "aiActivityAddExercise": MessageLookupByLibrary.simpleMessage(
+      "Add exercise",
+    ),
+    "aiActivityAnalyzeButton": MessageLookupByLibrary.simpleMessage(
+      "Analyze workout",
+    ),
+    "aiActivityAnalyzingLabel": MessageLookupByLibrary.simpleMessage(
+      "Structuring your exercises, sets, reps and loads…",
+    ),
+    "aiActivityBodyweightUnitLabel": MessageLookupByLibrary.simpleMessage(
+      "Body weight",
+    ),
+    "aiActivityDescriptionError": MessageLookupByLibrary.simpleMessage(
+      "Describe at least one strength exercise.",
+    ),
+    "aiActivityDescriptionHint": MessageLookupByLibrary.simpleMessage(
+      "For example: dumbbell press 17.5 kg for 3 sets of 8, then shoulder press 15 kg for 3 sets of 8",
+    ),
+    "aiActivityDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout description",
+    ),
+    "aiActivityDurationConfirmedHelper": MessageLookupByLibrary.simpleMessage(
+      "This duration will be used for the energy estimate.",
+    ),
+    "aiActivityDurationEstimateHelper": MessageLookupByLibrary.simpleMessage(
+      "Estimated from reps and standard rest assumptions. Replace it with your actual workout time when possible.",
+    ),
+    "aiActivityDurationLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout duration",
+    ),
+    "aiActivityEmptyExercises": MessageLookupByLibrary.simpleMessage(
+      "Keep at least one complete exercise before saving.",
+    ),
+    "aiActivityEnergyLabel": MessageLookupByLibrary.simpleMessage(
+      "Estimated energy",
+    ),
+    "aiActivityEstimateSource": MessageLookupByLibrary.simpleMessage(
+      "Calculated locally with 3.5 MET from 2024 Adult Compendium code 02054. AI only structures the workout text.",
+    ),
+    "aiActivityEstimateTitle": MessageLookupByLibrary.simpleMessage(
+      "Energy estimate",
+    ),
+    "aiActivityExerciseLabel": MessageLookupByLibrary.simpleMessage("Exercise"),
+    "aiActivityExerciseName": MessageLookupByLibrary.simpleMessage(
+      "Exercise name",
+    ),
+    "aiActivityIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Include the exercises, sets, reps, loads and total time you remember. AI structures the workout; the energy estimate uses your profile and a published activity value.",
+    ),
+    "aiActivityIntroTitle": MessageLookupByLibrary.simpleMessage(
+      "Describe your workout",
+    ),
+    "aiActivityLoadLabel": MessageLookupByLibrary.simpleMessage("Load"),
+    "aiActivityLoadUnitLabel": MessageLookupByLibrary.simpleMessage("Unit"),
+    "aiActivityMinutesUnit": MessageLookupByLibrary.simpleMessage("min"),
+    "aiActivityRemoveExercise": MessageLookupByLibrary.simpleMessage(
+      "Remove exercise",
+    ),
+    "aiActivityRepsLabel": MessageLookupByLibrary.simpleMessage("Reps per set"),
+    "aiActivityReviewBody": MessageLookupByLibrary.simpleMessage(
+      "Check every exercise and edit the duration before saving. AI does not calculate the calories.",
+    ),
+    "aiActivityReviewTitle": MessageLookupByLibrary.simpleMessage(
+      "Review your workout",
+    ),
+    "aiActivitySaveLabel": MessageLookupByLibrary.simpleMessage("Save workout"),
+    "aiActivitySavedLabel": MessageLookupByLibrary.simpleMessage(
+      "Workout added",
+    ),
+    "aiActivitySavingLabel": MessageLookupByLibrary.simpleMessage(
+      "Saving workout…",
+    ),
+    "aiActivitySetsLabel": MessageLookupByLibrary.simpleMessage("Sets"),
+    "aiActivityTitle": MessageLookupByLibrary.simpleMessage(
+      "AI activity logging",
+    ),
+    "aiActivityWorkoutName": MessageLookupByLibrary.simpleMessage(
+      "Strength workout",
+    ),
+    "treadmillActivityTitle": MessageLookupByLibrary.simpleMessage(
+      "Treadmill workout",
+    ),
+    "treadmillDurationError": MessageLookupByLibrary.simpleMessage(
+      "Enter a duration greater than zero, with seconds from 0 to 59.",
+    ),
+    "treadmillDurationTitle": MessageLookupByLibrary.simpleMessage("Duration"),
+    "treadmillEstimateSource": MessageLookupByLibrary.simpleMessage(
+      "Calculated locally with the ACSM treadmill metabolic equation. AI is not used for this estimate.",
+    ),
+    "treadmillEstimateTitle": MessageLookupByLibrary.simpleMessage(
+      "Live energy estimate",
+    ),
+    "treadmillHeightNotUsedLabel": MessageLookupByLibrary.simpleMessage(
+      "Height is not required by this treadmill equation.",
+    ),
+    "treadmillInclineError": MessageLookupByLibrary.simpleMessage(
+      "Enter an incline from 0% to 40%.",
+    ),
+    "treadmillInclineLabel": MessageLookupByLibrary.simpleMessage("Incline"),
+    "treadmillIntroBody": MessageLookupByLibrary.simpleMessage(
+      "Enter the time, speed and incline shown on the treadmill. The estimate updates from your profile weight.",
+    ),
+    "treadmillKilometersPerHour": MessageLookupByLibrary.simpleMessage("km/h"),
+    "treadmillMilesPerHour": MessageLookupByLibrary.simpleMessage("mph"),
+    "treadmillMinutesLabel": MessageLookupByLibrary.simpleMessage("Minutes"),
+    "treadmillModeLabel": MessageLookupByLibrary.simpleMessage("Movement"),
+    "treadmillProfileLoadError": MessageLookupByLibrary.simpleMessage(
+      "Your profile could not be loaded. Go back and try again.",
+    ),
+    "treadmillProfileWeightLabel": MessageLookupByLibrary.simpleMessage(
+      "Profile weight",
+    ),
+    "treadmillRunningLabel": MessageLookupByLibrary.simpleMessage("Running"),
+    "treadmillSaveError": MessageLookupByLibrary.simpleMessage(
+      "The treadmill workout could not be saved. Try again.",
+    ),
+    "treadmillSaveLabel": MessageLookupByLibrary.simpleMessage(
+      "Save treadmill workout",
+    ),
+    "treadmillSavedLabel": MessageLookupByLibrary.simpleMessage(
+      "Treadmill workout added",
+    ),
+    "treadmillSavingLabel": MessageLookupByLibrary.simpleMessage(
+      "Saving treadmill workout…",
+    ),
+    "treadmillSecondsLabel": MessageLookupByLibrary.simpleMessage("Seconds"),
+    "treadmillSpeedError": MessageLookupByLibrary.simpleMessage(
+      "Enter a speed greater than 0 and no more than 30 km/h.",
+    ),
+    "treadmillSpeedLabel": MessageLookupByLibrary.simpleMessage("Speed"),
+    "treadmillSpeedUnitLabel": MessageLookupByLibrary.simpleMessage(
+      "Speed unit",
+    ),
+    "treadmillWalkingLabel": MessageLookupByLibrary.simpleMessage("Walking"),
   };
 }

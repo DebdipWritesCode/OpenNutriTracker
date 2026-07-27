@@ -4,11 +4,13 @@ class NavigationOptions {
   static const settingsRoute = "settings";
   static const addMealRoute = "addMeal";
   static const aiMealRoute = "aiMeal";
+  static const aiActivityRoute = "aiActivity";
   static const scannerRoute = "scanner";
   static const mealDetailRoute = "mealDetail";
   static const editMealRoute = "editMeal";
   static const addActivityRoute = "addActivity";
   static const activityDetailRoute = "activityDetail";
+  static const treadmillActivityRoute = "treadmillActivity";
   static const imageFullScreenRoute = "imageFullScreen";
   static const importMealScannerRoute = "importMealScanner";
   static const importActivityScannerRoute = "importActivityScanner";

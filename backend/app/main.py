@@ -31,8 +31,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title=resolved_settings.app_name,
         version=resolved_settings.app_version,
         description=(
-            "Self-hosted AI meal parsing for OpenNutriTracker. AI endpoints identify foods and "
-            "portions only; nutrition values must come from the nutrition engine."
+            "Self-hosted AI parsing for OpenNutriTracker. AI endpoints identify foods, portions, "
+            "and workout structure only; nutrition and activity energy values come from "
+            "deterministic application calculations."
         ),
         lifespan=lifespan,
         docs_url="/docs",

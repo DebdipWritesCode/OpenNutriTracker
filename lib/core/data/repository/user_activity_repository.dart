@@ -24,12 +24,14 @@ class UserActivityRepository {
     double newDuration,
     double newBurnedKcal, {
     double? userKcal,
+    String? detailsJson,
   }) async {
     final dbo = await _userActivityDataSource.updateUserActivity(
       id,
       newDuration,
       newBurnedKcal,
       userKcal: userKcal,
+      detailsJson: detailsJson,
     );
     return dbo == null ? null : UserActivityEntity.fromUserActivityDBO(dbo);
   }
@@ -47,12 +49,12 @@ class UserActivityRepository {
     int dayStartOffsetHours = 0,
     int dayStartOffsetMinutes = 0,
   }) async {
-    final userActivityDBOList =
-        await _userActivityDataSource.getAllUserActivitiesByDate(
-      dateTime,
-      dayStartOffsetHours: dayStartOffsetHours,
-      dayStartOffsetMinutes: dayStartOffsetMinutes,
-    );
+    final userActivityDBOList = await _userActivityDataSource
+        .getAllUserActivitiesByDate(
+          dateTime,
+          dayStartOffsetHours: dayStartOffsetHours,
+          dayStartOffsetMinutes: dayStartOffsetMinutes,
+        );
 
     return userActivityDBOList
         .map(
@@ -63,8 +65,8 @@ class UserActivityRepository {
   }
 
   Future<List<UserActivityEntity>> getRecentUserActivity() async {
-    final userActivityDBOList =
-        await _userActivityDataSource.getRecentlyAddedUserActivity();
+    final userActivityDBOList = await _userActivityDataSource
+        .getRecentlyAddedUserActivity();
     return userActivityDBOList
         .map(
           (userActivityDBO) =>

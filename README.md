@@ -24,7 +24,9 @@ OpenNutriTracker is an open-source mobile application designed to simplify nutri
 
 ### AI layer development
 
-This clone is adding a privacy-first, self-hosted AI meal logging layer. The implementation plan is in
+This clone is adding a privacy-first, self-hosted AI meal and workout logging layer. AI structures meal and
+strength-workout input, while trusted databases and deterministic local equations remain the source of
+nutrition and activity-energy values. The implementation plan is in
 [`docs/ai_plan.md`](docs/ai_plan.md), current progress and architecture findings are in
 [`docs/ai_implementation_status.md`](docs/ai_implementation_status.md), and the FastAPI service is in
 [`backend/`](backend/).
@@ -36,6 +38,11 @@ turn rechecks the same photo without creating a stored server-side conversation.
 from the app's configured trusted food databases rather than the model. Production deployments must set the same
 randomly generated `ONT_AI_ACCESS_TOKEN` on the backend; the app asks for it once and stores it in platform secure
 storage.
+
+Strength workouts are available from **Add activity → Describe a workout**. The AI extracts exercise names,
+sets, reps, and loads into an editable preview, while calories are calculated locally from reviewed time,
+profile weight, and the 2024 Adult Compendium. Selecting treadmill running opens dedicated walking/running,
+minutes, seconds, speed-unit, and incline controls backed by the local ACSM treadmill equations.
 
 ## Screenshots
 <p align="center">

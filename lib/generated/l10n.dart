@@ -8557,6 +8557,596 @@ class S {
       args: [],
     );
   }
+
+  /// `AI activity logging`
+  String get aiActivityTitle {
+    return Intl.message(
+      'AI activity logging',
+      name: 'aiActivityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe a workout`
+  String get aiActivityActionLabel {
+    return Intl.message(
+      'Describe a workout',
+      name: 'aiActivityActionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use AI to turn sets, reps and weights into an editable log.`
+  String get aiActivityActionBody {
+    return Intl.message(
+      'Use AI to turn sets, reps and weights into an editable log.',
+      name: 'aiActivityActionBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe your workout`
+  String get aiActivityIntroTitle {
+    return Intl.message(
+      'Describe your workout',
+      name: 'aiActivityIntroTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Include the exercises, sets, reps, loads and total time you remember. AI structures the workout; the energy estimate uses your profile and a published activity value.`
+  String get aiActivityIntroBody {
+    return Intl.message(
+      'Include the exercises, sets, reps, loads and total time you remember. AI structures the workout; the energy estimate uses your profile and a published activity value.',
+      name: 'aiActivityIntroBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Workout description`
+  String get aiActivityDescriptionLabel {
+    return Intl.message(
+      'Workout description',
+      name: 'aiActivityDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For example: dumbbell press 17.5 kg for 3 sets of 8, then shoulder press 15 kg for 3 sets of 8`
+  String get aiActivityDescriptionHint {
+    return Intl.message(
+      'For example: dumbbell press 17.5 kg for 3 sets of 8, then shoulder press 15 kg for 3 sets of 8',
+      name: 'aiActivityDescriptionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe at least one strength exercise.`
+  String get aiActivityDescriptionError {
+    return Intl.message(
+      'Describe at least one strength exercise.',
+      name: 'aiActivityDescriptionError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Analyze workout`
+  String get aiActivityAnalyzeButton {
+    return Intl.message(
+      'Analyze workout',
+      name: 'aiActivityAnalyzeButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Structuring your exercises, sets, reps and loads…`
+  String get aiActivityAnalyzingLabel {
+    return Intl.message(
+      'Structuring your exercises, sets, reps and loads…',
+      name: 'aiActivityAnalyzingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review your workout`
+  String get aiActivityReviewTitle {
+    return Intl.message(
+      'Review your workout',
+      name: 'aiActivityReviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check every exercise and edit the duration before saving. AI does not calculate the calories.`
+  String get aiActivityReviewBody {
+    return Intl.message(
+      'Check every exercise and edit the duration before saving. AI does not calculate the calories.',
+      name: 'aiActivityReviewBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy estimate`
+  String get aiActivityEstimateTitle {
+    return Intl.message(
+      'Energy estimate',
+      name: 'aiActivityEstimateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Workout duration`
+  String get aiActivityDurationLabel {
+    return Intl.message(
+      'Workout duration',
+      name: 'aiActivityDurationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `min`
+  String get aiActivityMinutesUnit {
+    return Intl.message(
+      'min',
+      name: 'aiActivityMinutesUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated from reps and standard rest assumptions. Replace it with your actual workout time when possible.`
+  String get aiActivityDurationEstimateHelper {
+    return Intl.message(
+      'Estimated from reps and standard rest assumptions. Replace it with your actual workout time when possible.',
+      name: 'aiActivityDurationEstimateHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This duration will be used for the energy estimate.`
+  String get aiActivityDurationConfirmedHelper {
+    return Intl.message(
+      'This duration will be used for the energy estimate.',
+      name: 'aiActivityDurationConfirmedHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated energy`
+  String get aiActivityEnergyLabel {
+    return Intl.message(
+      'Estimated energy',
+      name: 'aiActivityEnergyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculated locally with 3.5 MET from 2024 Adult Compendium code 02054. AI only structures the workout text.`
+  String get aiActivityEstimateSource {
+    return Intl.message(
+      'Calculated locally with 3.5 MET from 2024 Adult Compendium code 02054. AI only structures the workout text.',
+      name: 'aiActivityEstimateSource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exercise`
+  String get aiActivityExerciseLabel {
+    return Intl.message(
+      'Exercise',
+      name: 'aiActivityExerciseLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exercise name`
+  String get aiActivityExerciseName {
+    return Intl.message(
+      'Exercise name',
+      name: 'aiActivityExerciseName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sets`
+  String get aiActivitySetsLabel {
+    return Intl.message(
+      'Sets',
+      name: 'aiActivitySetsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reps per set`
+  String get aiActivityRepsLabel {
+    return Intl.message(
+      'Reps per set',
+      name: 'aiActivityRepsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Load`
+  String get aiActivityLoadLabel {
+    return Intl.message(
+      'Load',
+      name: 'aiActivityLoadLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unit`
+  String get aiActivityLoadUnitLabel {
+    return Intl.message(
+      'Unit',
+      name: 'aiActivityLoadUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove exercise`
+  String get aiActivityRemoveExercise {
+    return Intl.message(
+      'Remove exercise',
+      name: 'aiActivityRemoveExercise',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep at least one complete exercise before saving.`
+  String get aiActivityEmptyExercises {
+    return Intl.message(
+      'Keep at least one complete exercise before saving.',
+      name: 'aiActivityEmptyExercises',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save workout`
+  String get aiActivitySaveLabel {
+    return Intl.message(
+      'Save workout',
+      name: 'aiActivitySaveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving workout…`
+  String get aiActivitySavingLabel {
+    return Intl.message(
+      'Saving workout…',
+      name: 'aiActivitySavingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Workout added`
+  String get aiActivitySavedLabel {
+    return Intl.message(
+      'Workout added',
+      name: 'aiActivitySavedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Strength workout`
+  String get aiActivityWorkoutName {
+    return Intl.message(
+      'Strength workout',
+      name: 'aiActivityWorkoutName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duration (minutes)`
+  String get activityDurationMinutesLabel {
+    return Intl.message(
+      'Duration (minutes)',
+      name: 'activityDurationMinutesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Treadmill workout`
+  String get treadmillActivityTitle {
+    return Intl.message(
+      'Treadmill workout',
+      name: 'treadmillActivityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the time, speed and incline shown on the treadmill. The estimate updates from your profile weight.`
+  String get treadmillIntroBody {
+    return Intl.message(
+      'Enter the time, speed and incline shown on the treadmill. The estimate updates from your profile weight.',
+      name: 'treadmillIntroBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Movement`
+  String get treadmillModeLabel {
+    return Intl.message(
+      'Movement',
+      name: 'treadmillModeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Walking`
+  String get treadmillWalkingLabel {
+    return Intl.message(
+      'Walking',
+      name: 'treadmillWalkingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Running`
+  String get treadmillRunningLabel {
+    return Intl.message(
+      'Running',
+      name: 'treadmillRunningLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duration`
+  String get treadmillDurationTitle {
+    return Intl.message(
+      'Duration',
+      name: 'treadmillDurationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minutes`
+  String get treadmillMinutesLabel {
+    return Intl.message(
+      'Minutes',
+      name: 'treadmillMinutesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Seconds`
+  String get treadmillSecondsLabel {
+    return Intl.message(
+      'Seconds',
+      name: 'treadmillSecondsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speed`
+  String get treadmillSpeedLabel {
+    return Intl.message(
+      'Speed',
+      name: 'treadmillSpeedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speed unit`
+  String get treadmillSpeedUnitLabel {
+    return Intl.message(
+      'Speed unit',
+      name: 'treadmillSpeedUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `km/h`
+  String get treadmillKilometersPerHour {
+    return Intl.message(
+      'km/h',
+      name: 'treadmillKilometersPerHour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mph`
+  String get treadmillMilesPerHour {
+    return Intl.message(
+      'mph',
+      name: 'treadmillMilesPerHour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Incline`
+  String get treadmillInclineLabel {
+    return Intl.message(
+      'Incline',
+      name: 'treadmillInclineLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Live energy estimate`
+  String get treadmillEstimateTitle {
+    return Intl.message(
+      'Live energy estimate',
+      name: 'treadmillEstimateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile weight`
+  String get treadmillProfileWeightLabel {
+    return Intl.message(
+      'Profile weight',
+      name: 'treadmillProfileWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Height is not required by this treadmill equation.`
+  String get treadmillHeightNotUsedLabel {
+    return Intl.message(
+      'Height is not required by this treadmill equation.',
+      name: 'treadmillHeightNotUsedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculated locally with the ACSM treadmill metabolic equation. AI is not used for this estimate.`
+  String get treadmillEstimateSource {
+    return Intl.message(
+      'Calculated locally with the ACSM treadmill metabolic equation. AI is not used for this estimate.',
+      name: 'treadmillEstimateSource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save treadmill workout`
+  String get treadmillSaveLabel {
+    return Intl.message(
+      'Save treadmill workout',
+      name: 'treadmillSaveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving treadmill workout…`
+  String get treadmillSavingLabel {
+    return Intl.message(
+      'Saving treadmill workout…',
+      name: 'treadmillSavingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Treadmill workout added`
+  String get treadmillSavedLabel {
+    return Intl.message(
+      'Treadmill workout added',
+      name: 'treadmillSavedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a duration greater than zero, with seconds from 0 to 59.`
+  String get treadmillDurationError {
+    return Intl.message(
+      'Enter a duration greater than zero, with seconds from 0 to 59.',
+      name: 'treadmillDurationError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a speed greater than 0 and no more than 30 km/h.`
+  String get treadmillSpeedError {
+    return Intl.message(
+      'Enter a speed greater than 0 and no more than 30 km/h.',
+      name: 'treadmillSpeedError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter an incline from 0% to 40%.`
+  String get treadmillInclineError {
+    return Intl.message(
+      'Enter an incline from 0% to 40%.',
+      name: 'treadmillInclineError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your profile could not be loaded. Go back and try again.`
+  String get treadmillProfileLoadError {
+    return Intl.message(
+      'Your profile could not be loaded. Go back and try again.',
+      name: 'treadmillProfileLoadError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The treadmill workout could not be saved. Try again.`
+  String get treadmillSaveError {
+    return Intl.message(
+      'The treadmill workout could not be saved. Try again.',
+      name: 'treadmillSaveError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add exercise`
+  String get aiActivityAddExercise {
+    return Intl.message(
+      'Add exercise',
+      name: 'aiActivityAddExercise',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Body weight`
+  String get aiActivityBodyweightUnitLabel {
+    return Intl.message(
+      'Body weight',
+      name: 'aiActivityBodyweightUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

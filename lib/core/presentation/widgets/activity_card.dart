@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/domain/entity/activity_log_details.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/energy_display.dart';
+import 'package:opennutritracker/core/utils/calc/treadmill_energy_calc.dart';
 
 /// A logged activity, rendered as a full-width row to match the meal rows: an
 /// accent icon chip, the activity name and duration, and the burned energy.
@@ -30,6 +32,7 @@ class ActivityCard extends StatelessWidget {
     final accent = Theme.of(context).colorScheme.primary;
     final textTheme = Theme.of(context).textTheme;
     final radius = BorderRadius.circular(Dimens.radiusM);
+    final detailText = _detailText();
 
     final card = Padding(
       padding: const EdgeInsets.symmetric(
@@ -72,25 +75,43 @@ class ActivityCard extends StatelessWidget {
                     children: [
                       Text(
                         activityEntity.physicalActivityEntity.getName(context),
-                        style: textTheme.titleSmall?.copyWith(color: palette.textStrong),
+                        style: textTheme.titleSmall?.copyWith(
+                          color: palette.textStrong,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${activityEntity.duration.toInt()} min',
-                        style: textTheme.bodySmall?.copyWith(color: palette.textMuted),
+                        detailText,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: palette.textMuted,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: Dimens.spacing8),
-                Text(
-                  "🔥${EnergyDisplay.formatWithUnit(context, activityEntity.burnedKcal)}",
-                  style: textTheme.labelMedium?.copyWith(
-                    color: palette.textStrong,
-                    fontWeight: FontWeight.w700,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.local_fire_department_rounded,
+                      size: 16,
+                      color: accent,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      EnergyDisplay.formatWithUnit(
+                        context,
+                        activityEntity.burnedKcal,
+                      ),
+                      style: textTheme.labelMedium?.copyWith(
+                        color: palette.textStrong,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -105,7 +126,8 @@ class ActivityCard extends StatelessWidget {
       data: activityEntity,
       onDragStarted: () => onItemDragCallback!.call(true),
       onDragEnd: (_) => onItemDragCallback!.call(false),
-      onDraggableCanceled: (velocity, offset) => onItemDragCallback!.call(false),
+      onDraggableCanceled: (velocity, offset) =>
+          onItemDragCallback!.call(false),
       feedback: Material(
         color: Colors.transparent,
         child: SizedBox(
@@ -116,6 +138,35 @@ class ActivityCard extends StatelessWidget {
       childWhenDragging: Opacity(opacity: 0.35, child: card),
       child: card,
     );
+  }
+
+  String _detailText() {
+    final details = activityEntity.details;
+    if (details?.kind == ActivityLogKind.treadmill &&
+        details?.speedKph != null &&
+        details?.inclinePercent != null) {
+      final unit =
+          details!.enteredSpeedUnit ?? TreadmillSpeedUnit.kilometersPerHour;
+      final speed = TreadmillEnergyCalc.fromKilometersPerHour(
+        details.speedKph!,
+        unit,
+      );
+      final unitLabel = unit == TreadmillSpeedUnit.kilometersPerHour
+          ? 'km/h'
+          : 'mph';
+      final minutes = details.durationSeconds ~/ 60;
+      final seconds = details.durationSeconds.remainder(60);
+      final duration = seconds == 0
+          ? '$minutes min'
+          : '$minutes:${seconds.toString().padLeft(2, '0')}';
+      return '$duration • ${speed.toStringAsFixed(1)} $unitLabel • '
+          '${details.inclinePercent!.toStringAsFixed(1)}%';
+    }
+    if (details?.kind == ActivityLogKind.aiStrength) {
+      return '${activityEntity.duration.toStringAsFixed(1)} min • '
+          '${details!.totalSets} sets';
+    }
+    return '${activityEntity.duration.toInt()} min';
   }
 }
 

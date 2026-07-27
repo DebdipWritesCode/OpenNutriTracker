@@ -6,6 +6,7 @@ import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/activity_detail/activity_detail_screen.dart';
+import 'package:opennutritracker/features/treadmill_activity/presentation/treadmill_activity_screen.dart';
 
 class ActivityItemCard extends StatelessWidget {
   final PhysicalActivityEntity physicalActivityEntity;
@@ -87,6 +88,16 @@ class ActivityItemCard extends StatelessWidget {
   }
 
   void _onItemPressed(BuildContext context) {
+    if (physicalActivityEntity.code == '12180') {
+      Navigator.of(context).pushNamed(
+        NavigationOptions.treadmillActivityRoute,
+        arguments: TreadmillActivityScreenArguments(
+          activity: physicalActivityEntity,
+          day: day,
+        ),
+      );
+      return;
+    }
     Navigator.of(context).pushNamed(
       NavigationOptions.activityDetailRoute,
       arguments: ActivityDetailScreenArguments(physicalActivityEntity, day),

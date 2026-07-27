@@ -22,6 +22,7 @@ import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/locale_provider.dart';
 import 'package:opennutritracker/core/utils/theme_mode_provider.dart';
 import 'package:opennutritracker/features/activity_detail/activity_detail_screen.dart';
+import 'package:opennutritracker/features/ai_activity/presentation/ai_activity_screen.dart';
 import 'package:opennutritracker/features/ai_meal/presentation/ai_meal_screen.dart';
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.dart';
 import 'package:opennutritracker/features/add_activity/presentation/add_activity_screen.dart';
@@ -40,6 +41,7 @@ import 'package:opennutritracker/features/scanner/scanner_screen.dart';
 import 'package:opennutritracker/features/meal_detail/meal_detail_screen.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/accent_colour_screen.dart';
 import 'package:opennutritracker/features/settings/settings_screen.dart';
+import 'package:opennutritracker/features/treadmill_activity/presentation/treadmill_activity_screen.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -217,6 +219,8 @@ class OpenNutriTrackerApp extends StatelessWidget {
             const AccentColourScreen(),
         NavigationOptions.addMealRoute: (context) => const AddMealScreen(),
         NavigationOptions.aiMealRoute: (context) => const AiMealScreen(),
+        NavigationOptions.aiActivityRoute: (context) =>
+            const AiActivityScreen(),
         NavigationOptions.scannerRoute: (context) => const ScannerScreen(),
         NavigationOptions.mealDetailRoute: (context) =>
             const MealDetailScreen(),
@@ -225,6 +229,8 @@ class OpenNutriTrackerApp extends StatelessWidget {
             const AddActivityScreen(),
         NavigationOptions.activityDetailRoute: (context) =>
             const ActivityDetailScreen(),
+        NavigationOptions.treadmillActivityRoute: (context) =>
+            const TreadmillActivityScreen(),
         NavigationOptions.imageFullScreenRoute: (context) =>
             const ImageFullScreen(),
         NavigationOptions.importMealScannerRoute: (context) =>

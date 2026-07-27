@@ -26,6 +26,7 @@ class PhysicalActivityEntity extends Equatable {
   /// and the edit dialog branch on this to swap the duration field for a
   /// direct kcal field, and the aggregation prefers the user-entered value.
   static const String customCode = '99999';
+  static const String aiStrengthCode = 'ai_strength';
 
   /// True for the generic Custom activity — UI paths use this to swap the
   /// duration entry for a direct kcal entry.
@@ -70,13 +71,28 @@ class PhysicalActivityEntity extends Equatable {
         PhysicalActivityTypeEntity.conditioningExercise,
       );
 
+  factory PhysicalActivityEntity.aiStrength(String name) =>
+      PhysicalActivityEntity(
+        aiStrengthCode,
+        name,
+        'multiple resistance exercises, 8-15 reps at varied resistance',
+        3.5,
+        const <String>['ai', 'strength', 'resistance'],
+        PhysicalActivityTypeEntity.conditioningExercise,
+      );
+
   @override
   List<Object?> get props => [code, specificActivity, description, mets];
 
   String getName(BuildContext context) {
     // A named Custom activity (e.g. from Quick Add) carries its label in
     // specificActivity; show that instead of the generic "Custom activity".
-    if (isCustom && specificActivity.isNotEmpty && specificActivity != 'custom') {
+    if (isCustom &&
+        specificActivity.isNotEmpty &&
+        specificActivity != 'custom') {
+      return specificActivity;
+    }
+    if (code == aiStrengthCode && specificActivity.isNotEmpty) {
       return specificActivity;
     }
     final physicalActivityMap = {
@@ -189,6 +205,7 @@ class PhysicalActivityEntity extends Equatable {
   }
 
   String getDescription(BuildContext context) {
+    if (code == aiStrengthCode) return description;
     final physicalActivityMap = {
       "01009": S.of(context).paBicyclingMountainGeneralDesc,
       "01015": S.of(context).paBicyclingGeneralDesc,
@@ -302,8 +319,10 @@ class PhysicalActivityEntity extends Equatable {
   /// so when the user reads in kJ (#177) we swap in the kJ-phrased
   /// variant. Everywhere else the description is unit-agnostic.
   String _customActivityDescription(BuildContext context) {
-    final usesKj =
-        Provider.of<EnergyUnitProvider>(context, listen: false).usesKilojoules;
+    final usesKj = Provider.of<EnergyUnitProvider>(
+      context,
+      listen: false,
+    ).usesKilojoules;
     return usesKj
         ? S.of(context).customActivityDescriptionKj
         : S.of(context).customActivityDescription;
@@ -331,6 +350,9 @@ class PhysicalActivityEntity extends Equatable {
         iconData = CustomIcons.kettlebell;
         break;
       case "02055":
+        iconData = CustomIcons.kettlebell;
+        break;
+      case aiStrengthCode:
         iconData = CustomIcons.kettlebell;
         break;
       case "02165":
@@ -602,16 +624,14 @@ class PhysicalActivityEntity extends Equatable {
 
   factory PhysicalActivityEntity.fromPhysicalActivityDBO(
     PhysicalActivityDBO activityDBO,
-  ) =>
-      PhysicalActivityEntity(
-        activityDBO.code,
-        activityDBO.specificActivity,
-        activityDBO.description,
-        activityDBO.mets,
-        activityDBO.tags,
-        PhysicalActivityTypeEntity.fromPhysicalActivityTypeDBO(
-            activityDBO.type),
-      );
+  ) => PhysicalActivityEntity(
+    activityDBO.code,
+    activityDBO.specificActivity,
+    activityDBO.description,
+    activityDBO.mets,
+    activityDBO.tags,
+    PhysicalActivityTypeEntity.fromPhysicalActivityTypeDBO(activityDBO.type),
+  );
 }
 
 extension ActivityIcon on PhysicalActivityTypeEntity {

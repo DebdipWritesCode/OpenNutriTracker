@@ -437,6 +437,10 @@ POST
 
 POST
 
+/analyze/activity
+
+POST
+
 /analyze/barcode
 
 POST
@@ -486,6 +490,15 @@ Extract foods.
 Normalize units.
 
 Return JSON.
+
+Activity text
+
+Extract exercise names, sets, reps, loads, and only a duration the user explicitly stated.
+
+Never return calories, MET values, oxygen use, or other physiological estimates.
+
+The mobile app calculates reviewed strength-workout energy from the Adult Compendium and treadmill energy from
+the ACSM treadmill equations.
 
 Chat
 

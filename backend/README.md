@@ -8,13 +8,17 @@ The first vertical slice provides:
 - `POST /api/v1/analyze/text` for structured food and portion extraction.
 - `POST /api/v1/analyze/image` for food and portion extraction from a JPEG, PNG, or WebP meal photo.
 - `POST /api/v1/analyze/image/refine` to correct the current photo draft with conversational feedback.
+- `POST /api/v1/analyze/activity` to extract strength exercises, sets, reps, loads, and an explicitly stated
+  duration from workout text.
 - Per-request OpenAI BYOK through `X-OpenAI-API-Key`, with an optional server key fallback.
 - Fail-closed production Bearer authentication and per-client rate limiting.
 - `gpt-5.4-mini` as the primary model and `gpt-5.4` as the configurable fallback.
 - Request IDs, structured logs, CORS, OpenAPI docs, tests, and a non-root Docker image.
 
-The AI endpoints deliberately **do not return calories or macros**. The Flutter review resolves those values
-against its configured USDA/FoodData Central and Open Food Facts nutrition sources.
+The AI endpoints deliberately **do not return calories, macros, MET values, or activity energy estimates**.
+The Flutter app resolves meal nutrition against its configured USDA/FoodData Central and Open Food Facts
+sources. Activity energy is calculated locally from published equations after the user reviews the structured
+workout.
 
 ## Local setup
 
@@ -41,6 +45,16 @@ curl -X POST http://localhost:8000/api/v1/analyze/text \
   -H "Authorization: Bearer $ONT_AI_ACCESS_TOKEN" \
   -H "X-OpenAI-API-Key: $OPENAI_API_KEY" \
   -d '{"text":"190g rice, 100g chicken and one katori curd","locale":"en-IN"}'
+```
+
+Try strength-workout extraction:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/analyze/activity \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $ONT_AI_ACCESS_TOKEN" \
+  -H "X-OpenAI-API-Key: $OPENAI_API_KEY" \
+  -d '{"text":"dumbbell press 17.5 kg 3 sets of 8, shoulder press 15 kg 3 sets of 8","locale":"en-IN"}'
 ```
 
 Photo extraction accepts an in-memory Base64 payload up to 3 MB:

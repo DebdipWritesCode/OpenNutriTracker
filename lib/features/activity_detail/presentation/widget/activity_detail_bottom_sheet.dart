@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 /// Bottom sheet for the Activity Detail screen.
 ///
-/// For compendium activities this is the quantity-in-minutes field plus
+/// For compendium activities this is the duration-in-minutes field plus
 /// an Add button — unchanged from #70. For the Custom activity it adds
 /// an optional name field, a "Save as template" checkbox, and a "Pick
 /// from saved" affordance (#70 follow-up) so people who do the same
@@ -248,7 +248,7 @@ class _ActivityDetailBottomSheetState extends State<ActivityDetailBottomSheet> {
                                           : S
                                               .of(context)
                                               .customActivityKcalLabel)
-                                      : S.of(context).quantityLabel,
+                                      : S.of(context).activityDurationMinutesLabel,
                                   hintText: isCustom
                                       ? S.of(context).customActivityKcalHint
                                       : null,

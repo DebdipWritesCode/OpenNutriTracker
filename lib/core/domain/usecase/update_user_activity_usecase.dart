@@ -1,16 +1,15 @@
 import 'package:opennutritracker/core/data/repository/user_activity_repository.dart';
+import 'package:opennutritracker/core/domain/entity/activity_log_details.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/met_calc.dart';
+import 'package:opennutritracker/core/utils/calc/treadmill_energy_calc.dart';
 
 class UpdateUserActivityUsecase {
   final UserActivityRepository _userActivityRepository;
   final GetUserUsecase _getUserUsecase;
 
-  UpdateUserActivityUsecase(
-    this._userActivityRepository,
-    this._getUserUsecase,
-  );
+  UpdateUserActivityUsecase(this._userActivityRepository, this._getUserUsecase);
 
   /// Updates a logged activity. For most activities [newValue] is the new
   /// duration in minutes, and burned kcal is recomputed via MET. For the
@@ -31,6 +30,44 @@ class UpdateUserActivityUsecase {
       );
     }
     final user = await _getUserUsecase.getUserData();
+    final details = activity.details;
+    if (details?.kind == ActivityLogKind.treadmill &&
+        details?.treadmillMode != null &&
+        details?.speedKph != null &&
+        details?.inclinePercent != null) {
+      final updatedDetails = details!.copyWithDurationMinutes(
+        newValue,
+        profileWeightKg: user.weightKG,
+      );
+      final newBurnedKcal = TreadmillEnergyCalc.calories(
+        mode: details.treadmillMode!,
+        speedKph: details.speedKph!,
+        inclinePercent: details.inclinePercent!,
+        weightKg: user.weightKG,
+        durationMinutes: newValue,
+      );
+      return _userActivityRepository.updateUserActivity(
+        activity.id,
+        newValue,
+        newBurnedKcal,
+        detailsJson: updatedDetails.encode(),
+      );
+    }
+    if (details?.kind == ActivityLogKind.aiStrength) {
+      final newBurnedKcal = METCalc.getTotalBurnedKcal(
+        user,
+        activity.physicalActivityEntity,
+        newValue,
+      );
+      return _userActivityRepository.updateUserActivity(
+        activity.id,
+        newValue,
+        newBurnedKcal,
+        detailsJson: details!
+            .copyWithDurationMinutes(newValue, profileWeightKg: user.weightKG)
+            .encode(),
+      );
+    }
     final newBurnedKcal = METCalc.getTotalBurnedKcal(
       user,
       activity.physicalActivityEntity,

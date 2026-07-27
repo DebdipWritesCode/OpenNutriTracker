@@ -16,11 +16,14 @@ from pydantic import BaseModel
 
 from app.config import Settings
 from app.prompts import (
+    build_activity_text_prompt,
     build_meal_image_prompt,
     build_meal_refinement_prompt,
     build_meal_text_prompt,
 )
 from app.schemas.analysis import (
+    ActivityExtraction,
+    AnalyzeActivityRequest,
     AnalyzeImageRequest,
     AnalyzeTextRequest,
     MealExtraction,
@@ -50,6 +53,12 @@ class MealRefinementResult:
     model_used: str
 
 
+@dataclass(frozen=True, slots=True)
+class ActivityAnalysisResult:
+    extraction: ActivityExtraction
+    model_used: str
+
+
 class MealAnalysisService:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -66,6 +75,19 @@ class MealAnalysisService:
             response_format=MealExtraction,
         )
         return MealAnalysisResult(extraction, model)
+
+    async def analyze_activity(
+        self,
+        request: AnalyzeActivityRequest,
+        request_api_key: str | None,
+    ) -> ActivityAnalysisResult:
+        extraction, model = await self._analyze(
+            instructions=build_activity_text_prompt(request.locale),
+            model_input=request.text,
+            request_api_key=request_api_key,
+            response_format=ActivityExtraction,
+        )
+        return ActivityAnalysisResult(extraction, model)
 
     async def analyze_image(
         self,
@@ -171,7 +193,7 @@ class MealAnalysisService:
                         store=False,
                     )
                     if response.output_parsed is None:
-                        raise ModelResponseError("The model did not return a meal extraction")
+                        raise ModelResponseError("The model did not return a structured extraction")
                     return response.output_parsed, model
                 except AuthenticationError as exc:
                     raise InvalidAPIKeyError("The provided OpenAI API key was rejected") from exc
@@ -179,7 +201,7 @@ class MealAnalysisService:
                     last_error = exc
                     if index < len(models) - 1:
                         logger.warning(
-                            "Meal extraction model failed; attempting configured fallback",
+                            "AI extraction model failed; attempting configured fallback",
                             extra={"model": model, "error_type": type(exc).__name__},
                         )
                         continue
@@ -188,7 +210,7 @@ class MealAnalysisService:
                     last_error = exc
                     if exc.status_code >= 500 and index < len(models) - 1:
                         logger.warning(
-                            "Meal extraction upstream failed; attempting configured fallback",
+                            "AI extraction upstream failed; attempting configured fallback",
                             extra={"model": model, "status_code": exc.status_code},
                         )
                         continue
@@ -199,7 +221,7 @@ class MealAnalysisService:
         if isinstance(last_error, ModelResponseError):
             raise last_error
         raise UpstreamUnavailableError(
-            "OpenAI meal extraction is temporarily unavailable"
+            "OpenAI extraction is temporarily unavailable"
         ) from last_error
 
     def _resolve_api_key(self, request_api_key: str | None) -> str:

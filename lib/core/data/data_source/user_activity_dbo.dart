@@ -29,6 +29,10 @@ class UserActivityDBO extends HiveObject {
   @HiveField(5)
   final double? userKcal;
 
+  /// Optional version-tolerant JSON metadata for structured workout details.
+  @HiveField(6)
+  final String? detailsJson;
+
   UserActivityDBO(
     this.id,
     this.duration,
@@ -36,6 +40,7 @@ class UserActivityDBO extends HiveObject {
     this.date,
     this.physicalActivityDBO, {
     this.userKcal,
+    this.detailsJson,
   });
 
   factory UserActivityDBO.fromUserActivityEntity(
@@ -50,6 +55,7 @@ class UserActivityDBO extends HiveObject {
         userActivityEntity.physicalActivityEntity,
       ),
       userKcal: userActivityEntity.userKcal,
+      detailsJson: userActivityEntity.detailsJson,
     );
   }
 

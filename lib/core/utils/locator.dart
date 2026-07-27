@@ -59,6 +59,7 @@ import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_water_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/save_recipe_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/save_estimated_activity_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/send_intake_to_profiles_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/switch_profile_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
@@ -72,6 +73,8 @@ import 'package:opennutritracker/core/utils/profile_bootstrap.dart';
 import 'package:opennutritracker/core/utils/ont_image_cache_manager.dart';
 import 'package:opennutritracker/core/utils/secure_app_storage_provider.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
+import 'package:opennutritracker/features/ai_activity/data/ai_activity_api_client.dart';
+import 'package:opennutritracker/features/ai_activity/presentation/bloc/ai_activity_bloc.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_access_token_store.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_api_client.dart';
 import 'package:opennutritracker/features/ai_meal/data/ai_meal_photo_picker.dart';
@@ -145,6 +148,13 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<AiMealGateway>(
     () => AiMealApiClient(
+      client: locator(),
+      tokenStore: locator(),
+      baseUrl: Env.aiBackendUrl,
+    ),
+  );
+  locator.registerLazySingleton<AiActivityGateway>(
+    () => AiActivityApiClient(
       client: locator(),
       tokenStore: locator(),
       baseUrl: Env.aiBackendUrl,
@@ -293,6 +303,9 @@ Future<void> initLocator() async {
   locator.registerFactory<AiMealBloc>(
     () => AiMealBloc(locator(), locator(), locator(), locator()),
   );
+  locator.registerFactory<AiActivityBloc>(
+    () => AiActivityBloc(locator(), locator(), locator(), locator()),
+  );
   locator.registerFactory<ScannerBloc>(() => ScannerBloc(locator(), locator()));
   locator.registerFactory<EditMealBloc>(
     () => EditMealBloc(locator(), locator(), locator()),
@@ -382,6 +395,14 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<AddUserActivityUsecase>(
     () => AddUserActivityUsecase(locator()),
+  );
+  locator.registerLazySingleton<SaveEstimatedActivityUsecase>(
+    () => SaveEstimatedActivityUsecase(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
   );
   locator.registerLazySingleton<DeleteUserActivityUsecase>(
     () => DeleteUserActivityUsecase(locator()),

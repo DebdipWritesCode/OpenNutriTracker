@@ -16,6 +16,10 @@ MealCorrectionText = Annotated[
     str,
     StringConstraints(strip_whitespace=True, min_length=2, max_length=1000),
 ]
+ActivityText = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, min_length=2, max_length=4000),
+]
 ImageMimeType = Literal["image/jpeg", "image/png", "image/webp"]
 MAX_IMAGE_BYTES = 3_000_000
 MAX_IMAGE_BASE64_LENGTH = 4_000_000
@@ -25,6 +29,13 @@ class AnalyzeTextRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     text: MealText
+    locale: str = Field(default="en", min_length=2, max_length=20)
+
+
+class AnalyzeActivityRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: ActivityText
     locale: str = Field(default="en", min_length=2, max_length=20)
 
 
@@ -96,6 +107,42 @@ class MealExtraction(BaseModel):
     notes: list[str] = Field(default_factory=list, max_length=20)
 
 
+class ExtractedExercise(BaseModel):
+    """A strength exercise parsed by the model; never model-calculated energy."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    original_text: str = Field(min_length=1, max_length=300)
+    canonical_name: str = Field(min_length=1, max_length=200)
+    sets: int | None = Field(default=None, ge=1, le=100)
+    reps_per_set: int | None = Field(default=None, ge=1, le=1000)
+    load_value: float | None = Field(default=None, gt=0, le=2000)
+    load_unit: Literal["kg", "lb", "bodyweight"] | None = None
+    confidence: float = Field(ge=0, le=1)
+    requires_user_confirmation: bool = False
+
+    @field_validator("canonical_name", "original_text", mode="before")
+    @classmethod
+    def strip_exercise_text_fields(cls, value: object) -> object:
+        return value.strip() if isinstance(value, str) else value
+
+    @model_validator(mode="after")
+    def validate_load(self) -> Self:
+        if self.load_unit == "bodyweight" and self.load_value is not None:
+            raise ValueError("Bodyweight exercises must not include load_value")
+        if self.load_value is not None and self.load_unit not in {"kg", "lb"}:
+            raise ValueError("A numeric load requires kg or lb")
+        return self
+
+
+class ActivityExtraction(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    exercises: list[ExtractedExercise] = Field(min_length=1, max_length=50)
+    stated_duration_minutes: float | None = Field(default=None, gt=0, le=1440)
+    notes: list[str] = Field(default_factory=list, max_length=20)
+
+
 class MealCorrectionTurn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -119,6 +166,10 @@ class MealRefinement(MealExtraction):
 
 
 class AnalyzeTextResponse(MealExtraction):
+    model_used: str
+
+
+class AnalyzeActivityResponse(ActivityExtraction):
     model_used: str
 
 
